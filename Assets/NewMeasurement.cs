@@ -184,9 +184,9 @@ public class NewMeasurement : ITool {
 		if (measurement)
 		{
 			measureState = state.idle;
-			foreach (GameObject obj in allMeasurements) {
-				Destroy (obj);
-			}
+			//foreach (GameObject obj in allMeasurements) {
+				//Destroy (obj);
+			//}
 		}
 
 	}

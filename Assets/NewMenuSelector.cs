@@ -19,7 +19,7 @@ public class NewMenuSelector : ITool {
 	public class menuButton
 	{
 		public GameObject myButton;
-		public ITool myTool;
+		public List<ITool> myTools;
 	}
 
 
@@ -128,7 +128,10 @@ public class NewMenuSelector : ITool {
 		}
 			menuButtons[currentMenuIndex].myButton.GetComponent<Image> ().color = new Color (0, 255, 0, .6f);
 			menuButtons[currentMenuIndex].myButton.transform.GetChild (1).GetComponent<Text> ().enabled = true;
-			menuButtons[currentMenuIndex].myTool.sub ();
+		foreach (ITool it in menuButtons[currentMenuIndex].myTools) {
+			it.sub ();
+		}
+			//menuButtons[currentMenuIndex].myTool.sub ();
 			
 
 

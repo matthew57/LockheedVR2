@@ -198,7 +198,7 @@ public class ImprovedController : MonoBehaviour {
 		foreach (ITool IT in myTools) {
 			if (IT) {
 				if (IT.PadClick(e)) {
-					break;
+					return;
 				}
 			}
 		}
@@ -211,7 +211,7 @@ public class ImprovedController : MonoBehaviour {
 		foreach (ITool IT in myTools) {
 			if (IT) {
 				if (IT.PadUnclick(e)) {
-					break;
+					return;
 				}
 			}
 		}

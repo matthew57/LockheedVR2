@@ -25,7 +25,7 @@ public class ClippingPlane : NetworkBehaviour
         Shader.SetGlobalFloat("_b", b);
         Shader.SetGlobalFloat("_c", c);
         Shader.SetGlobalFloat("_d", d);
-        Shader.SetGlobalFloat("_clip", 0.0f);
+        Shader.SetGlobalFloat("_clip", 1.0f);
        
 
     }

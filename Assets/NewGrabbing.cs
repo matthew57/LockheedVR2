@@ -27,9 +27,23 @@ public class NewGrabbing : ITool {
 	private Transform grabbedObjParent;
 
 
+
+
 	private float dist;
+	bool ObjectUsedGrav = false; 
 
 
+	NewGrabbing otherGrabber;
+
+	void Start()
+		{foreach (NewGrabbing ng in GetComponents<NewGrabbing>()) {
+			if (ng != this) {
+				otherGrabber = ng;
+				break;
+			}
+		}
+
+		}
 
 
 	public override bool TriggerClick(ClickedEventArgs e)
@@ -50,8 +64,10 @@ public class NewGrabbing : ITool {
 					//CmdCreateCollidedObjCopy(collidedObject.GetComponent<NetworkIdentity>());
 				}
 			}
-			pickUp(collidedObject);
-			StartCoroutine("snapCoroutine");
+			if (!otherGrabber.currentlyGrabbing (collidedObject)) {
+				pickUp (collidedObject);
+				StartCoroutine ("snapCoroutine");
+			}
 		}
 
 		return true;
@@ -86,9 +102,18 @@ public class NewGrabbing : ITool {
 	public override void stopUsing (){}
 	public override void startUsing(){}
 
+
+	public bool currentlyGrabbing(GameObject ob)
+	{if (grabbingState == state.pickedUp && collidedObject == ob) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public override void CollisionEnter (Collider other){
 
-		Debug.Log ("I entered " + other.gameObject.name);
+
 		if(grabbingState == state.idle || grabbingState == state.colliding)
 		{
 
@@ -148,9 +173,12 @@ public class NewGrabbing : ITool {
 	private void pickUp(GameObject obj)
 	{
 
-
-
+		Rigidbody rb = obj.GetComponent<Rigidbody> ();
+		ObjectUsedGrav = rb.useGravity;
+		rb.useGravity = false;
+		rb.isKinematic = true;
 		grabbedObjParent = obj.transform.parent;
+
 		obj.transform.SetParent(controllerInit.transform);
 		grabbingState = state.pickedUp;
 	}
@@ -160,6 +188,12 @@ public class NewGrabbing : ITool {
 		// Debug.Log("release");
 		Obj.transform.parent = grabbedObjParent;
 		grabbingState = state.colliding;
+
+		if (ObjectUsedGrav) {
+			Obj.GetComponent<Rigidbody> ().useGravity = true;
+			Obj.GetComponent<Rigidbody> ().isKinematic = false;
+		
+		}
 	}
 
 
