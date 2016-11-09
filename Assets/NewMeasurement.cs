@@ -34,7 +34,7 @@ public class NewMeasurement : ITool {
 
 
 
-	public override void TriggerClick(ClickedEventArgs e){
+	public override bool TriggerClick(ClickedEventArgs e){
 		Debug.Log ("Measurement pressed");
 
 		if (measureState == state.idle)
@@ -83,8 +83,8 @@ public class NewMeasurement : ITool {
 			dist = Vector3.Distance(startsphere.transform.position, endsphere.transform.position);
 			dist = dist * 39.3701f;
 			dist_string = dist.ToString("0.00");
-			texta.text = "Distance: " + dist_string + " inches";
-			textb.text = "Distance: " + dist_string + " inches";
+			texta.text = "Dist: " + dist_string + " inches";
+			textb.text = "Dist: " + dist_string + " inches";
 			measureState = state.idle;
 		
 		}
@@ -93,13 +93,13 @@ public class NewMeasurement : ITool {
 			//Destroy(measurement);
 			measureState = state.idle;
 		}
-
+		return true;
 
 	}
-	public override void TriggerUnclick (ClickedEventArgs e){}
-	public override void MenuClick (ClickedEventArgs e){}
-	public override void MenuUnclick (ClickedEventArgs e){}
-	public override void PadClick (ClickedEventArgs e){
+	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
+	public override bool MenuClick (ClickedEventArgs e){return false;}
+	public override bool MenuUnclick (ClickedEventArgs e){return false;}
+	public override bool PadClick (ClickedEventArgs e){
 
 
 		if (allMeasurements.Count > 0) {
@@ -107,15 +107,15 @@ public class NewMeasurement : ITool {
 			allMeasurements.Remove (temp);
 			Destroy (temp);
 		}
-
+		return true;
 	}
-	public override void PadUnclick (ClickedEventArgs e){}
+	public override bool PadUnclick (ClickedEventArgs e){return false;}
 
 
 
 
 	//USED FOR SNAPPING
-	public override void Grip (ClickedEventArgs e){
+	public override bool Grip (ClickedEventArgs e){
 		if (measureState == state.idle)
 		{
 			measureState = state.start;
@@ -163,18 +163,19 @@ public class NewMeasurement : ITool {
 			dist = Vector3.Distance(startsphere.transform.position, endsphere.transform.position);
 			dist = dist * 39.3701f;
 			dist_string = dist.ToString("0.00");
-			texta.text = "Distance: " + dist_string + " inches";
-			textb.text = "Distance: " + dist_string + " inches";
+			texta.text = "Dist: " + dist_string + " inches";
+			textb.text = "Dist: " + dist_string + " inches";
 			measureState = state.idle;
 
 		}
 
-
+		return true;
 	}
-	public override void UnGrip(ClickedEventArgs e){}
-	public override void PadTouched(ClickedEventArgs e){}
-	public override void PadUntouched(ClickedEventArgs e){}
-	public override void SteamClicked (ClickedEventArgs e){}
+
+	public override bool UnGrip(ClickedEventArgs e){return false;}
+	public override bool PadTouched(ClickedEventArgs e){return false;}
+	public override bool PadUntouched(ClickedEventArgs e){return false;}
+	public override bool SteamClicked (ClickedEventArgs e){return false;}
 	public override void CollisionEnter (Collider other){}
 	public override void CollisionExit (Collider other){}
 
@@ -194,7 +195,7 @@ public class NewMeasurement : ITool {
 
 	 void Start()
 	{
-		base.Start();
+		base.Awake();
 
 		grabSphere = controllerInit.gameObject.transform.Find("GrabSphere").gameObject;
 		camera_eyes = GameObject.Find("Camera (eye)");
@@ -222,8 +223,8 @@ public class NewMeasurement : ITool {
 				dist = Vector3.Distance(startsphere.transform.position, grabSphere.transform.position);
 				dist = dist * 39.3701f;
 				dist_string = dist.ToString("0.00");
-				texta.text = "Distance: " + dist_string + " inches";
-				textb.text = "Distance: " + dist_string + " inches";
+				texta.text = "Dist: " + dist_string + " inches";
+				textb.text = "Dist: " + dist_string + " inches";
 			}
 			else if (measureState == state.end)
 			{
@@ -243,7 +244,23 @@ public class NewMeasurement : ITool {
 		float distance = 1000000;;
 
 		foreach (GameObject col in GameObject.FindGameObjectsWithTag("SceneObject")) {
+
+
+		
 			Vector3 tempPoint = col.GetComponent<Collider>().ClosestPointOnBounds (point);
+
+			Vector3 origin = new Vector3 (col.transform.position.x -point.x , col.transform.position.y -  point.y,  col.transform.position.z - point.z );
+			origin.Normalize ();
+
+			Ray ray = new Ray (point, origin);
+			RaycastHit hitInfo = new RaycastHit ();
+			if (col.GetComponent<Collider> ().Raycast(ray, out hitInfo, 1000000)) {
+			
+				Debug.Log ("Hit it !");
+				tempPoint = hitInfo.point;
+
+			}
+
 			float tempDist = Vector3.Distance (tempPoint, point);
 			if (tempDist < distance) {
 				distance = tempDist;
@@ -254,8 +271,10 @@ public class NewMeasurement : ITool {
 		}
 		if (closestPoint == Vector3.zero || distance > .1) {
 		
+			Debug.Log ("Returning point");
 			return point;
 		} else {
+			Debug.Log ("New Point");
 			return closestPoint;
 		}
 

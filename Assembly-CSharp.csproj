@@ -98,6 +98,7 @@
      <Compile Include="Assets\NewCuttingPlane.cs" />
      <Compile Include="Assets\NewGrabbing.cs" />
      <Compile Include="Assets\NewMeasurement.cs" />
+     <Compile Include="Assets\NewMenuSelector.cs" />
      <Compile Include="Assets\OVR\Moonlight\Scripts\OVRDebugHeadController.cs" />
      <Compile Include="Assets\OVR\Moonlight\Scripts\OVROverlay.cs" />
      <Compile Include="Assets\OVR\Moonlight\Scripts\OVRPlatformMenu.cs" />

@@ -91,6 +91,8 @@ public class PlayBackSystem :Tools {
 	// does the normal thing to your objects per one frame of playback
 	public void PlayIt(float playRate)
 	{
+
+		//Debug.Log ("Playing it ");
 		currentPlaybackTime += Time.deltaTime * playRate;
 		// Going forward in Time
 		if (playRate > 0) {

@@ -32,11 +32,11 @@ public class NewGrabbing : ITool {
 
 
 
-	public override void TriggerClick(ClickedEventArgs e)
+	public override bool TriggerClick(ClickedEventArgs e)
 	{
 		if (collidedObject == null || collidedObject.tag == "UIObject")
 		{
-			return;
+			return false;
 		}
 			
 		if (grabbingState ==  state.colliding)
@@ -53,9 +53,11 @@ public class NewGrabbing : ITool {
 			pickUp(collidedObject);
 			StartCoroutine("snapCoroutine");
 		}
+
+		return true;
 	}
 
-	public override void TriggerUnclick (ClickedEventArgs e)
+	public override bool TriggerUnclick (ClickedEventArgs e)
 	{
 		if (grabbingState == state.pickedUp)
 		{
@@ -67,18 +69,18 @@ public class NewGrabbing : ITool {
 				//CmdDestroyCollidedObjCopy(collidedObject.GetComponent<NetworkIdentity>());
 			}
 		}
-
+		return true;
 	}
 
-	public override void MenuClick (ClickedEventArgs e){}
-	public override void MenuUnclick (ClickedEventArgs e){}
-	public override void PadClick (ClickedEventArgs e){}
-	public override void PadUnclick (ClickedEventArgs e){}
-	public override void Grip (ClickedEventArgs e){}
-	public override void UnGrip(ClickedEventArgs e){}
-	public override void PadTouched(ClickedEventArgs e){}
-	public override void PadUntouched(ClickedEventArgs e){}
-	public override void SteamClicked (ClickedEventArgs e){}
+	public override bool MenuClick (ClickedEventArgs e){ return false;}
+	public override bool MenuUnclick (ClickedEventArgs e){ return false;}
+	public override bool PadClick (ClickedEventArgs e){ return false;}
+	public override bool PadUnclick (ClickedEventArgs e){ return false;}
+	public override bool Grip (ClickedEventArgs e){ return false;}
+	public override  bool UnGrip(ClickedEventArgs e){ return false;}
+	public override bool PadTouched(ClickedEventArgs e){ return false;}
+	public override bool PadUntouched(ClickedEventArgs e){ return false;}
+	public override bool SteamClicked (ClickedEventArgs e){ return false;}
 
 	//Initialize any variables in these, they get called whenever you start/stop using the given tool
 	public override void stopUsing (){}

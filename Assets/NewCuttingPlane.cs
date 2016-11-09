@@ -149,12 +149,12 @@ public class NewCuttingPlane : ITool {
 
 
 
-	public override void TriggerClick(ClickedEventArgs e){}
-	public override void TriggerUnclick (ClickedEventArgs e){}
-	public override void MenuClick (ClickedEventArgs e){}
-	public override void MenuUnclick (ClickedEventArgs e){}
+	public override bool TriggerClick(ClickedEventArgs e){return false;}
+		public override bool TriggerUnclick (ClickedEventArgs e){return false;}
+		public override bool MenuClick (ClickedEventArgs e){return false;}
+			public override bool MenuUnclick (ClickedEventArgs e){return false;}
 
-	public override void PadClick (ClickedEventArgs e){
+	public override bool PadClick (ClickedEventArgs e){
 
 		//DPAD UP BUTTON SETTINGS - MOVE CUTTING PLANE UP ON NORMAL/////
 		if (controllerInit.controllerState.rAxis0.y >= 0.5f && controllerInit.controllerState.rAxis0.x >= -0.5f && controllerInit.controllerState.rAxis0.x <= 0.5f)
@@ -183,14 +183,13 @@ public class NewCuttingPlane : ITool {
 		{
 			TogglePlaneOriginDir();
 		}
-		else
-		{
-			return;
-		}
+	
+			return true;
+
 
 	}
 
-	public override void PadUnclick (ClickedEventArgs e){
+	public override bool PadUnclick (ClickedEventArgs e){
 		if (cPlaneState == state.panForward)
 		{
 			Debug.Log("RRRRRRRRRR");
@@ -201,14 +200,14 @@ public class NewCuttingPlane : ITool {
 			Debug.Log("RRRRRRRRRR");
 			cPlaneState = state.idle;
 		}
-
+		return true;
 	}
 
-	public override void Grip (ClickedEventArgs e){}
-	public override void UnGrip(ClickedEventArgs e){}
-	public override void PadTouched(ClickedEventArgs e){}
-	public override void PadUntouched(ClickedEventArgs e){}
-	public override void SteamClicked (ClickedEventArgs e){}
+	public override bool Grip (ClickedEventArgs e){return false;}
+	public override bool UnGrip(ClickedEventArgs e){return false;}
+	public override bool PadTouched(ClickedEventArgs e){return false;}
+	public override bool PadUntouched(ClickedEventArgs e){return false;}
+	public override bool SteamClicked (ClickedEventArgs e){return false;}
 	public override void CollisionEnter (Collider other){}
 	public override void CollisionExit (Collider other){}
 	public override void stopUsing (){}

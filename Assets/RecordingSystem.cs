@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using UnityEngine.UI;
 
 
 using UnityEngine.Networking;
@@ -12,11 +13,13 @@ using Valve.VR;
 //CREATED BY MATTHEW JOHNSON ON 10-29-16: PROTOTYPE SYSTEM FOR RECORDING THE TRANSFORMS OF YOUR OBJECTS AND THE BUTTONS CLICKED
 
 
-public class RecordingSystem :Tools{
+public class RecordingSystem : ITool{
 
 	private Transform eyeC;
 	private Transform leftC;
 	private Transform rightC;
+
+
 
 	//This extenstion will be added onto your files for identification (like a .txt )
 	string fileExtension = ".UVR";
@@ -40,46 +43,22 @@ public class RecordingSystem :Tools{
 	protected SteamVR_TrackedController controllerRight;
 	protected SteamVR_TrackedController controllerLeft;
 
-	private ButtonSubHandler record;
-	private ButtonSubHandler save;
-
-	public button recordButton;
-	public button saveButton;
-
-
-
-
-
-
-
-	public button resetButton;
-	public button grabButton;
-
-	private ButtonSubHandler reset;
-	private ButtonSubHandler grab;
-
-	public List<NetworkIdentity> movedObjects = new List<NetworkIdentity>();
-
 	private float dist;
 
-
-
-
-
-
+	Text countDown;
 
 	void Start()
-	{	
+	{	countDown = GameObject.Find ("SecondToolText").GetComponent<Text> ();
 		
-		record.clicked = startRecordingIn;
-		record.unclicked = null;
+		//record.clicked = startRecordingIn;
+		//record.unclicked = null;
 
 	
-		save.clicked = saveToFile;
-		save.unclicked = null;
+		//save.clicked = saveToFile;
+		//save.unclicked = null;
 
-		buttonMap.Add(recordButton, record);
-		buttonMap.Add(saveButton, save);
+		//buttonMap.Add(recordButton, record);
+		//buttonMap.Add(saveButton, save);
 
 
 	
@@ -113,7 +92,7 @@ public class RecordingSystem :Tools{
 
 
 
-	protected void startRecordingIn(object sender, ClickedEventArgs e)
+	protected void startRecordingIn()//object sender, ClickedEventArgs e)
 	{Debug.Log ("Start recording in " +3);
 		StartCoroutine (delayStartRecording (3));
 			
@@ -122,10 +101,27 @@ public class RecordingSystem :Tools{
 
 
 	IEnumerator delayStartRecording(float timeBeforeStart)
-	{
-		yield return new WaitForSeconds (timeBeforeStart);
-		SubScribeControllers ();
+	{countDown.color = Color.green;
+		countDown.enabled = true;
+		countDown.fontSize = 20;
+		countDown.text = "Starting in 3";
+
+		yield return new WaitForSeconds (1);
+		countDown.text = "Starting in 2";
+
+		yield return new WaitForSeconds (1);
+		countDown.text = "Starting in 1";
+
+		yield return new WaitForSeconds (1);
+		countDown.fontSize = 12;
+		countDown.text = "Recording";
+		countDown.color = Color.red;
+
+
+
+		//SubScribeControllers ();
 		isRecording = true;
+
 
 		nextRecordingFrame = Time.time + .00001f;
 		recordingTime = 0;
@@ -135,9 +131,9 @@ public class RecordingSystem :Tools{
 	protected void stopRecording()
 	{
 
-		Debug.Log ("Stop record");
+		countDown.enabled = false;
 		isRecording = false;
-		UnSubScribeControllers ();
+		//UnSubScribeControllers ();
 
 	}
 
@@ -147,7 +143,7 @@ public class RecordingSystem :Tools{
 			
 			isRecording = !isRecording;
 			if (isRecording) {
-				//startRecordingIn (0);
+				startRecordingIn ();
 
 			} else {
 				stopRecording ();
@@ -155,9 +151,9 @@ public class RecordingSystem :Tools{
 		
 		}
 
-		if (Input.GetKeyDown (KeyCode.S)) {
+		if (Input.GetKeyDown (KeyCode.G)) {
 
-			//saveToFile (myData);
+			saveToFile ();
 
 		}
 
@@ -340,7 +336,7 @@ public class RecordingSystem :Tools{
 	}
 
 
-	protected void saveToFile(object sender, ClickedEventArgs e)
+	protected void saveToFile()//object sender, ClickedEventArgs e)
 	{Debug.Log ("Saving to file");
 
 		isRecording = false;
@@ -363,7 +359,7 @@ public class RecordingSystem :Tools{
 	}
 
 	private void SubScribeControllers ()
-	{
+	{/*
 		controllerLeft.TriggerClicked += ControllerLeft_TriggerClicked;
 		controllerLeft.TriggerUnclicked += ControllerLeft_TriggerUnclicked;
 		controllerLeft.MenuButtonClicked += ControllerLeft_MenuButtonClicked;
@@ -381,13 +377,13 @@ public class RecordingSystem :Tools{
 		controllerRight.Ungripped += ControllerRight_Ungripped;
 		controllerRight.PadClicked += ControllerRight_PadClicked;
 		controllerRight.PadUnclicked += ControllerRight_PadUnclicked;
-
+*/
 
 	}
 
 
 	private void UnSubScribeControllers ()
-	{
+	{/*
 		controllerLeft.TriggerClicked -= ControllerLeft_TriggerClicked;
 		controllerLeft.TriggerUnclicked -= ControllerLeft_TriggerUnclicked;
 		controllerLeft.MenuButtonClicked -= ControllerLeft_MenuButtonClicked;
@@ -405,9 +401,51 @@ public class RecordingSystem :Tools{
 		controllerRight.Ungripped -= ControllerRight_Ungripped;
 		controllerRight.PadClicked -= ControllerRight_PadClicked;
 		controllerRight.PadUnclicked -= ControllerRight_PadUnclicked;
-
+*/
 
 	}
+
+
+	public override bool TriggerClick(ClickedEventArgs e){
+		if (isRecording) {
+		
+			stopRecording ();
+		} else {
+			startRecordingIn ();
+		}
+
+
+		return true;}
+
+
+	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
+	public override bool MenuClick (ClickedEventArgs e){
+
+		SavedData sd = loadFromFile ();
+		GameObject.FindObjectOfType<PlayBackSystem> ().play (sd);
+		return true;
+	}
+	public override bool MenuUnclick (ClickedEventArgs e){return false;}
+	public override bool PadClick (ClickedEventArgs e){
+		saveToFile ();
+
+		return true;}
+	public override bool PadUnclick (ClickedEventArgs e){return false;}
+	public override bool Grip (ClickedEventArgs e){return false;}
+	public override bool UnGrip(ClickedEventArgs e){return false;}
+	public override bool PadTouched(ClickedEventArgs e){return false;}
+	public override bool PadUntouched(ClickedEventArgs e){return false;}
+	public override bool SteamClicked (ClickedEventArgs e){return false;}
+	public override void CollisionEnter (Collider other){}
+	public override void CollisionExit (Collider other){}
+	public override void stopUsing (){}
+	public override void startUsing(){}
+
+
+
+
+
+
 
 	//We might be able to get rid of all of these functions except for
 

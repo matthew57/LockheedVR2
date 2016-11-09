@@ -11,12 +11,12 @@ public class NewAxisRotation: ITool {
 	private GameObject axis;
 
 
-	public override void TriggerClick(ClickedEventArgs e){}
-	public override void TriggerUnclick (ClickedEventArgs e){}
-	public override void MenuClick (ClickedEventArgs e){}
-	public override void MenuUnclick (ClickedEventArgs e){}
+	public override bool TriggerClick(ClickedEventArgs e){return false;}
+	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
+	public override bool MenuClick (ClickedEventArgs e){return false;}
+	public override bool MenuUnclick (ClickedEventArgs e){return false;}
 
-	public override void PadClick (ClickedEventArgs e){
+	public override bool PadClick (ClickedEventArgs e){
 
 		Debug.Log("rotate");
 		if (controllerInit.triggerPressed)
@@ -50,20 +50,23 @@ public class NewAxisRotation: ITool {
 			Vector3 nVector = new Vector3(controllerInit.controllerState.rAxis0.x, 0, controllerInit.controllerState.rAxis0.y);
 			StartCoroutine(panCoroutine(nVector));
 		}
+		return true;
 	}
 
-	public override void PadUnclick (ClickedEventArgs e){
+	public override bool PadUnclick (ClickedEventArgs e){
 		if (axisState != state.off)
 		{
 			axisState = state.idle;
 		}
+
+		return true;
 	}
 
-	public override void Grip (ClickedEventArgs e){}
-	public override void UnGrip(ClickedEventArgs e){}
-	public override void PadTouched(ClickedEventArgs e){}
-	public override void PadUntouched(ClickedEventArgs e){}
-	public override void SteamClicked (ClickedEventArgs e){}
+	public override bool Grip (ClickedEventArgs e){return false;}
+	public override bool UnGrip(ClickedEventArgs e){return false;}
+	public override bool PadTouched(ClickedEventArgs e){return false;}
+	public override bool PadUntouched(ClickedEventArgs e){return false;}
+	public override bool SteamClicked (ClickedEventArgs e){return false;}
 	public override void CollisionEnter (Collider other){}
 	public override void CollisionExit (Collider other){}
 	public override void stopUsing (){}

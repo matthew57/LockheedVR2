@@ -1,25 +1,50 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 using Valve.VR;
+using UnityEngine.UI;
 
 
 
 
 public class ImprovedController : MonoBehaviour {
 
+	// THE TOOL IN THE FIRST INDEX IS THE MAIN SELECTABLE TOOL THAT CAN BE SWAPPED OUT.
+	public List<ITool> myTools;
+	Text toolText;
 
-	public ITool currentTool;
-
-
-	public void setCurrentTool(ITool nextTool)
+	public void setMainTool(ITool nextTool)
 	{
-		if (currentTool) {
-			currentTool.stopUsing ();
+
+
+		if (myTools.Count == 0) {
+			myTools.Add (nextTool);
+		} else {
+
+			if (myTools [0]) {
+				myTools [0].stopUsing ();
+			}
+
+			myTools [0] = nextTool;
+			myTools [0].startUsing ();
 		}
 
-		currentTool = nextTool;
-		currentTool.startUsing ();
+		toolText.text = myTools [0].toolText;
+
+	}
+
+
+
+
+	public void subScribeTool(ITool theTool)
+	{
+
+		if (myTools.Count == 0) {
+			myTools.Add (null);
+		}
+		myTools.Add (theTool);
+		
 	}
 
 	public event ClickedEventHandler MenuButtonClicked;
@@ -49,6 +74,7 @@ public class ImprovedController : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
+		toolText = GameObject.Find ("ToolText").GetComponent<Text> ();
 		if (this.GetComponent<SteamVR_TrackedObject>() == null)
 		{
 			gameObject.AddComponent<SteamVR_TrackedObject>();
@@ -70,15 +96,20 @@ public class ImprovedController : MonoBehaviour {
 
 
 	private void OnTriggerEnter(Collider collider)
-	{
-		if (currentTool) {
-			currentTool.CollisionEnter (collider);}
+	{	//Debug.Log ("triggering " + collider + "   " + this.gameObject);
+		foreach (ITool IT in myTools) {
+			if (IT) {
+			//	Debug.Log ("Entering "+ IT);
+				IT.CollisionEnter (collider);
+			}
+		}
 	}
 
 	private void OnTriggerExit(Collider collider)
-	{
-		if (currentTool) {
-			currentTool.CollisionExit (collider);
+	{	foreach (ITool IT in myTools) {
+			if (IT) {
+				IT.CollisionExit (collider);
+			}
 		}
 	}
 
@@ -94,8 +125,15 @@ public class ImprovedController : MonoBehaviour {
 
 	public virtual void OnTriggerClicked(ClickedEventArgs e)
 	{
-		if(currentTool)
-			{currentTool.TriggerClick(e);}
+
+		foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.TriggerClick (e)) {
+					break;
+				}
+			}
+		}
+	
 
 		if (TriggerClicked != null)
 			TriggerClicked(this, e);
@@ -103,80 +141,131 @@ public class ImprovedController : MonoBehaviour {
 	}
 
 	public virtual void OnTriggerUnclicked(ClickedEventArgs e)
-	{if(currentTool)
-		{currentTool.TriggerUnclick(e);}
+	{
+	foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.TriggerUnclick(e)) {
+					break;
+				}
+			}
+		}
 	if (TriggerUnclicked != null)
 			TriggerUnclicked(this, e);
 	}
 
 	public virtual void OnMenuClicked(ClickedEventArgs e)
 	{
-		if(currentTool)
-		{currentTool.MenuClick(e);}
+
+		foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.MenuClick(e)) {
+					break;
+				}
+			}
+		}
 		if (MenuButtonClicked != null)
 			MenuButtonClicked(this, e);
 	}
 
 	public virtual void OnMenuUnclicked(ClickedEventArgs e)
 	{
-		if(currentTool)
-		{currentTool.MenuUnclick(e);}
+		foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.MenuUnclick(e)) {
+					break;
+				}
+			}
+		}
 		if (MenuButtonUnclicked != null)
 			MenuButtonUnclicked(this, e);
 	}
 
 	public virtual void OnSteamClicked(ClickedEventArgs e)
 	{
-		if(currentTool)
-		{currentTool.SteamClicked(e);}
+		foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.SteamClicked(e)) {
+					break;
+				}
+			}
+		}
 		if (SteamClicked != null)
 			SteamClicked(this, e);
 	}
 
 	public virtual void OnPadClicked(ClickedEventArgs e)
 	{
-		if(currentTool)
-		{currentTool.PadClick(e);}
+		foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.PadClick(e)) {
+					break;
+				}
+			}
+		}
 		if (PadClicked != null)
 			PadClicked(this, e);
 	}
 
 	public virtual void OnPadUnclicked(ClickedEventArgs e)
 	{
-		if(currentTool)
-		{currentTool.PadUnclick(e);}
+		foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.PadUnclick(e)) {
+					break;
+				}
+			}
+		}
 		if (PadUnclicked != null)
 			PadUnclicked(this, e);
 	}
 
 	public virtual void OnPadTouched(ClickedEventArgs e)
 	{
-		if(currentTool)
-		{currentTool.PadTouched(e);}
+		foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.PadTouched(e)) {
+					break;
+				}
+			}
+		}
 		if (PadTouched != null)
 			PadTouched(this, e);
 	}
 
 	public virtual void OnPadUntouched(ClickedEventArgs e)
 	{
-		if(currentTool)
-		{currentTool.PadUntouched(e);}
+		foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.PadUntouched(e)) {
+					break;
+				}
+			}
+		}
 		if (PadUntouched != null)
 			PadUntouched(this, e);
 	}
 
 	public virtual void OnGripped(ClickedEventArgs e)
 	{
-		if(currentTool)
-		{currentTool.Grip(e);}
+		foreach (ITool IT in myTools) {
+			if (IT) {
+				if (IT.Grip(e)) {
+					break;
+				}
+			}
+		}
 		if (Gripped != null)
 			Gripped(this, e);
 	}
 
 	public virtual void OnUngripped(ClickedEventArgs e)
-	{
-		if(currentTool)
-		{currentTool.UnGrip(e);}
+	{foreach (ITool IT in myTools) {
+		if (IT) {
+				if (IT.UnGrip(e)) {
+				break;
+			}
+		}
+	}
 		if (Ungripped != null)
 			Ungripped(this, e);
 	}

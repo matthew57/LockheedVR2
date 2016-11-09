@@ -27,8 +27,8 @@ public class MenuSelector : Tools
 
 
     public override void OnStartLocalPlayer()
-    {
-		//Debug.Log ("initialize menu selector " + this.gameObject);
+    { 
+		Debug.Log ("initialize menu selector " + this.gameObject);
         base.OnStartLocalPlayer();
 
        // menueItems.Add("MovePartsButton", gameObject.GetComponent<Grabbing>());
@@ -37,8 +37,6 @@ public class MenuSelector : Tools
         //menueItems.Add("MeasurementButton", gameObject.GetComponent<Measurement>());
 		//menueItems.Add ("RecordingButton", GameObject.FindObjectOfType<RecordingSystem> ());
 
-		//New Thin
-			      
 
 	
 		IToolItems.Add("CuttingPlaneButton", gameObject.GetComponent<NewCuttingPlane>());
