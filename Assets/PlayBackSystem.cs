@@ -60,6 +60,45 @@ public class PlayBackSystem :Tools {
 	}
 
 
+	public void rewind()
+	{if (savedData!= null) {
+		if (!(currentState is RewindState)) {
+			fastMultiplier = initialFastMultiplier;
+			currentState = new RewindState ();
+		} else {
+			fastMultiplier += .5f;
+		}
+	}
+	
+	}
+	public void fastForward()
+	{
+		if (savedData!= null) {
+			if (!(currentState is FastForwardState)) {
+				currentState = new FastForwardState ();
+				fastMultiplier = initialFastMultiplier;
+			} else {
+				fastMultiplier+= .5f;
+			}
+		}
+	}
+
+
+	public void playPause()
+	{if (savedData != null) {
+			fastMultiplier =  initialFastMultiplier;
+			if (!(currentState is PauseState)) {
+				currentState = new PauseState ();
+			} else {
+				currentState = new RegularPlayState ();
+			}
+
+
+		
+		}
+	}
+
+
 	public void updateObjTransforms()
 	{//Because we only record at X (usually 30) frames a second, we need to interpolate between points to create smooth motion for the playback system.
 		float lerpAmount =( currentPlaybackTime - previousFrame.RT )/ frameTime;

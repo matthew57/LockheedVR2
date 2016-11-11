@@ -16,6 +16,8 @@ public class IKControl : MonoBehaviour {
 	public GameObject rightHand;
 	public GameObject cameraHead;
 
+	[Tooltip("this number defines how high off the body the head is put based on the head's rotation")]
+	public float bodyOffsetAmount = .6f;
 	void Start () 
 	{
 		animator = GetComponent<Animator>();
@@ -29,18 +31,29 @@ public class IKControl : MonoBehaviour {
 
 			//if the IK is active, set the position and rotation directly to the goal. 
 			if(ikActive) {
-
-				gameObject.transform.position = cameraHead.transform.position + new Vector3(0,-.6f,0);
-
 				Quaternion tempQuat = cameraHead.transform.rotation;
 				tempQuat.x = 0;
 				tempQuat.z = 0;
+				// rotate the body to match the head
 				gameObject.transform.rotation = tempQuat;
-				// Set the look target position, if one has been assigned
+
+				// body will moved forward or back based on if the head is tilted up or down
+				float amount = ((-1*(Vector3.Angle (cameraHead.transform.forward, Vector3.up) - 90))/300) ;
+
+				// set the body position below the head
+				gameObject.transform.position = cameraHead.transform.position + new Vector3(0,-.7f - amount *bodyOffsetAmount,0);
+
+				//move the body that amount
+				gameObject.transform.position += (gameObject.transform.forward * (amount + .05f));
+
+				// Set the look target position, if one has been assigned / head will look at this object, should be bound in front of camera
 				if(lookObj != null) {
 					animator.SetLookAtWeight(1);
 					animator.SetLookAtPosition(lookObj.position);
-				}    
+				
+				}   
+
+			   
 
 				// Set the right hand target position and rotation, if one has been assigned
 				if(rightHand != null) {

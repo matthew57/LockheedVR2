@@ -78,12 +78,7 @@ public class NewGrabbing : ITool {
 		if (grabbingState == state.pickedUp)
 		{
 			releaseObj(collidedObject);
-			Debug.Log("distance is" + dist);
-			if (dist <= 0.25 && collidedObject.GetComponent<SnapBack>())
-			{
-				Debug.Log("calling destory command");
-				//CmdDestroyCollidedObjCopy(collidedObject.GetComponent<NetworkIdentity>());
-			}
+
 		}
 		return true;
 	}
@@ -92,7 +87,38 @@ public class NewGrabbing : ITool {
 	public override bool MenuUnclick (ClickedEventArgs e){ return false;}
 	public override bool PadClick (ClickedEventArgs e){ return false;}
 	public override bool PadUnclick (ClickedEventArgs e){ return false;}
-	public override bool Grip (ClickedEventArgs e){ return false;}
+
+
+	public override bool Grip (ClickedEventArgs e){ 
+
+
+		if (collidedObject == null || collidedObject.tag == "UIObject")
+		{
+			return false;
+		}
+
+		if (grabbingState == state.colliding) {
+			if (collidedObject.GetComponent<SnapBack> ()) {
+				if (!collidedObject.GetComponent<SnapBack> ().objectCopy) {
+					Debug.Log ("creating copy obj");
+
+					//CmdCreateCollidedObjCopy(collidedObject.GetComponent<NetworkIdentity>());
+				}
+			}
+			if (!otherGrabber.currentlyGrabbing (collidedObject)) {
+				pickUp (collidedObject);
+				StartCoroutine ("snapCoroutine");
+			}
+		} else if (grabbingState == state.pickedUp) {
+			releaseObj(collidedObject);
+		
+		}
+
+		return true;
+
+		return false;}
+
+
 	public override  bool UnGrip(ClickedEventArgs e){ return false;}
 	public override bool PadTouched(ClickedEventArgs e){ return false;}
 	public override bool PadUntouched(ClickedEventArgs e){ return false;}

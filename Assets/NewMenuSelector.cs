@@ -97,6 +97,8 @@ public class NewMenuSelector : ITool {
 
 	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
 	public override bool MenuClick (ClickedEventArgs e){
+
+		Debug.Log ("I am clicked " + this.gameObject);
 		onOffClicked (e);
 
 		return true;}

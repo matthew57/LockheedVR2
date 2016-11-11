@@ -18,7 +18,7 @@ public class RecordingSystem : ITool{
 	private Transform eyeC;
 	private Transform leftC;
 	private Transform rightC;
-
+	PlayBackSystem myPlayBack;
 
 
 	//This extenstion will be added onto your files for identification (like a .txt )
@@ -49,7 +49,7 @@ public class RecordingSystem : ITool{
 
 	void Start()
 	{	countDown = GameObject.Find ("SecondToolText").GetComponent<Text> ();
-		
+		myPlayBack = GameObject.FindObjectOfType<PlayBackSystem> ();
 		//record.clicked = startRecordingIn;
 		//record.unclicked = null;
 
@@ -93,7 +93,7 @@ public class RecordingSystem : ITool{
 
 
 	protected void startRecordingIn()//object sender, ClickedEventArgs e)
-	{Debug.Log ("Start recording in " +3);
+	{
 		StartCoroutine (delayStartRecording (3));
 			
 	}
@@ -410,6 +410,7 @@ public class RecordingSystem : ITool{
 		if (isRecording) {
 		
 			stopRecording ();
+			saveToFile ();
 		} else {
 			startRecordingIn ();
 		}
@@ -419,17 +420,31 @@ public class RecordingSystem : ITool{
 
 
 	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-	public override bool MenuClick (ClickedEventArgs e){
 
+	public override bool MenuClick (ClickedEventArgs e){
 		SavedData sd = loadFromFile ();
-		GameObject.FindObjectOfType<PlayBackSystem> ().play (sd);
+		myPlayBack.play (sd);
 		return true;
 	}
-	public override bool MenuUnclick (ClickedEventArgs e){return false;}
-	public override bool PadClick (ClickedEventArgs e){
-		saveToFile ();
 
+	public override bool MenuUnclick (ClickedEventArgs e){return false;}
+
+
+	public override bool PadClick (ClickedEventArgs e){
+
+		if (e.padX < -.33) {
+			Debug.Log ("Rwind");
+			myPlayBack.rewind ();
+		} else if (e.padX > .33) {
+			Debug.Log ("fast forward");
+			myPlayBack.fastForward ();
+		} else {
+			Debug.Log ("play pause");
+			myPlayBack.playPause ();
+		}
 		return true;}
+
+
 	public override bool PadUnclick (ClickedEventArgs e){return false;}
 	public override bool Grip (ClickedEventArgs e){return false;}
 	public override bool UnGrip(ClickedEventArgs e){return false;}
