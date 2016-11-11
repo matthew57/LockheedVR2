@@ -1,16 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\IKAssets\Scripts\IKControl.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ImprovedController.cs">
     <Files>
-      <File FileName="Assets\RecordingSystem.cs" Line="439" Column="31" />
-      <File FileName="Assets\PlayBackSystem.cs" Line="72" Column="2" />
-      <File FileName="Assets\ImprovedController.cs" Line="308" Column="47" />
-      <File FileName="Assets\ITool.cs" Line="65" Column="19" />
-      <File FileName="Assets\NewGrabbing.cs" Line="119" Column="17" />
+      <File FileName="Assets\RecordingSystem.cs" Line="1" Column="1" />
+      <File FileName="Assets\PlayBackSystem.cs" Line="1" Column="1" />
+      <File FileName="Assets\ImprovedController.cs" Line="304" Column="84" />
+      <File FileName="Assets\ITool.cs" Line="1" Column="1" />
+      <File FileName="Assets\NewGrabbing.cs" Line="1" Column="1" />
       <File FileName="Assets\NewCuttingPlane.cs" Line="1" Column="1" />
-      <File FileName="Assets\NewMenuSelector.cs" Line="107" Column="26" />
-      <File FileName="Assets\IKAssets\Scripts\IKControl.cs" Line="37" Column="41" />
-      <File FileName="Assets\newLaserPointer.cs" Line="29" Column="15" />
+      <File FileName="Assets\NewMenuSelector.cs" Line="1" Column="1" />
+      <File FileName="Assets\IKAssets\Scripts\IKControl.cs" Line="49" Column="106" />
+      <File FileName="Assets\newLaserPointer.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -45,30 +45,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Cardboard\Scripts\Audio\CardboardAudio.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\Audio\CardboardAudioListener.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\Audio\CardboardAudioRoom.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\Audio\CardboardAudioSource.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\Cardboard.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\CardboardEye.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\CardboardHead.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\CardboardPostRender.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\CardboardPreRender.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\CardboardProfile.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\GazeInputModule.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\Pose3D.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\StereoController.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\StereoRenderEffect.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\UI\CardboardGaze.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\UI\CardboardReticle.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\UI\ICardboardGazePointer.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\UI\ICardboardGazeResponder.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\VRDevices\BaseAndroidDevice.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\VRDevices\BaseCardboardDevice.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\VRDevices\BaseVRDevice.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\VRDevices\CardboardAndroidDevice.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\VRDevices\CardboardiOSDevice.cs" />
-     <Compile Include="Assets\Cardboard\Scripts\VRDevices\UnityEditorDevice.cs" />
      <Compile Include="Assets\IKAssets\Scripts\IKControl.cs" />
      <Compile Include="Assets\ITool.cs" />
      <Compile Include="Assets\ImprovedController.cs" />
@@ -77,32 +53,6 @@
      <Compile Include="Assets\NewGrabbing.cs" />
      <Compile Include="Assets\NewMeasurement.cs" />
      <Compile Include="Assets\NewMenuSelector.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\OVRDebugHeadController.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\OVROverlay.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\OVRPlatformMenu.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\OVRTouchpad.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\Utils\OVRChromaticAberration.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\Utils\OVRDebugGraph.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\Utils\OVRModeParms.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\Utils\OVRMonoscopic.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\Utils\OVRResetOrientation.cs" />
-     <Compile Include="Assets\OVR\Moonlight\Scripts\Utils\OVRWaitCursor.cs" />
-     <Compile Include="Assets\OVR\Scripts\OVRCameraRig.cs" />
-     <Compile Include="Assets\OVR\Scripts\OVRCommon.cs" />
-     <Compile Include="Assets\OVR\Scripts\OVRDisplay.cs" />
-     <Compile Include="Assets\OVR\Scripts\OVRInput.cs" />
-     <Compile Include="Assets\OVR\Scripts\OVRManager.cs" />
-     <Compile Include="Assets\OVR\Scripts\OVROnCompleteListener.cs" />
-     <Compile Include="Assets\OVR\Scripts\OVRPlugin.cs" />
-     <Compile Include="Assets\OVR\Scripts\OVRProfile.cs" />
-     <Compile Include="Assets\OVR\Scripts\OVRTracker.cs" />
-     <Compile Include="Assets\OVR\Scripts\Util\OVRCubemapCapture.cs" />
-     <Compile Include="Assets\OVR\Scripts\Util\OVRDebugInfo.cs" />
-     <Compile Include="Assets\OVR\Scripts\Util\OVRGridCube.cs" />
-     <Compile Include="Assets\OVR\Scripts\Util\OVRPlayerController.cs" />
-     <Compile Include="Assets\OVR\Scripts\Util\OVRSceneSampleController.cs" />
-     <Compile Include="Assets\OVR\Scripts\Util\OVRScreenFade.cs" />
-     <Compile Include="Assets\OVR\Scripts\Util\OVRTrackerBounds.cs" />
      <Compile Include="Assets\PlayBackSystem.cs" />
      <Compile Include="Assets\RecordingSystem.cs" />
      <Compile Include="Assets\Scripts\AssemblyMover.cs" />
@@ -170,44 +120,6 @@
      <Compile Include="Assets\TheLabRenderer\Scripts\openvr_api.cs" />
      <Compile Include="Assets\VRArcTeleporter\Scripts\ArcTeleporter.cs" />
      <Compile Include="Assets\WarehouseKit\WarehouseKit\Scripts\SimpleDoorTrigger.cs" />
-     <Compile Include="Assets\_Test\Integration Testing\Scripts\HumanoidMover.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\AssertionComponent.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\AssertionException.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Assertions.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\CheckMethod.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\ActionBase.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\BoolComparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\ColliderComparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\ComparerBase.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\FloatComparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\GeneralComparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\IntComparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\IsRenderedByCamera.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\StringComparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\TransformComparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\ValueDoesNotChange.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\Vector2Comparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\Vector3Comparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\Vector4Comparer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\Comparers\VectorComparerBase.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\InvalidPathException.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Assertions\MemberResolver.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Common\ITestResult.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\Common\TestResultState.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\DTOFormatter.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\ITestRunnerCallback.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\IntegrationTest.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\IntegrationTestAttribute.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\IntegrationTestsProvider.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\NetworkResultSender.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\ResultDTO.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\TestComponent.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\TestResult.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\TestResultRenderer.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\TestRunner.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\TestRunnerCallbackList.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestRunner\TestRunnerConfigurator.cs" />
-     <Compile Include="Assets\_Test\UnityTestTools\IntegrationTestsFramework\TestingAssets\CallTesting.cs" />
      <Compile Include="Assets\newArcTeleporter.cs" />
      <Compile Include="Assets\newLaserPointer.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
@@ -219,9 +131,7 @@
      <None Include="Assets\TheLabRenderer\Resources\vr_quality_vis.shader" />
      <None Include="Assets\VRArcTeleporter\readme.txt" />
      <None Include="Assets\ProjectSettings\ProjectVersion.txt" />
-     <None Include="Assets\_Test\UnityTestTools\LICENSE.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ShowAlphaChannel.shader" />
-     <None Include="Assets\Cardboard\Distortion\CardboardDistortion.cginc" />
      <None Include="Assets\SteamVR\Resources\SteamVR_Fade.shader" />
      <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SunShaftsComposite.shader" />
@@ -236,7 +146,6 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfFieldScatter.shader" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularSmooth.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Guidelines.txt" />
-     <None Include="Assets\Cardboard\Resources\UnlitTexture.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\MotionBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MobileBloom.shader" />
      <None Include="Assets\TheLabRenderer\Shaders\vr_utils.cginc" />
@@ -246,7 +155,6 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\SSAA.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\RadialBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfFieldDX11.shader" />
-     <None Include="Assets\OVR\Moonlight\Shaders\OVRColorRampAlpha.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ContrastComposite.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAAPreset3.shader" />
      <None Include="Assets\TheLabRenderer\Shaders\vr_skybox.shader" />
@@ -260,10 +168,8 @@
      <None Include="Assets\Shaders\ClipShader2.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_Overlay.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
-     <None Include="Assets\OVR\Moonlight\Shaders\Unlit Crosshair.shader" />
      <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAlpha.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfField34.shader" />
-     <None Include="Assets\OVR\Moonlight\Resources\Unlit Transparent Color.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SSAOShader.shader" />
      <None Include="Assets\Standard Assets\ParticleSystems\ParticleSystemsGuidelines.txt" />
@@ -281,7 +187,6 @@
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Luminance.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
-     <None Include="Assets\_Test\UnityTestTools\changelog.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionSelective.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\Bokeh34.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlurDX11.shader" />
@@ -312,7 +217,6 @@
      <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
      <None Include="Assets\TheLabRenderer\Resources\vr_shadow_vis.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_SphericalProjection.shader" />
-     <None Include="Assets\Cardboard\Resources\UI\CardboardReticleShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Tonemapper.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_AlphaOut.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BrightPassFilter.shader" />
@@ -324,14 +228,12 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\EdgeDetectNormals.shader" />
      <None Include="Assets\SteamVR\readme.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\PrepareSunShaftsBlur.shader" />
-     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\Blend.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_ColorOut.shader" />
      <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
-     <None Include="Assets\Cardboard\Resources\SolidColor.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />
      <None Include="Assets\Shaders\GlowingCollision.shader" />
@@ -345,12 +247,6 @@
  </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>C:/Program Files/Unity_5_4_2/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
- </Reference>
- <Reference Include="Mono.Cecil">
- <HintPath>C:/Users/VR/Desktop/NetworkedVR-master/LockheedVR2/Assets/_Test/UnityTestTools/IntegrationTestsFramework/Libs/Mono.Cecil.dll</HintPath>
- </Reference>
- <Reference Include="Mono.Cecil.Mdb">
- <HintPath>C:/Users/VR/Desktop/NetworkedVR-master/LockheedVR2/Assets/_Test/UnityTestTools/IntegrationTestsFramework/Libs/Mono.Cecil.Mdb.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
