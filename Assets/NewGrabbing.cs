@@ -26,12 +26,15 @@ public class NewGrabbing : ITool {
 	public state grabbingState = state.idle;
 	private Transform grabbedObjParent;
 
-
+	private GameObject grabSphere;
 
 
 	private float dist;
 	bool ObjectUsedGrav = false; 
 
+
+	Vector3 lastObjectLocation;
+	Quaternion lastRotation;
 
 	NewGrabbing otherGrabber;
 
@@ -42,7 +45,7 @@ public class NewGrabbing : ITool {
 				break;
 			}
 		}
-
+		grabSphere = controllerInit.gameObject.transform.Find("GrabSphere").gameObject;
 		}
 
 
@@ -170,9 +173,12 @@ public class NewGrabbing : ITool {
 
 	IEnumerator snapCoroutine()
 	{
-		Debug.Log("COOOR");
+
 		while ((grabbingState == state.pickedUp))
-		{
+		{ lastObjectLocation = collidedObject.transform.position;
+			lastRotation = collidedObject.transform.rotation;
+
+
 			if (collidedObject.GetComponent<SnapBack>())
 			{
 				if (collidedObject.GetComponent<SnapBack>().objectCopy)
@@ -193,7 +199,7 @@ public class NewGrabbing : ITool {
 
 		yield return null;
 
-		print("MyCoroutine is now finished.");
+	//	print("MyCoroutine is now finished.");
 	}
 
 
@@ -208,6 +214,16 @@ public class NewGrabbing : ITool {
 		grabbedObjParent = obj.transform.parent;
 
 		obj.transform.SetParent(controllerInit.transform);
+		GrabTool gTool = obj.GetComponent<GrabTool> ();
+		if (gTool) {
+
+			obj.transform.rotation = grabSphere.transform.rotation;
+
+			obj.transform.position = (grabSphere.transform.position - gTool.transform.rotation * gTool.getGrabPoint());
+			//obj.transform.LookAt (gTool.getLookAtPoint());
+
+		}
+
 		grabbingState = state.pickedUp;
 	}
 
@@ -220,8 +236,30 @@ public class NewGrabbing : ITool {
 		if (ObjectUsedGrav) {
 			collidedObject.GetComponent<Rigidbody> ().useGravity = true;
 			collidedObject.GetComponent<Rigidbody> ().isKinematic = false;
+
+			StartCoroutine (throwObject (collidedObject, (collidedObject.transform.position - lastObjectLocation) / Time.deltaTime));
+			//collidedObject.GetComponent<Rigidbody> ().AddForce ((collidedObject.transform.position - lastObjectLocation)/Time.deltaTime);
+		
 		
 		}
+	}
+
+	IEnumerator throwObject(GameObject obj, Vector3 direction)
+	{yield return 0;
+		obj.GetComponent<Rigidbody> ().AddForce (60* (obj.transform.position - lastObjectLocation)/Time.deltaTime);
+
+
+	
+		Quaternion quat10;
+
+		quat10=obj.transform.rotation*Quaternion.Inverse(lastRotation);
+		quat10.x /= (Time.deltaTime *75 );
+		quat10.y /= (Time.deltaTime * 75);
+		quat10.z /= (Time.deltaTime *75);
+	
+		obj.GetComponent<Rigidbody>().AddTorque(quat10.x,quat10.y,quat10.z,ForceMode.Impulse);
+
+	
 	}
 
 

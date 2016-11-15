@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\GrabTool.cs" />
      <Compile Include="Assets\IKAssets\Scripts\IKControl.cs" />
      <Compile Include="Assets\ITool.cs" />
      <Compile Include="Assets\ImprovedController.cs" />
