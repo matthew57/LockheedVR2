@@ -118,8 +118,10 @@
      <Compile Include="Assets\TheLabRenderer\Scripts\ValvePhotogrammetryGlobalSettings.cs" />
      <Compile Include="Assets\TheLabRenderer\Scripts\ValveRealtimeLight.cs" />
      <Compile Include="Assets\TheLabRenderer\Scripts\openvr_api.cs" />
+     <Compile Include="Assets\ToolDisplayer.cs" />
      <Compile Include="Assets\VRArcTeleporter\Scripts\ArcTeleporter.cs" />
      <Compile Include="Assets\WarehouseKit\WarehouseKit\Scripts\SimpleDoorTrigger.cs" />
+     <Compile Include="Assets\measureInfo.cs" />
      <Compile Include="Assets\newArcTeleporter.cs" />
      <Compile Include="Assets\newLaserPointer.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />

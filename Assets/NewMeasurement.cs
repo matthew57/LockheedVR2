@@ -11,7 +11,7 @@ public class NewMeasurement : ITool {
 
 	public GameObject measurementPrefab;
 	private GameObject measurement;
-	private List<GameObject> allMeasurements = new List<GameObject> ();
+	private List<measureInfo> allMeasurements = new List<measureInfo> ();
 	private GameObject startsphere;
 	private GameObject endsphere;
 	private GameObject measureLine;
@@ -26,89 +26,131 @@ public class NewMeasurement : ITool {
 	TextMesh textb;
 	private GameObject distancebox;
 
+	private measureInfo previousMeasure;
+	private measureInfo closestMeasure;
+
 	public enum state { idle, start, end };
 	public state measureState = state.idle;
 
 
+	void Update()
+	{
 
+		if (subscribed && allMeasurements.Count > 0 && measureState == state.idle) {
+			previousMeasure = closestMeasure;
+			closestMeasure = getClosest ();
+
+			if (previousMeasure && previousMeasure != closestMeasure) {
+
+				previousMeasure.myLine.material = previousMeasure.yellowShade;//.SetColors (Color.yellow, Color.yellow);
+				closestMeasure.myLine.material = closestMeasure.greebShade;//.SetColors (Color.green, Color.green);
+			}
+
+
+		}
+
+	}
 
 
 
 	public override bool TriggerClick(ClickedEventArgs e){
-		Debug.Log ("Measurement pressed");
 
 		if (measureState == state.idle)
-		{
+		{	
+			if (closestMeasure) {
+				closestMeasure.myLine.material = closestMeasure.yellowShade;
+			}
 			measureState = state.start;
 			measurement = Instantiate(measurementPrefab);
-			allMeasurements.Add (measurement);
-			foreach (var child in measurement.GetComponentsInChildren<Transform>())
-			{
-				switch (child.gameObject.name)
-				{
-				case ("StartSphere"):
-					startsphere = child.gameObject;                       
-					break;
-				case ("EndSphere"):
-					endsphere = child.gameObject;
-					child.GetComponent<MeshRenderer>().enabled = false;
-					break;
-				case ("MeasureLine"):
-					measureLine = child.gameObject;
-					break;
-				case ("DistanceBox"):
-					distancebox = child.gameObject;
-					texta = distancebox.GetComponent("TextMesh") as TextMesh;
-					break;
-				case ("ShadowBox"):
-					distancebox = child.gameObject;
-					textb = distancebox.GetComponent("TextMesh") as TextMesh;
-					break;
-				default:
-					break;
-				}
-			}
-			StartCoroutine("measureCoroutine" , false);     
+			allMeasurements.Add (measurement.GetComponent<measureInfo>());
+			setSpheres ();
+			StartCoroutine(measureCoroutine( false, false));     
 		}
 		else if (measureState == state.start)
 		{
-			measureState = state.end;
-
-			endsphere.GetComponent<MeshRenderer>().enabled = true;
-			endsphere.transform.position = grabSphere.transform.position;
-
-			measureLine.GetComponent<LineRenderer>().SetPosition(1, endsphere.transform.position);
-
-			distancebox.transform.position = ((startsphere.transform.position + endsphere.transform.position) / 2);
-			dist = Vector3.Distance(startsphere.transform.position, endsphere.transform.position);
-			dist = dist * 39.3701f;
-			dist_string = dist.ToString("0.00");
-			texta.text = "Dist: " + dist_string + " inches";
-			textb.text = "Dist: " + dist_string + " inches";
-			measureState = state.idle;
+			finalCLick (false);
 		
 		}
 		else if (measureState == state.end)
 		{
-			//Destroy(measurement);
 			measureState = state.idle;
 		}
 		return true;
 
 	}
 	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-	public override bool MenuClick (ClickedEventArgs e){return false;}
+
+
+
+	//Rearrange existing measurement
+	public override bool MenuClick (ClickedEventArgs e){
+
+		if (measureState == state.idle)
+		{	
+			if (closestMeasure) {
+				closestMeasure.myLine.material = closestMeasure.yellowShade;
+			}
+			measureState = state.start;
+			measurement = getClosest ().gameObject;
+			if (!measurement) {
+				return false;}
+			
+			setSpheres ();
+			if (Vector3.Distance (grabSphere.transform.position, endsphere.transform.position) > Vector3.Distance (grabSphere.transform.position, startsphere.transform.position)) {
+				GameObject tempStart = startsphere;
+
+				startsphere = endsphere;
+				startsphere.name = "EndSphere";
+
+				endsphere = tempStart;
+				endsphere.name = "StartSphere";
+			
+
+			} else {
+	
+				endsphere.transform.position = startsphere.transform.position;
+			}
+
+			StartCoroutine (measureCoroutine (false,true));  
+		}
+		else if (measureState == state.start)
+		{
+			finalCLick (false);
+
+		}
+		else if (measureState == state.end)
+		{
+
+			measureState = state.idle;
+		}
+		return true;
+
+
+
+		return false;}
+	
 	public override bool MenuUnclick (ClickedEventArgs e){return false;}
+
+
 	public override bool PadClick (ClickedEventArgs e){
 
 
-		if (allMeasurements.Count > 0) {
-			GameObject temp = allMeasurements [0];
-			allMeasurements.Remove (temp);
-			Destroy (temp);
+		measureInfo bestObj = getClosest ();
+
+		if (bestObj) {
+		
+			allMeasurements.Remove (bestObj);
+				Destroy (bestObj.gameObject);
 		}
+
 		return true;
 	}
+
+
+
+
+
+
 	public override bool PadUnclick (ClickedEventArgs e){return false;}
 
 
@@ -120,56 +162,76 @@ public class NewMeasurement : ITool {
 		{
 			measureState = state.start;
 			measurement = Instantiate(measurementPrefab);
-			allMeasurements.Add (measurement);
-			foreach (var child in measurement.GetComponentsInChildren<Transform>())
-			{
-				switch (child.gameObject.name)
-				{
-				case ("StartSphere"):
-					startsphere = child.gameObject;                       
-					break;
-				case ("EndSphere"):
-					endsphere = child.gameObject;
-					child.GetComponent<MeshRenderer>().enabled = false;
-					break;
-				case ("MeasureLine"):
-					measureLine = child.gameObject;
-					break;
-				case ("DistanceBox"):
-					distancebox = child.gameObject;
-					texta = distancebox.GetComponent("TextMesh") as TextMesh;
-					break;
-				case ("ShadowBox"):
-					distancebox = child.gameObject;
-					textb = distancebox.GetComponent("TextMesh") as TextMesh;
-					break;
-				default:
-					break;
-				}
-			}
-			StartCoroutine("measureCoroutine",true);     
+			allMeasurements.Add (measurement.GetComponent<measureInfo>());
+			setSpheres ();
+
+
+
+			StartCoroutine (measureCoroutine (true, false));  
 		}
 		else if (measureState == state.start)
 		{
-			measureState = state.end;
-
-			endsphere.GetComponent<MeshRenderer>().enabled = true;
-
-			endsphere.transform.position =snapToEdge (grabSphere.transform.position);
-
-			measureLine.GetComponent<LineRenderer>().SetPosition(1, endsphere.transform.position);
-
-			distancebox.transform.position = ((startsphere.transform.position + endsphere.transform.position) / 2);
-			dist = Vector3.Distance(startsphere.transform.position, endsphere.transform.position);
-			dist = dist * 39.3701f;
-			dist_string = dist.ToString("0.00");
-			texta.text = "Dist: " + dist_string + " inches";
-			textb.text = "Dist: " + dist_string + " inches";
-			measureState = state.idle;
+			finalCLick (true);
 
 		}
 
 		return true;
+	}
+
+
+	public void setSpheres()
+	{
+	
+		foreach (var child in measurement.GetComponentsInChildren<Transform>())
+		{
+			switch (child.gameObject.name)
+			{
+			case ("StartSphere"):
+				startsphere = child.gameObject;                       
+				break;
+			case ("EndSphere"):
+				endsphere = child.gameObject;
+				child.GetComponent<MeshRenderer>().enabled = true;
+				break;
+			case ("MeasureLine"):
+				measureLine = child.gameObject;
+				break;
+			case ("DistanceBox"):
+				distancebox = child.gameObject;
+				texta = distancebox.GetComponent("TextMesh") as TextMesh;
+				break;
+			case ("ShadowBox"):
+				distancebox = child.gameObject;
+				textb = distancebox.GetComponent("TextMesh") as TextMesh;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	public void finalCLick (bool snapTo){
+		measureState = state.end;
+		closestMeasure = endsphere.GetComponentInParent<measureInfo> ();
+		closestMeasure.myLine.material = closestMeasure.greebShade;
+		endsphere.GetComponent<MeshRenderer>().enabled = true;
+		closestMeasure = null;
+		if (snapTo) {
+			endsphere.transform.position = snapToEdge (grabSphere.transform.position);
+		} else {
+			endsphere.transform.position = grabSphere.transform.position;
+		}
+
+		measureLine.GetComponent<LineRenderer>().SetPosition(1, endsphere.transform.position);
+
+		distancebox.transform.position = ((startsphere.transform.position + endsphere.transform.position) / 2);
+		dist = Vector3.Distance(startsphere.transform.position, endsphere.transform.position);
+		dist = dist * 39.3701f;
+		dist_string = dist.ToString("0.00");
+		texta.text = "Dist: " + dist_string + " inches";
+		textb.text = "Dist: " + dist_string + " inches";
+		measureState = state.idle;
+
 	}
 
 	public override bool UnGrip(ClickedEventArgs e){return false;}
@@ -184,9 +246,6 @@ public class NewMeasurement : ITool {
 		if (measurement)
 		{
 			measureState = state.idle;
-			//foreach (GameObject obj in allMeasurements) {
-				//Destroy (obj);
-			//}
 		}
 
 	}
@@ -202,19 +261,26 @@ public class NewMeasurement : ITool {
 	}
 
 
-	IEnumerator measureCoroutine(bool snap)
-	{if (!snap) {
-			startsphere.transform.position = grabSphere.transform.position;
+	IEnumerator measureCoroutine(bool snap, bool Rearrange)
+	{
+		if (Rearrange) {
+
+		
 		} else {
-			startsphere.transform.position = snapToEdge (grabSphere.transform.position);
+			if (!snap) {
+				startsphere.transform.position = grabSphere.transform.position;
+			} else {
+				startsphere.transform.position = snapToEdge (grabSphere.transform.position);
+			}
 		}
+		LineRenderer myLine = measureLine.GetComponent<LineRenderer> ();
 		while (measureState != state.idle)
 		{
 			if (measureState == state.start)
 			{
 
-				measureLine.GetComponent<LineRenderer>().SetPosition(0, startsphere.transform.position);
-				measureLine.GetComponent<LineRenderer>().SetPosition(1, grabSphere.transform.position);
+				myLine.SetPosition(0, startsphere.transform.position);
+				myLine.SetPosition(1, grabSphere.transform.position);
 
 				distancebox.transform.position = ((startsphere.transform.position + grabSphere.transform.position) / 2);
 				distancebox.transform.LookAt(camera_eyes.transform.position);
@@ -256,7 +322,7 @@ public class NewMeasurement : ITool {
 			RaycastHit hitInfo = new RaycastHit ();
 			if (col.GetComponent<Collider> ().Raycast(ray, out hitInfo, 1000000)) {
 			
-				Debug.Log ("Hit it !");
+
 				tempPoint = hitInfo.point;
 
 			}
@@ -282,6 +348,45 @@ public class NewMeasurement : ITool {
 
 	}
 
+
+
+	public measureInfo getClosest()
+	{
+		float bestDistance = 100000;
+		measureInfo bestObj = null;
+
+		foreach (measureInfo obj in allMeasurements) {
+
+			float tempDist = distanceToLine (obj.startSphere.transform.position, obj.endSphere.transform.position, grabSphere.transform.position);// = Vector3.Distance (obj.startSphere.transform.position, grabSphere.transform.position);
+			if (tempDist < bestDistance) {
+				bestObj = obj;
+				bestDistance = tempDist;
+
+			}
+
+		}
+		return bestObj;
+	}
+
+
+	public float distanceToLine( Vector3 vA, Vector3 vB, Vector3 vPoint)
+	{
+		var vVector1 = vPoint - vA;
+		var vVector2 = (vB - vA).normalized;
+
+		var d = Vector3.Distance(vA, vB);
+		var t = Vector3.Dot(vVector2, vVector1);
+
+		if (t <= 0)
+			Vector3.Distance (vA, vPoint);
+
+		if (t >= d)
+			Vector3.Distance (vB, vPoint);
+
+		var vVector3 = vVector2 * t;
+
+		return  Vector3.Distance ((vA + vVector3), vPoint);
+	}
 
 
 }

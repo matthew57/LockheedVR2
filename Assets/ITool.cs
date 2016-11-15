@@ -4,13 +4,14 @@ using System.Collections;
 public abstract class  ITool : MonoBehaviour {
 
 
-	public string toolText;
+	public ToolDisplayer.ToolDisplayInfo myInfo;
 
 
 	public enum controller { Left, Right, Both };
 	[Tooltip("Select This if this tool can be used at the same time as other tools (menu, laser pointer, arc teleporter...)")]
 	public bool AuxiliaryTool;
 	public controller assignedController;
+	protected bool subscribed = false;
 
 	protected ImprovedController controllerInit;
 
@@ -65,12 +66,20 @@ public abstract class  ITool : MonoBehaviour {
 	public void sub()
 	{
 
-		Debug.Log ("Subscribing " + this.gameObject + "   " + this);
+
 		if (!AuxiliaryTool) {
 			controllerInit.setMainTool (this);
+
 		} else {
 			controllerInit.subScribeTool (this);
 		}
+		subscribed = true;
+	}
+
+	public void unsub()
+	{
+
+		subscribed = false;
 	}
 
 	void findController()

@@ -64,10 +64,13 @@ public class NewGrabbing : ITool {
 					//CmdCreateCollidedObjCopy(collidedObject.GetComponent<NetworkIdentity>());
 				}
 			}
-			if (!otherGrabber.currentlyGrabbing (collidedObject)) {
+			if (!!otherGrabber.currentlyGrabbing (collidedObject)) {
+				otherGrabber.releaseObj ();
+			
+			}
 				pickUp (collidedObject);
 				StartCoroutine ("snapCoroutine");
-			}
+
 		}
 
 		return true;
@@ -77,7 +80,7 @@ public class NewGrabbing : ITool {
 	{
 		if (grabbingState == state.pickedUp)
 		{
-			releaseObj(collidedObject);
+			releaseObj();
 
 		}
 		return true;
@@ -98,23 +101,22 @@ public class NewGrabbing : ITool {
 		}
 
 		if (grabbingState == state.colliding) {
-			if (collidedObject.GetComponent<SnapBack> ()) {
-				if (!collidedObject.GetComponent<SnapBack> ().objectCopy) {
-					Debug.Log ("creating copy obj");
 
-					//CmdCreateCollidedObjCopy(collidedObject.GetComponent<NetworkIdentity>());
-				}
+			if (otherGrabber.currentlyGrabbing (collidedObject)) {
+				otherGrabber.releaseObj ();
 			}
-			if (!otherGrabber.currentlyGrabbing (collidedObject)) {
 				pickUp (collidedObject);
 				StartCoroutine ("snapCoroutine");
-			}
+
+				return true;
+
 		} else if (grabbingState == state.pickedUp) {
-			releaseObj(collidedObject);
+			releaseObj();
+			return true;
 		
 		}
 
-		return true;
+	
 
 		return false;}
 
@@ -209,15 +211,15 @@ public class NewGrabbing : ITool {
 		grabbingState = state.pickedUp;
 	}
 
-	private void releaseObj(GameObject Obj)
+	public void releaseObj()
 	{
 		// Debug.Log("release");
-		Obj.transform.parent = grabbedObjParent;
+		collidedObject.transform.parent = grabbedObjParent;
 		grabbingState = state.colliding;
 
 		if (ObjectUsedGrav) {
-			Obj.GetComponent<Rigidbody> ().useGravity = true;
-			Obj.GetComponent<Rigidbody> ().isKinematic = false;
+			collidedObject.GetComponent<Rigidbody> ().useGravity = true;
+			collidedObject.GetComponent<Rigidbody> ().isKinematic = false;
 		
 		}
 	}

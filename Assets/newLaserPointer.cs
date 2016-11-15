@@ -22,18 +22,21 @@ public class newLaserPointer : ITool {
 
 	public override bool MenuClick (ClickedEventArgs e) {
 
-	
-		laserOn = !laserOn;
-
-		GetComponentInChildren<VR_LaserPointer>().holder.gameObject.SetActive(laserOn);
-		return true;
+		return false;
 	}
 
 
 	public override bool MenuUnclick (ClickedEventArgs e){return false;}
 	public override bool PadClick (ClickedEventArgs e){return false;}
 	public override bool PadUnclick (ClickedEventArgs e){return false;}
-	public override bool Grip (ClickedEventArgs e){return false;}
+
+
+	public override bool Grip (ClickedEventArgs e){	
+		laserOn = !laserOn;
+		GetComponentInChildren<VR_LaserPointer>().holder.gameObject.SetActive(laserOn);
+		return true;}
+
+
 	public override bool UnGrip(ClickedEventArgs e){return false;}
 	public override bool PadTouched(ClickedEventArgs e){return false;}
 	public override bool PadUntouched(ClickedEventArgs e){return false;}

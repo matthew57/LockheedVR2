@@ -12,7 +12,6 @@ public class ImprovedController : MonoBehaviour {
 
 	// THE TOOL IN THE FIRST INDEX IS THE MAIN SELECTABLE TOOL THAT CAN BE SWAPPED OUT.
 	public List<ITool> myTools;
-	Text toolText;
 
 	public void setMainTool(ITool nextTool)
 	{
@@ -23,14 +22,15 @@ public class ImprovedController : MonoBehaviour {
 		} else {
 
 			if (myTools [0]) {
+				myTools [0].unsub ();
 				myTools [0].stopUsing ();
 			}
 
 			myTools [0] = nextTool;
 			myTools [0].startUsing ();
 		}
+		GameObject.FindObjectOfType<ToolDisplayer> ().loadDescription (myTools [0].myInfo);
 
-		toolText.text = myTools [0].toolText;
 
 	}
 
@@ -74,7 +74,7 @@ public class ImprovedController : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
-		toolText = GameObject.Find ("ToolText").GetComponent<Text> ();
+		
 		if (this.GetComponent<SteamVR_TrackedObject>() == null)
 		{
 			gameObject.AddComponent<SteamVR_TrackedObject>();

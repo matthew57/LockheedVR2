@@ -13,7 +13,7 @@ public class NewMenuSelector : ITool {
 	public GameObject menu;
 
 
-	Text ToolDescript;
+	Canvas ToolDescript;
 
 	[Serializable]
 	public class menuButton
@@ -27,12 +27,12 @@ public class NewMenuSelector : ITool {
 
 	public enum state { on, off };
 	public state menuState = state.off;
-	private int currentMenuIndex = 0;
+	private int currentMenuIndex = 1;
 
 
 
 	void Start()
-	{ToolDescript = GameObject.Find ("ToolText").GetComponent<Text>();
+	{ToolDescript = GameObject.Find ("ToolText").GetComponent<Canvas>();
 		AuxiliaryTool = true;
 	
 
@@ -51,6 +51,14 @@ public class NewMenuSelector : ITool {
 
 		menu = GameObject.Find("Menu");
 		menu.SetActive(false);
+
+		//SUbScribe the default Tools
+		menuButtons[currentMenuIndex].myButton.GetComponent<Image> ().color = new Color (0, 255, 0, .6f);
+		menuButtons[currentMenuIndex].myButton.transform.GetChild (1).GetComponent<Text> ().enabled = true;
+		foreach (ITool it in menuButtons[currentMenuIndex].myTools) {
+			it.sub ();
+		}
+
 
 
 	}
