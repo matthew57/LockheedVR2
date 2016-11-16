@@ -94,13 +94,13 @@ public class RecordingSystem : ITool{
 
 	protected void startRecordingIn()//object sender, ClickedEventArgs e)
 	{
-		StartCoroutine (delayStartRecording (3));
+		StartCoroutine (delayStartRecording ());
 			
 	}
 
 
 
-	IEnumerator delayStartRecording(float timeBeforeStart)
+	IEnumerator delayStartRecording()
 	{countDown.color = Color.green;
 		countDown.enabled = true;
 		countDown.fontSize = 20;
@@ -116,6 +116,7 @@ public class RecordingSystem : ITool{
 		countDown.fontSize = 12;
 		countDown.text = "Recording";
 		countDown.color = Color.red;
+		GetComponent<Recorder> ().BeginRecording ();
 
 
 
@@ -130,7 +131,7 @@ public class RecordingSystem : ITool{
 
 	protected void stopRecording()
 	{
-
+		GetComponent<Recorder> ().EndRecord ();
 		countDown.enabled = false;
 		isRecording = false;
 		//UnSubScribeControllers ();
@@ -139,43 +140,22 @@ public class RecordingSystem : ITool{
 
 	void Update()
 	{
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			
-			isRecording = !isRecording;
-			if (isRecording) {
-				startRecordingIn ();
+ 
 
-			} else {
-				stopRecording ();
-			}
-		
-		}
-
-		if (Input.GetKeyDown (KeyCode.G)) {
-
-			saveToFile ();
-
-		}
-
-		if (Input.GetKeyDown (KeyCode.R)) {
-			SavedData sd = loadFromFile ();
-			GameObject.FindObjectOfType<PlayBackSystem> ().play (sd);
-
-		}
+	
 
 
-		if (!isRecording && Input.GetKeyDown (KeyCode.A)) {
-			GameObject.FindObjectOfType<PlayBackSystem> ().play (myData);
-		
-		}
+
 		if (isRecording) {
 			recordingTime += Time.deltaTime;
 
 
+		
 
 			if (Time.time > nextRecordingFrame) {
 
 
+				countDown.text = "Recording: " + TimeConverter.getClockTime(recordingTime);
 				nextRecordingFrame = Time.time + frameLength;
 				RecordFrame ();
 			}

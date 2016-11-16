@@ -55,7 +55,9 @@
      <Compile Include="Assets\NewMeasurement.cs" />
      <Compile Include="Assets\NewMenuSelector.cs" />
      <Compile Include="Assets\PlayBackSystem.cs" />
+     <Compile Include="Assets\Recorder.cs" />
      <Compile Include="Assets\RecordingSystem.cs" />
+     <Compile Include="Assets\SavWav.cs" />
      <Compile Include="Assets\Scripts\AssemblyMover.cs" />
      <Compile Include="Assets\Scripts\AxisRotation.cs" />
      <Compile Include="Assets\Scripts\ClippingPlane.cs" />
@@ -119,6 +121,7 @@
      <Compile Include="Assets\TheLabRenderer\Scripts\ValvePhotogrammetryGlobalSettings.cs" />
      <Compile Include="Assets\TheLabRenderer\Scripts\ValveRealtimeLight.cs" />
      <Compile Include="Assets\TheLabRenderer\Scripts\openvr_api.cs" />
+     <Compile Include="Assets\TimeConverter.cs" />
      <Compile Include="Assets\ToolDisplayer.cs" />
      <Compile Include="Assets\VRArcTeleporter\Scripts\ArcTeleporter.cs" />
      <Compile Include="Assets\WarehouseKit\WarehouseKit\Scripts\SimpleDoorTrigger.cs" />

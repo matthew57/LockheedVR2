@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 //CREATED BY MATTHEW JOHNSON ON 10-29-16: PROTOTYPE SYSTEM FOR PLAYING BACK STUFF FROM RECORDING SYSTEM
 
@@ -22,6 +23,8 @@ public class PlayBackSystem :Tools {
 	RecordingSystem.movementFrame previousFrame;
 	RecordingSystem.movementFrame nextFrame;
 
+
+	Text countDown;
 	float frameTime;
 
 	PlayBackState currentState;
@@ -35,8 +38,9 @@ public class PlayBackSystem :Tools {
 
 	// Use this for initialization
 	void Start () {
-		frameTime = 1 / 30;// GameObject.FindObjectOfType<RecordingSystem> ().frameRate;
+		frameTime = 1 / 30;//GameObject.FindObjectOfType<RecordingSystem> ().frameRate;
 		initialFastMultiplier = fastMultiplier;
+		countDown = GameObject.Find ("SecondToolText").GetComponent<Text> ();
 	
 	}
 	
@@ -56,6 +60,9 @@ public class PlayBackSystem :Tools {
 
 
 			currentState.update (this);
+
+			countDown.text = "" + TimeConverter.getClockTime(currentPlaybackTime);
+
 		}
 	}
 
@@ -117,11 +124,17 @@ public class PlayBackSystem :Tools {
 	public void play(RecordingSystem.SavedData sData)
 	{
 		currentState = new RegularPlayState ();
+
+		GameObject.FindObjectOfType<Recorder> ().Play ();
 		savedData = sData;
 		Debug.Log ("PLAYING");
 		previousFrame = savedData.savedFrames [0];
 		nextFrame = savedData.savedFrames[1];
 		currentPlaybackTime = savedData.savedFrames [0].RT;
+
+		countDown.color = Color.green;
+		countDown.enabled = true;
+
 
 	}
 

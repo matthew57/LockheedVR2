@@ -16,6 +16,10 @@ public class IKControl : MonoBehaviour {
 	public GameObject rightHand;
 	public GameObject cameraHead;
 
+
+	Quaternion rRotate;
+	Quaternion lRotate;
+
 	[Tooltip("this number defines how high off the body the head is put based on the head's rotation")]
 	public float bodyOffsetAmount = .6f;
 	void Start () 
@@ -58,17 +62,21 @@ public class IKControl : MonoBehaviour {
 				// Set the right hand target position and rotation, if one has been assigned
 				if(rightHand != null) {
 					animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
-					animator.SetIKRotationWeight(AvatarIKGoal.RightHand,1);  
-					animator.SetIKPosition(AvatarIKGoal.RightHand,rightHand.transform.position);
-					animator.SetIKRotation(AvatarIKGoal.RightHand,rightHand.transform.rotation);
+					animator.SetIKRotationWeight(AvatarIKGoal.RightHand,.8f);  
+					animator.SetIKPosition(AvatarIKGoal.RightHand,rightHand.transform.position - rightHand.transform.rotation * (new Vector3 (0,-.04f,.1f)));
+					rRotate = rightHand.transform.rotation;
+					rRotate *= Quaternion.Euler (rightHand.transform.forward * 65);
+					animator.SetIKRotation(AvatarIKGoal.RightHand,rRotate);
 				}     
 
 				// Set the right hand target position and rotation, if one has been assigned
 				if(leftHand != null) {
 					animator.SetIKPositionWeight(AvatarIKGoal.LeftHand,1);
-					animator.SetIKRotationWeight(AvatarIKGoal.LeftHand,1);  
-					animator.SetIKPosition(AvatarIKGoal.LeftHand,leftHand.transform.position);
-					animator.SetIKRotation(AvatarIKGoal.LeftHand,leftHand.transform.rotation);
+					animator.SetIKRotationWeight(AvatarIKGoal.LeftHand,.8f);  
+					animator.SetIKPosition(AvatarIKGoal.LeftHand,leftHand.transform.position - leftHand.transform.rotation * (new Vector3 (0,-.04f,.1f)));
+					lRotate = leftHand.transform.rotation;
+					//lRotate *= Quaternion.Euler (leftHand.transform.right * 65);
+					animator.SetIKRotation(AvatarIKGoal.LeftHand,lRotate);
 				}        
 
 

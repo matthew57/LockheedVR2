@@ -219,8 +219,10 @@ public class NewGrabbing : ITool {
 
 			obj.transform.rotation = grabSphere.transform.rotation;
 
+			obj.transform.Rotate (new Vector3 (gTool.handleAngle, 0, 0));
+
 			obj.transform.position = (grabSphere.transform.position - gTool.transform.rotation * gTool.getGrabPoint());
-			//obj.transform.LookAt (gTool.getLookAtPoint());
+
 
 		}
 
@@ -246,7 +248,7 @@ public class NewGrabbing : ITool {
 
 	IEnumerator throwObject(GameObject obj, Vector3 direction)
 	{yield return 0;
-		obj.GetComponent<Rigidbody> ().AddForce (60* (obj.transform.position - lastObjectLocation)/Time.deltaTime);
+		obj.GetComponent<Rigidbody> ().AddForce (70* (obj.transform.position - lastObjectLocation)/Time.deltaTime);
 
 
 	
