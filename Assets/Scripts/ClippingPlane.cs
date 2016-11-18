@@ -10,7 +10,7 @@ public class ClippingPlane : NetworkBehaviour
     private float b = 0.0f;
     private float c = 0.0f;
     private float d = 0.0f;
-    private float clip = 1.0f;
+  //  private float clip = 1.0f;
 
     private bool rotatePlane = false;
     private bool resetPlane = false;

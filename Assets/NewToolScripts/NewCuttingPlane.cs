@@ -1,6 +1,6 @@
 ﻿// ===================== DOCUMENTATION ======================= //
-/* Drag this script onto either one of the controllers. Drag the 
- * cutting plane game object onto the Cutting Plane slot on the 
+/* Drag this script onto either one of the controllers.
+ * Drag the cutting plane game object onto the Cutting Plane slot on the 
  * script. The higher the cutting speed reduction, the slower the 
  * plane will pan when you click up or down on the touchpad of the controller. 
  * The assigned button will turn on/off the cutting plane, while the touchpad 
@@ -30,96 +30,54 @@ public class NewCuttingPlane : ITool {
 	private int set = 0;
 
 
-	private void onOffClicked(object sender, ClickedEventArgs e)
-	{
-		if (cPlaneState == state.off)
-		{
-			TurnOnCPlane();
-		}
-		else
-		{
-			turnOffCPlane();
-		}
-	}
-
 
 	IEnumerator panCoroutine()
 	{
-		Debug.Log("COOOR");
+	//	Debug.Log("COOOR");
 		while (cPlaneState != state.idle && cPlaneState != state.off)
 		{
 			if (cPlaneState == state.panForward)
 			{
-				Debug.Log("MOVING");
-				PanPlaneForward();
+				//Debug.Log("MOVING");
+				cuttingPlane.transform.position = cuttingPlane.transform.position + (cuttingPlane.gameObject.transform.up) / 150;
 			}
 			else if (cPlaneState == state.panBackward)
 			{
-				Debug.Log("MOVING");
-				PanPlaneBackward();
+				//Debug.Log("MOVING");
+				cuttingPlane.transform.position = cuttingPlane.transform.position - (cuttingPlane.gameObject.transform.up) / 150;
 			}
 			yield return null;
 		}
 
 		yield return null;
 
-		print("MyCoroutine is now finished.");
+		//print("MyCoroutine is now finished.");
 	}
+		
 
 
+	public override bool TriggerClick(ClickedEventArgs e){return false;}
+	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
+		
+
+	public override bool MenuClick (ClickedEventArgs e){
+	
 
 
-	void turnOffCPlane()
-	{
-
-		cPlaneState = state.off;
-	}
-
-	void TurnOnCPlane()
-	{
-		cPlaneState = state.idle;
-	}
-
-	void PanPlaneForward()
-	{
-		cuttingPlane.transform.position = cuttingPlane.transform.position + (cuttingPlane.gameObject.transform.up) / 200;
-		Debug.Log("MOVING CCCCCCCCCCCC");
-	}
-
-	void PanPlaneBackward()
-	{
-		cuttingPlane.transform.position = cuttingPlane.transform.position - (cuttingPlane.gameObject.transform.up) / 200;
-		Debug.Log("MOVING CCCCCCCCCCC");
-	}
-
-	void FlipPlaneNormal()
-	{
-		cuttingPlane.gameObject.transform.up = cuttingPlane.gameObject.transform.up * -1;
-		cPlaneState = state.idle;
-	}
-
-	void TogglePlaneOriginDir()
-	{
-		if (set == 0)
+		if (cPlaneState == state.off)
 		{
-			cuttingPlane.gameObject.transform.up = Vector3.up;
-			set++;
-			return;
+			cPlaneState = state.idle;
+			onOffSwitch (true);
 		}
-		if (set == 1)
+		else
 		{
-			cuttingPlane.gameObject.transform.up = Vector3.right;
-			set++;
-			return;
+			onOffSwitch (false);
+			cPlaneState = state.off;
 		}
-		if (set == 2)
-		{
-			cuttingPlane.gameObject.transform.up = Vector3.forward;
-			set = 0;
-			return;
-		}
-		cPlaneState = state.idle;
+		return false;
+	
 	}
+
 
 
 	void onOffSwitch(bool onOff)
@@ -128,17 +86,16 @@ public class NewCuttingPlane : ITool {
 		{
 			cuttingPlane = GameObject.Find("CuttingPlane");
 		}
+
+		cuttingPlane.GetComponent<BoxCollider>().enabled = onOff;
+		cuttingPlane.GetComponent<MeshRenderer>().enabled = onOff;
+
 		if(onOff)
 		{
-			cuttingPlane.GetComponent<BoxCollider>().enabled = true;
-			cuttingPlane.GetComponent<MeshRenderer>().enabled = true;
-
 			Shader.SetGlobalFloat("_clip", 1.0f);
 		}
 		else
 		{
-			cuttingPlane.GetComponent<BoxCollider>().enabled = false;
-			cuttingPlane.GetComponent<MeshRenderer>().enabled = false;
 			Shader.SetGlobalFloat("_clip", 0.0f);
 		}
 
@@ -149,10 +106,7 @@ public class NewCuttingPlane : ITool {
 
 
 
-	public override bool TriggerClick(ClickedEventArgs e){return false;}
-		public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-		public override bool MenuClick (ClickedEventArgs e){return false;}
-			public override bool MenuUnclick (ClickedEventArgs e){return false;}
+	public override bool MenuUnclick (ClickedEventArgs e){return false;}
 
 	public override bool PadClick (ClickedEventArgs e){
 
@@ -175,7 +129,8 @@ public class NewCuttingPlane : ITool {
 		//DPAD LEFT BUTTON SETTINGS - FLIP NORMAL OF CUTTING PLANE/////////////
 		else if (controllerInit.controllerState.rAxis0.x <= -0.5f && controllerInit.controllerState.rAxis0.y >= -0.5f && controllerInit.controllerState.rAxis0.y <= 0.5f)
 		{
-			FlipPlaneNormal();
+			cuttingPlane.gameObject.transform.up = cuttingPlane.gameObject.transform.up * -1;
+			cPlaneState = state.idle;
 		}
 
 		//DPAD RIGHT BUTTON SETTINGS -TOGGLE THROUGH CUTTING PLANE SNAPPED TO ORIGIN PLANES//////////////////
@@ -187,6 +142,30 @@ public class NewCuttingPlane : ITool {
 			return true;
 
 
+	}
+
+
+	void TogglePlaneOriginDir()
+	{
+		if (set == 0)
+		{
+			cuttingPlane.gameObject.transform.up = Vector3.up;
+			set++;
+			return;
+		}
+		if (set == 1)
+		{
+			cuttingPlane.gameObject.transform.up = Vector3.right;
+			set++;
+			return;
+		}
+		if (set == 2)
+		{
+			cuttingPlane.gameObject.transform.up = Vector3.forward;
+			set = 0;
+			return;
+		}
+		cPlaneState = state.idle;
 	}
 
 	public override bool PadUnclick (ClickedEventArgs e){

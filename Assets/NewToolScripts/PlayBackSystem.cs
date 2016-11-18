@@ -27,6 +27,10 @@ public class PlayBackSystem :Tools {
 	Text countDown;
 	float frameTime;
 
+	//THIS is a temprorary hack, implement this better later
+	List<PlayBackInputController> playControllers = new List<PlayBackInputController>();
+
+
 	PlayBackState currentState;
 	//==============================================================================================================
 	// pressing the fastforward/rewind keys [left/right arrows] while already in those states will accelerate how fast time is moving for the play back
@@ -38,7 +42,12 @@ public class PlayBackSystem :Tools {
 
 	// Use this for initialization
 	void Start () {
-		frameTime = 1 / 30;//GameObject.FindObjectOfType<RecordingSystem> ().frameRate;
+
+		foreach (PlayBackInputController pbic in GameObject.FindObjectsOfType<PlayBackInputController>() )
+			{
+				playControllers.Add(pbic);	
+			}
+
 		initialFastMultiplier = fastMultiplier;
 		countDown = GameObject.Find ("SecondToolText").GetComponent<Text> ();
 	
@@ -124,10 +133,10 @@ public class PlayBackSystem :Tools {
 	public void play(RecordingSystem.SavedData sData)
 	{
 		currentState = new RegularPlayState ();
-
+		frameTime = 1 / sData.frameRate;
 		GameObject.FindObjectOfType<Recorder> ().Play ();
 		savedData = sData;
-		Debug.Log ("PLAYING");
+
 		previousFrame = savedData.savedFrames [0];
 		nextFrame = savedData.savedFrames[1];
 		currentPlaybackTime = savedData.savedFrames [0].RT;
@@ -162,7 +171,10 @@ public class PlayBackSystem :Tools {
 				}
 
 				foreach (ClickedEventArgs ea in nextFrame.myC) {
-					Debug.Log ("I clicked " + ea.controllerIndex + "   " + ea.butClicked);
+					foreach (PlayBackInputController pbic in playControllers) {
+					//	Debug.Log ("Caliing actions " + ea.butClicked + "   " + pbic.gameObject);
+						pbic.callButtonAction (ea);
+					}
 				}
 
 			}
@@ -180,6 +192,8 @@ public class PlayBackSystem :Tools {
 					currentState = null;
 					return;
 				}
+
+				//IMPLEMENT UNDO ACTIONS FOR ALL TOOLS!
 
 				foreach (ClickedEventArgs ea in nextFrame.myC) {
 					Debug.Log ("I clicked " + ea.controllerIndex + "   " + ea.butClicked);

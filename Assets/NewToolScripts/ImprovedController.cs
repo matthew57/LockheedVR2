@@ -35,6 +35,8 @@ public class ImprovedController : MonoBehaviour {
 	}
 
 
+	RecordingSystem MyRecorder;
+
 
 
 	public void subScribeTool(ITool theTool)
@@ -94,6 +96,11 @@ public class ImprovedController : MonoBehaviour {
 		}
 	}
 
+
+	public void setRecorder(RecordingSystem RS)
+	{
+		MyRecorder = RS;
+	}
 
 	private void OnTriggerEnter(Collider collider)
 	{	//Debug.Log ("triggering " + collider + "   " + this.gameObject);
@@ -155,10 +162,14 @@ public class ImprovedController : MonoBehaviour {
 
 	public virtual void OnMenuClicked(ClickedEventArgs e)
 	{
-
+		//Debug.Log ("CCCCCCCCalling menu");
 		foreach (ITool IT in myTools) {
+
+			//Debug.Log ("Inside LOOP!");
 			if (IT) {
+				//Debug.Log ("HAS A TOOL " + IT);
 				if (IT.MenuClick(e)) {
+					//Debug.Log ("BREAKING");
 					break;
 				}
 			}
@@ -271,7 +282,7 @@ public class ImprovedController : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update()
+	public virtual void Update()
 	{
 
 		// All of this stuff detected button press detection
@@ -280,7 +291,8 @@ public class ImprovedController : MonoBehaviour {
 		{
 			ulong trigger = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Trigger));
 
-			ClickedEventArgs e;
+			bool buttonPressed = false;
+			ClickedEventArgs e = new ClickedEventArgs ();
 			e.controllerIndex = controllerIndex;
 			e.flags = (uint)controllerState.ulButtonPressed;
 			e.padX = controllerState.rAxis0.x;
@@ -292,6 +304,8 @@ public class ImprovedController : MonoBehaviour {
 				triggerPressed = true;
 				e.butClicked = Tools.button.Trigger;// ******
 				OnTriggerClicked(e);
+				e.offOn = true;
+				buttonPressed = true;
 
 			}
 			else if (trigger == 0L && triggerPressed)
@@ -299,6 +313,8 @@ public class ImprovedController : MonoBehaviour {
 				triggerPressed = false;
 				e.butClicked = Tools.button.Trigger;// ******
 				OnTriggerUnclicked(e);
+				e.offOn = false;
+				buttonPressed = true;
 			}
 
 			ulong grip = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_Grip));
@@ -307,6 +323,8 @@ public class ImprovedController : MonoBehaviour {
 				gripped = true;
 				e.butClicked = Tools.button.Grip;// ******
 				OnGripped(e);
+				e.offOn = true;
+				buttonPressed = true;
 
 			}
 			else if (grip == 0L && gripped)
@@ -314,6 +332,8 @@ public class ImprovedController : MonoBehaviour {
 				gripped = false;
 				e.butClicked = Tools.button.Grip;// ******
 				OnUngripped(e);
+				e.offOn = false;
+				buttonPressed = true;
 			}
 
 			ulong pad = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Touchpad));
@@ -322,12 +342,16 @@ public class ImprovedController : MonoBehaviour {
 				padPressed = true;
 				e.butClicked = Tools.button.Pad; // ******
 				OnPadClicked(e);
+				e.offOn = true;
+				buttonPressed = true;
 			}
 			else if (pad == 0L && padPressed)
 			{
 				padPressed = false;
 				e.butClicked = Tools.button.Pad;// ******
 				OnPadUnclicked(e);
+				e.offOn = false;
+				buttonPressed = true;
 			}
 
 			ulong menu = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_ApplicationMenu));
@@ -336,28 +360,40 @@ public class ImprovedController : MonoBehaviour {
 				menuPressed = true;
 				e.butClicked = Tools.button.Menu; // ******
 				OnMenuClicked(e);
+				e.offOn = true;
+				buttonPressed = true;
 			}
 			else if (menu == 0L && menuPressed)
 			{
 				menuPressed = false;
 				e.butClicked = Tools.button.Menu;// ******
 				OnMenuUnclicked(e);
+				e.offOn = false;
+				buttonPressed = true;
 			}
 
 			pad = controllerState.ulButtonTouched & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Touchpad));
 			if (pad > 0L && !padTouched)
 			{
 				padTouched = true;
-				e.butClicked = Tools.button.Pad; // ******
+				e.butClicked = Tools.button.PadTouch; // ******
 				OnPadTouched(e);
+				e.offOn = true;
+				buttonPressed = true;
 
 			}
 			else if (pad == 0L && padTouched)
 			{
 				padTouched = false;
-				e.butClicked = Tools.button.Pad;// ******
+				e.butClicked = Tools.button.PadTouch;// ******
 				OnPadUntouched(e);
+				e.offOn = false;
+				buttonPressed = true;
 			}
+			if (MyRecorder && buttonPressed) {
+				MyRecorder.recordClick (e);
+			}
+
 		}
 	}
 }

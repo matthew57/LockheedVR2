@@ -21,7 +21,7 @@ public class NewGrabbing : ITool {
  * after you have taken it out.   */
 
 
-	private GameObject collidedObject;
+	public GameObject collidedObject;
 	public enum state { idle, colliding, pickedUp };
 	public state grabbingState = state.idle;
 	private Transform grabbedObjParent;
@@ -51,6 +51,8 @@ public class NewGrabbing : ITool {
 
 	public override bool TriggerClick(ClickedEventArgs e)
 	{
+		Debug.Log ("Trigger has been clicked");
+
 		if (collidedObject == null || collidedObject.tag == "UIObject")
 		{
 			return false;

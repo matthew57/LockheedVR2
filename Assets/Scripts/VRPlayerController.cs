@@ -14,7 +14,7 @@ using UnityEngine.Networking;
 
 public class VRPlayerController : NetworkBehaviour
 {
-    private GameObject cameraRig;
+    //private GameObject cameraRig;
     private Transform eyeC;
     private Transform leftC;
     private Transform rightC;
@@ -26,7 +26,8 @@ public class VRPlayerController : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {      
-        cameraRig = GameObject.Find("[CameraRig]");
+		Debug.Log ("This " + this.gameObject);
+       // cameraRig = GameObject.Find("[CameraRig]");
         eyeC = GameObject.Find("Camera (eye)").transform;
         leftC = GameObject.Find("Controller (left)").transform;
         rightC = GameObject.Find("Controller (right)").transform;

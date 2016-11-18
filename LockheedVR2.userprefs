@@ -1,20 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\NewGrabbing.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\NewToolScripts\ImprovedController.cs">
     <Files>
-      <File FileName="Assets\RecordingSystem.cs" Line="158" Column="38" />
-      <File FileName="Assets\PlayBackSystem.cs" Line="62" Column="31" />
-      <File FileName="Assets\ImprovedController.cs" Line="1" Column="1" />
-      <File FileName="Assets\NewGrabbing.cs" Line="249" Column="52" />
-      <File FileName="Assets\NewMenuSelector.cs" Line="1" Column="1" />
-      <File FileName="Assets\GrabTool.cs" Line="1" Column="1" />
-      <File FileName="Assets\NewMeasurement.cs" Line="1" Column="1" />
-      <File FileName="Assets\SavWav.cs" Line="1" Column="1" />
-      <File FileName="Assets\Recorder.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\ModelManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\IKAssets\Scripts\IKControl.cs" Line="81" Column="5" />
-      <File FileName="Assets\ToolDisplayer.cs" Line="39" Column="1" />
-      <File FileName="Assets\TimeConverter.cs" Line="20" Column="1" />
+      <File FileName="Assets\NewToolScripts\ImprovedController.cs" Line="169" Column="13" />
+      <File FileName="Assets\PlayBackInputController.cs" Line="33" Column="18" />
+      <File FileName="Assets\NewToolScripts\RecordingSystem.cs" Line="145" Column="1" />
+      <File FileName="Assets\NewToolScripts\PlayBackSystem.cs" Line="175" Column="8" />
+      <File FileName="Assets\NewToolScripts\NewMenuSelector.cs" Line="100" Column="22" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

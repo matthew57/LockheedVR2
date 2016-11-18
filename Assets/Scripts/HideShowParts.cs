@@ -7,7 +7,7 @@ using Valve.VR;
 public class HideShowParts : NetworkBehaviour
 {
    
-    private bool viewhide = false;
+    //private bool viewhide = false;
     private GameObject viewobject;
 
   

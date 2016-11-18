@@ -5,7 +5,7 @@ public abstract class  ITool : MonoBehaviour {
 
 
 	public ToolDisplayer.ToolDisplayInfo myInfo;
-
+	public bool playBackDevice;
 
 	public enum controller { Left, Right, Both };
 	[Tooltip("Select This if this tool can be used at the same time as other tools (menu, laser pointer, arc teleporter...)")]
@@ -87,10 +87,19 @@ public abstract class  ITool : MonoBehaviour {
 		switch (assignedController)
 		{
 		case (controller.Left):
-			controllerInit = GameObject.Find("Controller (left)").GetComponent<ImprovedController>();
+			if (!playBackDevice) {
+				controllerInit = GameObject.Find ("Controller (left)").GetComponent<ImprovedController> ();
+			} else {
+				controllerInit = GameObject.Find ("Controller (left)B").GetComponent<PlayBackInputController> ();
+			}
 			break;
 		case (controller.Right):
-			controllerInit = GameObject.Find("Controller (right)").GetComponent<ImprovedController>();
+			if (!playBackDevice) {
+				controllerInit = GameObject.Find ("Controller (right)").GetComponent<ImprovedController> ();
+			}
+			else {
+				controllerInit = GameObject.Find ("Controller (right)B").GetComponent<PlayBackInputController> ();
+			}
 			break;
 		case (controller.Both):
 

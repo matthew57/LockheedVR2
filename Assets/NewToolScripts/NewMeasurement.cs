@@ -124,10 +124,7 @@ public class NewMeasurement : ITool {
 			measureState = state.idle;
 		}
 		return true;
-
-
-
-		return false;}
+	}
 	
 	public override bool MenuUnclick (ClickedEventArgs e){return false;}
 

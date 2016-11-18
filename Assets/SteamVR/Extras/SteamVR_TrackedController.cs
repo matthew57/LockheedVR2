@@ -10,6 +10,7 @@ public struct ClickedEventArgs
     public uint flags;
     public float padX, padY;
 	public Tools.button butClicked;// ******
+	public bool offOn;
 }
 
 public delegate void ClickedEventHandler(object sender, ClickedEventArgs e);
@@ -142,7 +143,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             if (trigger > 0L && !triggerPressed)
             {
                 triggerPressed = true;
-                ClickedEventArgs e;
+				ClickedEventArgs e = new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;
@@ -154,7 +155,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             else if (trigger == 0L && triggerPressed)
             {
                 triggerPressed = false;
-                ClickedEventArgs e;
+				ClickedEventArgs e= new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;
@@ -167,7 +168,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             if (grip > 0L && !gripped)
             {
                 gripped = true;
-                ClickedEventArgs e;
+				ClickedEventArgs e= new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;
@@ -179,7 +180,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             else if (grip == 0L && gripped)
             {
                 gripped = false;
-                ClickedEventArgs e;
+				ClickedEventArgs e= new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;
@@ -192,7 +193,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             if (pad > 0L && !padPressed)
             {
                 padPressed = true;
-                ClickedEventArgs e;
+				ClickedEventArgs e= new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;
@@ -203,7 +204,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             else if (pad == 0L && padPressed)
             {
                 padPressed = false;
-                ClickedEventArgs e;
+				ClickedEventArgs e= new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;
@@ -216,7 +217,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             if (menu > 0L && !menuPressed)
             {
                 menuPressed = true;
-                ClickedEventArgs e;
+				ClickedEventArgs e= new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;
@@ -227,7 +228,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             else if (menu == 0L && menuPressed)
             {
                 menuPressed = false;
-                ClickedEventArgs e;
+				ClickedEventArgs e= new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;
@@ -240,7 +241,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             if (pad > 0L && !padTouched)
             {
                 padTouched = true;
-                ClickedEventArgs e;
+				ClickedEventArgs e= new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;
@@ -252,7 +253,7 @@ public class SteamVR_TrackedController : MonoBehaviour
             else if (pad == 0L && padTouched)
             {
                 padTouched = false;
-                ClickedEventArgs e;
+				ClickedEventArgs e= new ClickedEventArgs();
                 e.controllerIndex = controllerIndex;
                 e.flags = (uint)controllerState.ulButtonPressed;
                 e.padX = controllerState.rAxis0.x;

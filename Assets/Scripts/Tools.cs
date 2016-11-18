@@ -13,7 +13,7 @@ public struct ButtonSubHandler
 
 public class Tools : NetworkBehaviour
 {
-    public enum button { Trigger, Menu, Pad, Grip };
+    public enum button { Trigger, Menu, Pad, Grip, PadTouch };
     
     public Dictionary<button, ButtonSubHandler> buttonMap = new Dictionary<button, ButtonSubHandler>();
     //list enum
@@ -166,15 +166,15 @@ public class Tools : NetworkBehaviour
     public void CmdServerAssignClient(NetworkIdentity controlledNetId)
     {
       //  Debug.Log(controlledNetId + "NETIDDDDDDDDDD");
-        GameObject Obj = controlledNetId.gameObject;
-        Obj.GetComponent<NetworkIdentity>().AssignClientAuthority(this.GetComponent<NetworkIdentity>().connectionToClient);
+       // GameObject Obj = controlledNetId.gameObject;
+       // Obj.GetComponent<NetworkIdentity>().AssignClientAuthority(this.GetComponent<NetworkIdentity>().connectionToClient);
     }
 
     [Command]
     public void CmdServerRemoveClient(NetworkIdentity controlledNetId)
     {
-        GameObject Obj = controlledNetId.gameObject;
-        Obj.GetComponent<NetworkIdentity>().RemoveClientAuthority(this.GetComponent<NetworkIdentity>().connectionToClient);
+       // GameObject Obj = controlledNetId.gameObject;
+       // Obj.GetComponent<NetworkIdentity>().RemoveClientAuthority(this.GetComponent<NetworkIdentity>().connectionToClient);
     }
 
 }

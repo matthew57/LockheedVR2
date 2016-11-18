@@ -45,19 +45,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\GrabTool.cs" />
      <Compile Include="Assets\IKAssets\Scripts\IKControl.cs" />
-     <Compile Include="Assets\ITool.cs" />
-     <Compile Include="Assets\ImprovedController.cs" />
-     <Compile Include="Assets\NewAxisRotation.cs" />
-     <Compile Include="Assets\NewCuttingPlane.cs" />
-     <Compile Include="Assets\NewGrabbing.cs" />
-     <Compile Include="Assets\NewMeasurement.cs" />
-     <Compile Include="Assets\NewMenuSelector.cs" />
-     <Compile Include="Assets\PlayBackSystem.cs" />
-     <Compile Include="Assets\Recorder.cs" />
-     <Compile Include="Assets\RecordingSystem.cs" />
-     <Compile Include="Assets\SavWav.cs" />
+     <Compile Include="Assets\NewToolScripts\GrabTool.cs" />
+     <Compile Include="Assets\NewToolScripts\ITool.cs" />
+     <Compile Include="Assets\NewToolScripts\ImprovedController.cs" />
+     <Compile Include="Assets\NewToolScripts\NewAxisRotation.cs" />
+     <Compile Include="Assets\NewToolScripts\NewCuttingPlane.cs" />
+     <Compile Include="Assets\NewToolScripts\NewGrabbing.cs" />
+     <Compile Include="Assets\NewToolScripts\NewMeasurement.cs" />
+     <Compile Include="Assets\NewToolScripts\NewMenuSelector.cs" />
+     <Compile Include="Assets\NewToolScripts\PlayBackSystem.cs" />
+     <Compile Include="Assets\NewToolScripts\Recorder.cs" />
+     <Compile Include="Assets\NewToolScripts\RecordingSystem.cs" />
+     <Compile Include="Assets\NewToolScripts\SavWav.cs" />
+     <Compile Include="Assets\NewToolScripts\TimeConverter.cs" />
+     <Compile Include="Assets\NewToolScripts\ToolDisplayer.cs" />
+     <Compile Include="Assets\NewToolScripts\measureInfo.cs" />
+     <Compile Include="Assets\NewToolScripts\newArcTeleporter.cs" />
+     <Compile Include="Assets\NewToolScripts\newLaserPointer.cs" />
+     <Compile Include="Assets\PlayBackController.cs" />
+     <Compile Include="Assets\PlayBackInputController.cs" />
      <Compile Include="Assets\Scripts\AssemblyMover.cs" />
      <Compile Include="Assets\Scripts\AxisRotation.cs" />
      <Compile Include="Assets\Scripts\ClippingPlane.cs" />
@@ -121,13 +128,8 @@
      <Compile Include="Assets\TheLabRenderer\Scripts\ValvePhotogrammetryGlobalSettings.cs" />
      <Compile Include="Assets\TheLabRenderer\Scripts\ValveRealtimeLight.cs" />
      <Compile Include="Assets\TheLabRenderer\Scripts\openvr_api.cs" />
-     <Compile Include="Assets\TimeConverter.cs" />
-     <Compile Include="Assets\ToolDisplayer.cs" />
      <Compile Include="Assets\VRArcTeleporter\Scripts\ArcTeleporter.cs" />
      <Compile Include="Assets\WarehouseKit\WarehouseKit\Scripts\SimpleDoorTrigger.cs" />
-     <Compile Include="Assets\measureInfo.cs" />
-     <Compile Include="Assets\newArcTeleporter.cs" />
-     <Compile Include="Assets\newLaserPointer.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />

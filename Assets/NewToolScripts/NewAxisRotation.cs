@@ -10,18 +10,33 @@ public class NewAxisRotation: ITool {
 
 	private GameObject axis;
 
+	public state axisState = state.off;
+
+	GameObject lastCollided;
 
 	public override bool TriggerClick(ClickedEventArgs e){return false;}
 	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-	public override bool MenuClick (ClickedEventArgs e){return false;}
+	public override bool MenuClick (ClickedEventArgs e){
+	
+		if (axisState == state.off)
+		{
+			turnOnAxis();
+		}
+		else
+		{
+			turnOffAxis();
+		}
+		return true;
+	
+	}
 	public override bool MenuUnclick (ClickedEventArgs e){return false;}
 
 	public override bool PadClick (ClickedEventArgs e){
 
-		Debug.Log("rotate");
-		if (controllerInit.triggerPressed)
+
+		if (!controllerInit.triggerPressed)
 		{
-			Debug.Log("t Pressed");
+
 			//Left
 			if (controllerInit.controllerState.rAxis0.x <= -0.5f && controllerInit.controllerState.rAxis0.y >= -0.5f && controllerInit.controllerState.rAxis0.y <= 0.5f)
 			{
@@ -62,12 +77,24 @@ public class NewAxisRotation: ITool {
 		return true;
 	}
 
-	public override bool Grip (ClickedEventArgs e){return false;}
+	public override bool Grip (ClickedEventArgs e){
+		if (lastCollided) {
+
+			GameObject.FindObjectOfType<ModelManager> ().cadModel = lastCollided;
+			return true;
+		}
+
+		return false;
+	
+	}
 	public override bool UnGrip(ClickedEventArgs e){return false;}
 	public override bool PadTouched(ClickedEventArgs e){return false;}
 	public override bool PadUntouched(ClickedEventArgs e){return false;}
 	public override bool SteamClicked (ClickedEventArgs e){return false;}
-	public override void CollisionEnter (Collider other){}
+	public override void CollisionEnter (Collider other){
+		lastCollided = other.gameObject;
+
+	}
 	public override void CollisionExit (Collider other){}
 	public override void stopUsing (){}
 	public override void startUsing(){}
@@ -75,26 +102,12 @@ public class NewAxisRotation: ITool {
 
 
 	public enum state { off, idle, moving, rotateRight, rotateLeft };
-	public state axisState = state.off;
 
-
-
-	private void onOffClicked(object sender, ClickedEventArgs e)
-	{
-		if (axisState == state.off)
-		{
-			turnOnAxis();
-		}
-		else
-		{
-			turnOffAxis();
-		}
-	}
 
 
 	IEnumerator panCoroutine(Vector3 nVector)
 	{
-		Debug.Log("COOOR");
+
 		while (axisState == state.moving)
 		{
 
@@ -108,13 +121,11 @@ public class NewAxisRotation: ITool {
 		}
 
 		yield return null;
-
-		print("MyCoroutine is now finished.");
 	}
 
 	IEnumerator rotate()
 	{
-		Debug.Log("COOOR");
+
 		while (axisState == state.rotateRight || axisState == state.rotateLeft)
 		{
 
@@ -132,7 +143,6 @@ public class NewAxisRotation: ITool {
 
 		yield return null;
 
-		print("MyCoroutine is now finished.");
 	}
 
 
@@ -146,7 +156,7 @@ public class NewAxisRotation: ITool {
 
 	void turnOnAxis()
 	{
-		cadModel = GameObject.Find("Model Manager").GetComponent<ModelManager>().cadModel;
+		cadModel = GameObject.FindObjectOfType<ModelManager>().cadModel;
 		axis = Instantiate(axisPrefab);
 
 		Vector3 startLocation = new Vector3(cadModel.transform.position.x, axis.transform.position.y, cadModel.transform.position.z);

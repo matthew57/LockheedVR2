@@ -32,29 +32,34 @@ public class NewMenuSelector : ITool {
 
 
 	void Start()
-	{ToolDescript = GameObject.Find ("ToolText").GetComponent<Canvas>();
+	{
+		if (!playBackDevice) {
+			menu = GameObject.Find("Menu");
+			ToolDescript = GameObject.Find ("ToolText").GetComponent<Canvas> ();
+		} else {
+			menu = GameObject.Find("MenuB");
+			ToolDescript = GameObject.Find ("ToolTextB").GetComponent<Canvas> ();
+		}
 		AuxiliaryTool = true;
 	
 
-		menuButtons [0].myButton = GameObject.Find ("AxisRotationButton");
-		menuButtons [1].myButton = GameObject.Find ("MovePartsButton");
-		menuButtons [2].myButton = GameObject.Find ("CuttingPlaneButton");
-		menuButtons [3].myButton = GameObject.Find ("MeasurementButton");
-		menuButtons [4].myButton = GameObject.Find ("RecordingButton");
+		menuButtons [0].myButton = menu.transform.Find ("AxisRotationButton").gameObject;
+		menuButtons [1].myButton = menu.transform.Find ("MovePartsButton").gameObject;
+		menuButtons [2].myButton = menu.transform.Find  ("CuttingPlaneButton").gameObject;
+		menuButtons [3].myButton = menu.transform.Find ("MeasurementButton").gameObject;
+		menuButtons [4].myButton = menu.transform.Find  ("RecordingButton").gameObject;
 
 
 	
-		var rightController = GameObject.Find("Controller (right)");
+		//var rightController = GameObject.Find("Controller (right)");
 
 		sub ();
 
-
-		menu = GameObject.Find("Menu");
 		menu.SetActive(false);
 
 		//SUbScribe the default Tools
 		menuButtons[currentMenuIndex].myButton.GetComponent<Image> ().color = new Color (0, 255, 0, .6f);
-		menuButtons[currentMenuIndex].myButton.transform.GetChild (1).GetComponent<Text> ().enabled = true;
+		menuButtons[currentMenuIndex].myButton.transform.GetComponentInChildren<Text>().enabled = true;
 		foreach (ITool it in menuButtons[currentMenuIndex].myTools) {
 			it.sub ();
 		}
@@ -106,7 +111,7 @@ public class NewMenuSelector : ITool {
 	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
 	public override bool MenuClick (ClickedEventArgs e){
 
-		Debug.Log ("I am clicked " + this.gameObject);
+	//	Debug.Log ("I am clicked " + this.gameObject);
 		onOffClicked (e);
 
 		return true;}
@@ -118,7 +123,7 @@ public class NewMenuSelector : ITool {
 		}
 
 			menuButtons[currentMenuIndex].myButton.GetComponent<Image>().color = Color.clear;
-			menuButtons[currentMenuIndex].myButton.transform.GetChild(1).GetComponent<Text>().enabled = false;
+			menuButtons[currentMenuIndex].myButton.transform.GetComponentInChildren<Text>().enabled = false;
 
 
 
@@ -137,7 +142,7 @@ public class NewMenuSelector : ITool {
 		
 		}
 			menuButtons[currentMenuIndex].myButton.GetComponent<Image> ().color = new Color (0, 255, 0, .6f);
-			menuButtons[currentMenuIndex].myButton.transform.GetChild (1).GetComponent<Text> ().enabled = true;
+		menuButtons[currentMenuIndex].myButton.transform.GetComponentInChildren<Text>().enabled = true;
 		foreach (ITool it in menuButtons[currentMenuIndex].myTools) {
 			it.sub ();
 		}

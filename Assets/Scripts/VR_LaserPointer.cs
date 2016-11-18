@@ -27,7 +27,7 @@ public class VR_LaserPointer : MonoBehaviour
     public float thickness = 0.002f;
     public GameObject holder;
     public GameObject pointer;
-    bool isActive = false;
+   // bool isActive = false;
     public bool addRigidBody = false;
     public Transform reference;
     public event PEventHandler PointerIn;
