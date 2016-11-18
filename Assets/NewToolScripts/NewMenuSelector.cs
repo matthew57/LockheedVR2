@@ -25,8 +25,8 @@ public class NewMenuSelector : ITool {
 
 	public List<menuButton> menuButtons = new List<menuButton>();
 
-	public enum state { on, off };
-	public state menuState = state.off;
+
+	bool menuOn = false;
 	private int currentMenuIndex = 1;
 
 
@@ -69,23 +69,26 @@ public class NewMenuSelector : ITool {
 	}
 
 	void onOffClicked(ClickedEventArgs e)
-	{
-		if (menuState == state.on)
-		{
-			ToolDescript.enabled = false;
-			menu.SetActive(false);
-			menuState = state.off;
-		}
-		else if (menuState == state.off)
-		{
-			ToolDescript.enabled = true;
-			menu.SetActive(true);
-			menuState = state.on;
-		}
+	{//Debug.Log ("clicking  " + !menuOn);
+		
+		menuOn = !menuOn;
+		ToolDescript.enabled = menuOn;
+		menu.SetActive(menuOn);
+
+	}
+
+	public void setMenuOnOff(bool OnOff)
+	{//Debug.Log ("Turning " + OnOff);
+		menuOn = OnOff;
+		ToolDescript.enabled = OnOff;
+		menu.SetActive(OnOff);
 	}
 
 
-
+	public bool isMenuOn()
+	{
+		return menuOn;
+	}
 
 
 	IEnumerator move(float distance)
@@ -104,9 +107,7 @@ public class NewMenuSelector : ITool {
 
 
 
-	public override bool TriggerClick(ClickedEventArgs e){
-		return false;
-	}
+	public override bool TriggerClick(ClickedEventArgs e){return false;}
 
 	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
 	public override bool MenuClick (ClickedEventArgs e){
@@ -118,7 +119,8 @@ public class NewMenuSelector : ITool {
 	
 	public override bool MenuUnclick (ClickedEventArgs e){return false;}
 	public override bool PadClick (ClickedEventArgs e){
-		if (menuState == state.off) {
+
+		if (!menuOn) {
 			return false;
 		}
 
@@ -141,13 +143,7 @@ public class NewMenuSelector : ITool {
 			}
 		
 		}
-			menuButtons[currentMenuIndex].myButton.GetComponent<Image> ().color = new Color (0, 255, 0, .6f);
-		menuButtons[currentMenuIndex].myButton.transform.GetComponentInChildren<Text>().enabled = true;
-		foreach (ITool it in menuButtons[currentMenuIndex].myTools) {
-			it.sub ();
-		}
-			//menuButtons[currentMenuIndex].myTool.sub ();
-			
+		setMenuIndex (currentMenuIndex);
 
 
 		return true;
@@ -169,7 +165,22 @@ public class NewMenuSelector : ITool {
 	public override void startUsing(){}
 
 
+	public int getMenuIndex ()
+	{
+		return currentMenuIndex;
+	}
 
 
+	public void setMenuIndex(int ind){
+
+
+		Debug.Log ("Setting menu index " + ind);
+		menuButtons [currentMenuIndex].myButton.GetComponent<Image> ().color = new Color (0, 255, 0, .6f);
+		menuButtons [currentMenuIndex].myButton.transform.GetComponentInChildren<Text> ().enabled = true;
+		foreach (ITool it in menuButtons[currentMenuIndex].myTools) {
+			it.sub ();
+		
+		}
+	}
 
 }

@@ -144,6 +144,15 @@ public class PlayBackSystem :Tools {
 		countDown.color = Color.green;
 		countDown.enabled = true;
 
+		foreach (PlayBackInputController pbic in playControllers) {
+			foreach (ITool currentTool in pbic.myTools) {
+				if (currentTool is NewMenuSelector) {
+					((NewMenuSelector)currentTool).setMenuIndex (sData.startingMenuIndex);
+					((NewMenuSelector)currentTool).setMenuOnOff (sData.menuOn);
+				}
+			}
+		}
+
 
 	}
 
@@ -196,7 +205,7 @@ public class PlayBackSystem :Tools {
 				//IMPLEMENT UNDO ACTIONS FOR ALL TOOLS!
 
 				foreach (ClickedEventArgs ea in nextFrame.myC) {
-					Debug.Log ("I clicked " + ea.controllerIndex + "   " + ea.butClicked);
+				//	Debug.Log ("I clicked " + ea.controllerIndex + "   " + ea.butClicked);
 				}
 
 			}

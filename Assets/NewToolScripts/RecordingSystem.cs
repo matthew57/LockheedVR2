@@ -55,6 +55,9 @@ public class RecordingSystem : ITool{
 	[Serializable]
 	public class SavedData{
 
+		public int startingMenuIndex;
+		public bool menuOn;
+
 		public SavedData(int frameR)
 		{frameRate = frameR;}
 
@@ -183,9 +186,11 @@ public class RecordingSystem : ITool{
 		countDown.fontSize = 12;
 		countDown.text = "Recording";
 		countDown.color = Color.red;
+		//AUDIO Recording
 		GetComponent<Recorder> ().BeginRecording ();
 
-
+		myData.startingMenuIndex = GetComponent<NewMenuSelector> ().getMenuIndex ();
+		myData.menuOn = GetComponent<NewMenuSelector> ().isMenuOn ();
 		foreach (ImprovedController ic in  GameObject.FindObjectsOfType<ImprovedController>()) {
 			ic.setRecorder (this);
 		

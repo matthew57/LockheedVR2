@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\IKAssets\Scripts\IKControl.cs" />
+     <Compile Include="Assets\MainMenuManager.cs" />
      <Compile Include="Assets\NewToolScripts\GrabTool.cs" />
      <Compile Include="Assets\NewToolScripts\ITool.cs" />
      <Compile Include="Assets\NewToolScripts\ImprovedController.cs" />
@@ -87,6 +88,37 @@
      <Compile Include="Assets\Scripts\Tools.cs" />
      <Compile Include="Assets\Scripts\VRPlayerController.cs" />
      <Compile Include="Assets\Scripts\VR_LaserPointer.cs" />
+     <Compile Include="Assets\Scripts\ViveCursor.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\AudioFileSavingComponent.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\GoogleNonStreamingSpeechToTextService.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\GoogleSpeechToTextResponseJSONParser.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\GoogleStreamingSpeechToTextService.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\NonStreamingSpeechToTextService.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\SpeechToTextResults\GoogleTextAlternative.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\SpeechToTextResults\SpeechToTextResult.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\SpeechToTextResults\TextAlternative.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\SpeechToTextResults\WindowsTextAlternative.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\SpeechToTextService.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\StreamingSpeechToTextService.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\WindowsSpeechToTextService.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\WitAiNonStreamingSpeechToTextService.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextServices\WitAiSpeechToTextResponseJSONParser.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextWidgets\SpeechToTextComparisonWidget.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\SpeechToTextWidgets\SpeechToTextServiceWidget.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\AudioRecordingManager.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\DebugFlag.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\Globals.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\IOUtilities.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\LogFileManager.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\MonoSingleton.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\SavWav.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\SmartLogger.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\StringUtilities.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\ThreadedJobs\SoXAudioConversionJob.cs" />
+     <Compile Include="Assets\SpeechToText\Scripts\Utilities\ThreadedJobs\ThreadedJob.cs" />
+     <Compile Include="Assets\SpeechToText\ThirdParty\JSON\JSONObject.cs" />
+     <Compile Include="Assets\SpeechToText\ThirdParty\JSON\JSONTemplates.cs" />
+     <Compile Include="Assets\SpeechToText\ThirdParty\JSON\VectorTemplates.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_GazeTracker.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_LaserPointer.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_Teleporter.cs" />
@@ -128,6 +160,14 @@
      <Compile Include="Assets\TheLabRenderer\Scripts\ValvePhotogrammetryGlobalSettings.cs" />
      <Compile Include="Assets\TheLabRenderer\Scripts\ValveRealtimeLight.cs" />
      <Compile Include="Assets\TheLabRenderer\Scripts\openvr_api.cs" />
+     <Compile Include="Assets\UIButton.cs" />
+     <Compile Include="Assets\UniWeb-Free\Examples\ConditionalGet.cs" />
+     <Compile Include="Assets\UniWeb-Free\Examples\ForceProxyExample.cs" />
+     <Compile Include="Assets\UniWeb-Free\Examples\KeepAliveExample.cs" />
+     <Compile Include="Assets\UniWeb-Free\Examples\RequestBenchmark.cs" />
+     <Compile Include="Assets\UniWeb-Free\Examples\UniWebExamples.cs" />
+     <Compile Include="Assets\UniWeb-Free\Examples\WebsocketClientEcho.cs" />
+     <Compile Include="Assets\UniWeb-Free\Examples\WebsocketClientExample.cs" />
      <Compile Include="Assets\VRArcTeleporter\Scripts\ArcTeleporter.cs" />
      <Compile Include="Assets\WarehouseKit\WarehouseKit\Scripts\SimpleDoorTrigger.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
@@ -136,12 +176,16 @@
      <None Include="Assets\Plugins\donotdelete.txt" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\SeparableWeightedBlurDof34.shader" />
+     <None Include="Assets\UniWeb-Free\FAQ.txt" />
+     <None Include="Assets\StreamingAssets\GoogleStreamingSpeechToTextProgram\Grpc.Core.xml" />
+     <None Include="Assets\StreamingAssets\GoogleStreamingSpeechToTextProgram\Newtonsoft.Json.xml" />
      <None Include="Assets\TheLabRenderer\Resources\vr_quality_vis.shader" />
      <None Include="Assets\VRArcTeleporter\readme.txt" />
      <None Include="Assets\ProjectSettings\ProjectVersion.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ShowAlphaChannel.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_Fade.shader" />
      <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
+     <None Include="Assets\SpeechToText\ThirdParty\JSON\readme.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SunShaftsComposite.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionCurves.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ScreenSpaceAmbientObscurance.shader" />
@@ -163,6 +207,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\SSAA.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\RadialBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfFieldDX11.shader" />
+     <None Include="Assets\StreamingAssets\GoogleStreamingSpeechToTextProgram\Google.Apis.Core.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ContrastComposite.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAAPreset3.shader" />
      <None Include="Assets\TheLabRenderer\Shaders\vr_skybox.shader" />
@@ -171,14 +216,17 @@
      <None Include="Assets\SteamVR\Resources\SteamVR_HiddenArea.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Apply.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\frag_ao.cginc" />
+     <None Include="Assets\Plugins\Android\assets\OSIG_Readme.txt" />
      <None Include="Assets\TheLabRenderer\Shaders\vr_matrix_palette_skinning.cginc" />
      <None Include="Assets\Shaders\ClipShader2.shader" />
+     <None Include="Assets\StreamingAssets\GoogleStreamingSpeechToTextProgram\Google.Apis.Auth.PlatformServices.xml" />
      <None Include="Assets\SteamVR\Resources\SteamVR_Overlay.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
      <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAlpha.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfField34.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SSAOShader.shader" />
+     <None Include="Assets\UniWeb-Free\README.txt" />
      <None Include="Assets\Standard Assets\ParticleSystems\ParticleSystemsGuidelines.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ConvertDepth.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionCurvesSimple.shader" />
@@ -199,8 +247,11 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\SeparableBlurPlus.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorLight.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MultiPassHollywoodFlares.shader" />
+     <None Include="Assets\Shaders\SeparableAlpha.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlur.shader" />
+     <None Include="Assets\StreamingAssets\GoogleStreamingSpeechToTextProgram\System.Interactive.Async.xml" />
+     <None Include="Assets\StreamingAssets\GoogleStreamingSpeechToTextProgram\Google.Apis.Auth.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\DLAA.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrainDX11.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_Blit.shader" />
@@ -235,12 +286,14 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\PrepareSunShaftsBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\Blend.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
+     <None Include="Assets\StreamingAssets\GoogleStreamingSpeechToTextProgram\Google.Protobuf.xml" />
      <None Include="Assets\SteamVR\Resources\SteamVR_ColorOut.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />
      <None Include="Assets\Shaders\GlowingCollision.shader" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAA3Console.shader" />
+     <None Include="Assets\StreamingAssets\GoogleStreamingSpeechToTextProgram\Grpc.Auth.xml" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAAPreset2.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlurAndFlares.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendForBloom.shader" />
@@ -249,6 +302,9 @@
  </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>C:/Program Files/Unity_5_4_2/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UniWeb-Free">
+ <HintPath>C:/Users/VR/Desktop/NetworkedVR-master/LockheedVR2/Assets/UniWeb-Free/UniWeb-Free.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
