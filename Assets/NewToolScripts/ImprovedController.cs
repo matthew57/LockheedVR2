@@ -63,7 +63,7 @@ public class ImprovedController : MonoBehaviour {
 
 
 
-	public uint controllerIndex;
+ public uint controllerIndex;
 	public VRControllerState_t controllerState;
 	public bool triggerPressed = false;
 	public bool steamPressed = false;
@@ -92,7 +92,7 @@ public class ImprovedController : MonoBehaviour {
 		}
 		else
 		{
-			controllerIndex = (uint) this.GetComponent<SteamVR_TrackedObject>().index;
+		//	controllerIndex = (uint) this.GetComponent<SteamVR_TrackedObject>().index;
 		}
 	}
 
@@ -103,7 +103,10 @@ public class ImprovedController : MonoBehaviour {
 	}
 
 	private void OnTriggerEnter(Collider collider)
-	{	//Debug.Log ("triggering " + collider + "   " + this.gameObject);
+	{	if (collider.gameObject.name == "GrabSphere") {
+			return;
+		}
+
 		foreach (ITool IT in myTools) {
 			if (IT) {
 			//	Debug.Log ("Entering "+ IT);
@@ -297,6 +300,8 @@ public class ImprovedController : MonoBehaviour {
 			e.flags = (uint)controllerState.ulButtonPressed;
 			e.padX = controllerState.rAxis0.x;
 			e.padY = controllerState.rAxis0.y;
+			e.location = this.transform.position;
+			e.rotation = this.transform.rotation;
 
 
 			if (trigger > 0L && !triggerPressed)
@@ -336,7 +341,29 @@ public class ImprovedController : MonoBehaviour {
 				buttonPressed = true;
 			}
 
-			ulong pad = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Touchpad));
+			ulong  pad = controllerState.ulButtonTouched & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Touchpad));
+			if (pad > 0L && !padTouched)
+			{
+				padTouched = true;
+				e.butClicked = Tools.button.PadTouch; // ******
+				OnPadTouched(e);
+				e.offOn = true;
+				buttonPressed = true;
+
+			}
+			else if (pad == 0L && padTouched)
+			{
+				padTouched = false;
+				e.butClicked = Tools.button.PadTouch;// ******
+				OnPadUntouched(e);
+				e.offOn = false;
+				buttonPressed = true;
+			}
+
+
+
+
+			pad = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Touchpad));
 			if (pad > 0L && !padPressed)
 			{
 				padPressed = true;
@@ -372,24 +399,7 @@ public class ImprovedController : MonoBehaviour {
 				buttonPressed = true;
 			}
 
-			pad = controllerState.ulButtonTouched & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Touchpad));
-			if (pad > 0L && !padTouched)
-			{
-				padTouched = true;
-				e.butClicked = Tools.button.PadTouch; // ******
-				OnPadTouched(e);
-				e.offOn = true;
-				buttonPressed = true;
-
-			}
-			else if (pad == 0L && padTouched)
-			{
-				padTouched = false;
-				e.butClicked = Tools.button.PadTouch;// ******
-				OnPadUntouched(e);
-				e.offOn = false;
-				buttonPressed = true;
-			}
+		
 			if (MyRecorder && buttonPressed) {
 				MyRecorder.recordClick (e);
 			}

@@ -170,6 +170,7 @@
      <Compile Include="Assets\UniWeb-Free\Examples\WebsocketClientExample.cs" />
      <Compile Include="Assets\VRArcTeleporter\Scripts\ArcTeleporter.cs" />
      <Compile Include="Assets\WarehouseKit\WarehouseKit\Scripts\SimpleDoorTrigger.cs" />
+     <Compile Include="Assets\controllerIDMatcher.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />

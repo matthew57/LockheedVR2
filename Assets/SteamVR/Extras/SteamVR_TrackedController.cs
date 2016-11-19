@@ -11,6 +11,8 @@ public struct ClickedEventArgs
     public float padX, padY;
 	public Tools.button butClicked;// ******
 	public bool offOn;
+	public Vector3 location;
+	public Quaternion rotation;
 }
 
 public delegate void ClickedEventHandler(object sender, ClickedEventArgs e);

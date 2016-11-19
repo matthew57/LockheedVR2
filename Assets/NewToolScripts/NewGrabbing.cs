@@ -38,20 +38,29 @@ public class NewGrabbing : ITool {
 
 	NewGrabbing otherGrabber;
 
+	//Figure out a better way to record which objects have been touched.
+	RecordingSystem myRecorder;
+
 	void Start()
-		{foreach (NewGrabbing ng in GetComponents<NewGrabbing>()) {
+		{
+
+	
+		foreach (NewGrabbing ng in GetComponents<NewGrabbing>()) {
 			if (ng != this) {
 				otherGrabber = ng;
 				break;
 			}
 		}
+		myRecorder = GetComponent<RecordingSystem> ();
 		grabSphere = controllerInit.gameObject.transform.Find("GrabSphere").gameObject;
+
+
 		}
 
 
 	public override bool TriggerClick(ClickedEventArgs e)
 	{
-		Debug.Log ("Trigger has been clicked");
+		//Debug.Log ("Trigger has been clicked " + collidedObject + "   " + this.gameObject + "   " + assignedController);
 
 		if (collidedObject == null || collidedObject.tag == "UIObject")
 		{
@@ -73,6 +82,8 @@ public class NewGrabbing : ITool {
 				otherGrabber.releaseObj ();
 			
 			}
+
+			//Debug.Log ("Picking up thing " + collidedObject);
 				pickUp (collidedObject);
 				StartCoroutine ("snapCoroutine");
 
@@ -149,9 +160,11 @@ public class NewGrabbing : ITool {
 
 		if(grabbingState == state.idle || grabbingState == state.colliding)
 		{
-
+			
 			collidedObject =other.gameObject;
 			grabbingState = state.colliding;
+
+			//Debug.Log ("Now inside " + collidedObject + "   " + this.gameObject);
 		}
 	}
 	public override void CollisionExit (Collider other){
@@ -226,6 +239,10 @@ public class NewGrabbing : ITool {
 			obj.transform.position = (grabSphere.transform.position - gTool.transform.rotation * gTool.getGrabPoint());
 
 
+		}
+
+		if(myRecorder){
+			myRecorder.recordInteractedObj (obj);
 		}
 
 		grabbingState = state.pickedUp;

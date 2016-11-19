@@ -15,6 +15,18 @@ using Valve.VR;
 
 public class RecordingSystem : ITool{
 
+	[Serializable]
+	public struct ActionClick{
+
+		public ActionClick(ClickedEventArgs cea, float time)
+		{
+			myAction = cea;
+			actionTime = time;
+		}
+
+		public ClickedEventArgs myAction;
+		public float actionTime;
+	}
 
 
 
@@ -37,7 +49,10 @@ public class RecordingSystem : ITool{
 
 		public Vector3 rP;
 		public Quaternion rQ;
-		public List<ClickedEventArgs> myC; // My clicks
+
+		public List<ActionClick> myC; // My clicks
+
+
 
 		public void changeTime(float t)
 		{
@@ -47,6 +62,15 @@ public class RecordingSystem : ITool{
 		public void setTime(float t)
 		{
 			RT = t;}
+
+	}
+
+	[Serializable]
+	public struct interactedObject{
+
+		public GameObject obj;
+		public Vector3 origin;
+		public Quaternion originRotation;
 
 	}
 
@@ -63,16 +87,33 @@ public class RecordingSystem : ITool{
 
 		public int frameRate;
 		public List<movementFrame> savedFrames = new List<movementFrame>();
+		public List<interactedObject> interObjects = new List<interactedObject> ();
+
+		public void addObject(GameObject obj)
+		{
+			foreach (interactedObject io in interObjects) {
+				if (io.obj == obj) { // We have already moved this object, so its already saved;
+					return;}
+			
+			}
+
+			interactedObject newIO = new interactedObject ();
+			newIO.obj = obj;
+			newIO.origin = obj.transform.position;
+			newIO.originRotation = obj.transform.rotation;
+			interObjects.Add (newIO);
+		
+		}
 
 		public void addFrame(movementFrame mFrame)
 		{
 			savedFrames.Add (mFrame);
 		}
 
-		public void addAction(ClickedEventArgs ea)
+		public void addAction(ClickedEventArgs ea, float t)
 		{
 			if (savedFrames.Count > 0) {
-				savedFrames [savedFrames.Count - 1].myC.Add (ea);
+				savedFrames [savedFrames.Count - 1].myC.Add (new ActionClick (ea,t));
 			}
 		}
 
@@ -98,6 +139,12 @@ public class RecordingSystem : ITool{
 	}
 
 
+	public void recordInteractedObj(GameObject obj)
+	{
+		if (isRecording) {
+			myData.addObject (obj);
+		}
+	}
 
 
 	private Transform eyeC;
@@ -145,14 +192,17 @@ public class RecordingSystem : ITool{
 	{// its delayed because its waiting for other scene objects to initialize
 		yield return new WaitForSeconds(.1f);
 
-		controllerLeft = GameObject.Find("Controller (left)").GetComponent<SteamVR_TrackedController>();
 
-		controllerRight = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedController>();
+		leftC = GameObject.Find("Controller (left)").transform;
+		rightC = GameObject.Find("Controller (right)").transform;
+
+		controllerLeft = leftC.GetComponent<SteamVR_TrackedController>();
+
+		controllerRight = rightC.GetComponent<SteamVR_TrackedController>();
 
 
 		eyeC = GameObject.Find("Camera (eye)").transform;
-		leftC = GameObject.Find("Controller (left)").transform;
-		rightC = GameObject.Find("Controller (right)").transform;
+
 
 		frameLength = 1 / frameRate;
 
@@ -171,7 +221,10 @@ public class RecordingSystem : ITool{
 
 
 	IEnumerator delayStartRecording()
-	{countDown.color = Color.green;
+	{	recordingTime = 0;
+		myPlayBack.stopPlayback ();
+
+		countDown.color = Color.green;
 		countDown.enabled = true;
 		countDown.fontSize = 20;
 		countDown.text = "Starting in 3";
@@ -240,6 +293,11 @@ public class RecordingSystem : ITool{
 	}
 
 
+	public bool currentlyRecording()
+	{
+		return isRecording;
+	}
+
 
 	//Speeds up /Slows down up a section of a recording so you wont have to dothrough during playtime
 
@@ -281,7 +339,7 @@ public class RecordingSystem : ITool{
 	public void RecordFrame()
 	{
 		movementFrame mFrame = new movementFrame ();
-		mFrame.myC = new List<ClickedEventArgs> ();
+		mFrame.myC = new List<ActionClick> ();
 
 
 		mFrame.hP = eyeC.position;
@@ -304,7 +362,7 @@ public class RecordingSystem : ITool{
 
 
 	protected void saveToFile()//object sender, ClickedEventArgs e)
-	{Debug.Log ("Saving to file");
+	{//Debug.Log ("Saving to file");
 
 		isRecording = false;
 		string json = JsonUtility.ToJson (myData);
@@ -316,7 +374,7 @@ public class RecordingSystem : ITool{
 
 
 	public SavedData loadFromFile()
-	{Debug.Log ("loading from file");
+	{//Debug.Log ("loading from file");
 
 		string path = "testSaveFile" + fileExtension;
 		string info = File.ReadAllText (path);
@@ -329,6 +387,10 @@ public class RecordingSystem : ITool{
 
 
 	public override bool TriggerClick(ClickedEventArgs e){
+		if (playBackDevice) {
+			return false;
+		}
+
 		if (isRecording) {
 		
 			stopRecording ();
@@ -344,6 +406,10 @@ public class RecordingSystem : ITool{
 	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
 
 	public override bool MenuClick (ClickedEventArgs e){
+		if (playBackDevice) {
+			return false;
+		}
+
 		if (!isRecording) {
 			SavedData sd = loadFromFile ();
 			if (sd != null) {
@@ -358,7 +424,9 @@ public class RecordingSystem : ITool{
 
 
 	public override bool PadClick (ClickedEventArgs e){
-
+		if (playBackDevice) {
+			return false;
+		}
 		if (!isRecording) {
 			if (e.padX < -.33) {
 				//Debug.Log ("Rwind");
@@ -394,7 +462,7 @@ public class RecordingSystem : ITool{
 	public void recordClick(ClickedEventArgs ea)
 	{
 		if (isRecording) {
-			myData.addAction (ea);
+			myData.addAction (ea, recordingTime);
 		}
 	
 	}

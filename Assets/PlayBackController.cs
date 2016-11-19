@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 public class PlayBackController : MonoBehaviour {
 	//private GameObject cameraRig;
-	private Transform eyeC;
+	 Transform eyeC;
 	private Transform leftC;
 	private Transform rightC;
 

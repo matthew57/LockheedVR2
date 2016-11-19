@@ -63,7 +63,7 @@ public class IKControl : MonoBehaviour {
 				if(rightHand != null) {
 					animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
 					animator.SetIKRotationWeight(AvatarIKGoal.RightHand,.8f);  
-					animator.SetIKPosition(AvatarIKGoal.RightHand,rightHand.transform.position - rightHand.transform.rotation * (new Vector3 (0,-.04f,.1f)));
+					animator.SetIKPosition (AvatarIKGoal.RightHand, rightHand.transform.position);// - rightHand.transform.rotation * (new Vector3 (0,-.04f,.1f)));
 					rRotate = rightHand.transform.rotation;
 					rRotate *= Quaternion.Euler (rightHand.transform.forward * 65);
 					animator.SetIKRotation(AvatarIKGoal.RightHand,rRotate);
@@ -73,7 +73,7 @@ public class IKControl : MonoBehaviour {
 				if(leftHand != null) {
 					animator.SetIKPositionWeight(AvatarIKGoal.LeftHand,1);
 					animator.SetIKRotationWeight(AvatarIKGoal.LeftHand,.8f);  
-					animator.SetIKPosition(AvatarIKGoal.LeftHand,leftHand.transform.position - leftHand.transform.rotation * (new Vector3 (0,-.04f,.1f)));
+					animator.SetIKPosition (AvatarIKGoal.LeftHand, leftHand.transform.position);// - leftHand.transform.rotation * (new Vector3 (0,-.04f,.1f)));
 					lRotate = leftHand.transform.rotation;
 					//lRotate *= Quaternion.Euler (leftHand.transform.right * 65);
 					animator.SetIKRotation(AvatarIKGoal.LeftHand,lRotate);

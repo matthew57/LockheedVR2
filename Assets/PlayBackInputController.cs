@@ -23,9 +23,15 @@ public class PlayBackInputController : ImprovedController {
 	public void callButtonAction(ClickedEventArgs e)
 	{
 		if (e.controllerIndex != controllerIndex) {
+
+		
 			return;
 		}
 
+	//	Debug.Log ("same controller " + e.controllerIndex + "   " + controllerIndex);
+
+		this.transform.position = e.location;
+		this.transform.rotation = e.rotation;
 
 		if (e.butClicked == Tools.button.Trigger && e.offOn)
 			{
@@ -53,7 +59,7 @@ public class PlayBackInputController : ImprovedController {
 			}
 
 
-			if (e.butClicked == Tools.button.Pad && e.offOn)
+		if (e.butClicked == Tools.button.Pad && e.offOn)
 			{
 				padPressed = true;
 				OnPadClicked(e);

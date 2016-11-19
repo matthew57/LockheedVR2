@@ -123,7 +123,7 @@ public class PlayBackSystem :Tools {
 		leftHand.transform.rotation = Quaternion.Slerp (previousFrame.lQ, nextFrame.lQ, lerpAmount);
 
 		rightHand.transform.position = Vector3.Lerp (previousFrame.rP, nextFrame.rP, lerpAmount);
-		leftHand.transform.rotation = Quaternion.Slerp (previousFrame.rQ, nextFrame.rQ, lerpAmount);
+		rightHand.transform.rotation = Quaternion.Slerp (previousFrame.rQ, nextFrame.rQ, lerpAmount);
 
 		Head.transform.position = Vector3.Lerp (previousFrame.hP, nextFrame.hP, lerpAmount);
 		Head.transform.rotation = Quaternion.Slerp (previousFrame.hQ, nextFrame.hQ, lerpAmount);
@@ -143,6 +143,11 @@ public class PlayBackSystem :Tools {
 
 		countDown.color = Color.green;
 		countDown.enabled = true;
+
+		foreach (RecordingSystem.interactedObject rio in sData.interObjects) {
+			GameObject newObj = (GameObject)Instantiate (rio.obj, rio.origin + new Vector3 (.0000001f,.0000001f,.0000001f), rio.originRotation);
+			newObj.layer = 8;
+		}
 
 		foreach (PlayBackInputController pbic in playControllers) {
 			foreach (ITool currentTool in pbic.myTools) {
@@ -179,10 +184,10 @@ public class PlayBackSystem :Tools {
 					return;
 				}
 
-				foreach (ClickedEventArgs ea in nextFrame.myC) {
+				foreach (RecordingSystem.ActionClick ea in nextFrame.myC) {
 					foreach (PlayBackInputController pbic in playControllers) {
-					//	Debug.Log ("Caliing actions " + ea.butClicked + "   " + pbic.gameObject);
-						pbic.callButtonAction (ea);
+					//	Debug.Log ("I clicked " + ea.controllerIndex + "   " + ea.butClicked + "   " + pbic);
+						StartCoroutine(PerformAction(pbic, ea));
 					}
 				}
 
@@ -204,9 +209,7 @@ public class PlayBackSystem :Tools {
 
 				//IMPLEMENT UNDO ACTIONS FOR ALL TOOLS!
 
-				foreach (ClickedEventArgs ea in nextFrame.myC) {
-				//	Debug.Log ("I clicked " + ea.controllerIndex + "   " + ea.butClicked);
-				}
+	
 
 			}
 		}
@@ -216,8 +219,17 @@ public class PlayBackSystem :Tools {
 	}
 
 
+	IEnumerator PerformAction(PlayBackInputController pbic, RecordingSystem.ActionClick ac)
+	{
+		yield return new WaitForSeconds (ac.actionTime - currentPlaybackTime);
+		pbic.callButtonAction(ac.myAction);
+	}
 
 
+	public void stopPlayback (){
+		currentState = null;
+		savedData = null;
+	}
 
 
 

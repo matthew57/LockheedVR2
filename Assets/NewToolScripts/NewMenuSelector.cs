@@ -120,10 +120,11 @@ public class NewMenuSelector : ITool {
 	public override bool MenuUnclick (ClickedEventArgs e){return false;}
 	public override bool PadClick (ClickedEventArgs e){
 
+		//Debug.Log ("Entering");
 		if (!menuOn) {
 			return false;
 		}
-
+		//Debug.Log ("Caliing actions " + e.butClicked + "   " + this.gameObject);
 			menuButtons[currentMenuIndex].myButton.GetComponent<Image>().color = Color.clear;
 			menuButtons[currentMenuIndex].myButton.transform.GetComponentInChildren<Text>().enabled = false;
 
@@ -172,9 +173,12 @@ public class NewMenuSelector : ITool {
 
 
 	public void setMenuIndex(int ind){
+		
+		menuButtons[currentMenuIndex].myButton.GetComponent<Image>().color = Color.clear;
+		menuButtons[currentMenuIndex].myButton.transform.GetComponentInChildren<Text>().enabled = false;
 
-
-		Debug.Log ("Setting menu index " + ind);
+		currentMenuIndex = ind;
+	//	Debug.Log ("Setting menu index " + ind + "   " + this.gameObject );
 		menuButtons [currentMenuIndex].myButton.GetComponent<Image> ().color = new Color (0, 255, 0, .6f);
 		menuButtons [currentMenuIndex].myButton.transform.GetComponentInChildren<Text> ().enabled = true;
 		foreach (ITool it in menuButtons[currentMenuIndex].myTools) {
