@@ -40,14 +40,14 @@ public class NewAxisRotation: ITool {
 			//Left
 			if (controllerInit.controllerState.rAxis0.x <= -0.5f && controllerInit.controllerState.rAxis0.y >= -0.5f && controllerInit.controllerState.rAxis0.y <= 0.5f)
 			{
-				axisState = state.rotateLeft;
+				axisState = state.rotate;
 				StartCoroutine("rotate");
 			}
 
 			//DPAD RIGHT BUTTON SETTINGS -TOGGLE THROUGH CUTTING PLANE SNAPPED TO ORIGIN PLANES//////////////////
 			else if (controllerInit.controllerState.rAxis0.x >= 0.5f && controllerInit.controllerState.rAxis0.y >= -0.5f && controllerInit.controllerState.rAxis0.y <= 0.5f)
 			{
-				axisState = state.rotateRight;
+				axisState = state.rotate;
 				StartCoroutine("rotate");
 			}
 
@@ -81,6 +81,11 @@ public class NewAxisRotation: ITool {
 		if (lastCollided) {
 
 			GameObject.FindObjectOfType<ModelManager> ().cadModel = lastCollided;
+
+			turnOffAxis ();
+			turnOnAxis ();
+
+
 			return true;
 		}
 
@@ -101,7 +106,7 @@ public class NewAxisRotation: ITool {
 
 
 
-	public enum state { off, idle, moving, rotateRight, rotateLeft };
+	public enum state { off, idle, moving, rotate };
 
 
 
@@ -126,17 +131,9 @@ public class NewAxisRotation: ITool {
 	IEnumerator rotate()
 	{
 
-		while (axisState == state.rotateRight || axisState == state.rotateLeft)
+		while (axisState == state.rotate)
 		{
-
-			if (axisState == state.rotateRight)
-			{
-				rotateAxisRight();
-			}
-			else if(axisState == state.rotateLeft)
-			{
-				rotateAxisLeft();
-			}
+			cadModel.transform.RotateAround(axis.transform.position, axis.transform.up, Time.deltaTime * 90f * controllerInit.controllerState.rAxis0.x);
 
 			yield return null;
 		}
@@ -165,15 +162,6 @@ public class NewAxisRotation: ITool {
 	}
 
 
-	void rotateAxisRight()
-	{
-		cadModel.transform.RotateAround(axis.transform.position, axis.transform.up, Time.deltaTime * 90f);
-	}
-
-	void rotateAxisLeft()
-	{
-		cadModel.transform.RotateAround(axis.transform.position, axis.transform.up, Time.deltaTime * -90f);
-	}
 
 
 

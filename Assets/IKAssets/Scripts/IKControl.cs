@@ -45,7 +45,7 @@ public class IKControl : MonoBehaviour {
 				float amount = ((-1*(Vector3.Angle (cameraHead.transform.forward, Vector3.up) - 90))/300) ;
 
 				// set the body position below the head
-				gameObject.transform.position = cameraHead.transform.position + new Vector3(0,-.7f - amount *bodyOffsetAmount,0);
+				gameObject.transform.position = cameraHead.transform.position + new Vector3(0,(-.7f - amount *bodyOffsetAmount) + .05f,0);
 
 				//move the body that amount
 				gameObject.transform.position += (gameObject.transform.forward * (amount + .05f));
@@ -77,7 +77,31 @@ public class IKControl : MonoBehaviour {
 					lRotate = leftHand.transform.rotation;
 					//lRotate *= Quaternion.Euler (leftHand.transform.right * 65);
 					animator.SetIKRotation(AvatarIKGoal.LeftHand,lRotate);
-				}        
+				}   
+
+				RaycastHit rayHit;
+
+				Vector3 floorLocation = transform.position;
+				if (Physics.Raycast (transform.position, Vector3.down,  out  rayHit, 20,1 << 9)) {
+
+					floorLocation = rayHit.point + Vector3.up * .1f;
+				}
+
+
+			// RIGHT FOOT POSITION
+					animator.SetIKPositionWeight(AvatarIKGoal.RightFoot,1);
+					animator.SetIKRotationWeight(AvatarIKGoal.RightFoot,1);  
+					animator.SetIKPosition(AvatarIKGoal.RightFoot, floorLocation + this.transform.rotation *Vector3.right * .1f);
+					animator.SetIKRotation(AvatarIKGoal.RightFoot,tempQuat);
+			  
+
+
+			// LEFT FOOT POSITION
+					animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot,1);
+					animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot,1);  
+					animator.SetIKPosition(AvatarIKGoal.LeftFoot, floorLocation + this.transform.rotation *Vector3.left * .1f);
+					animator.SetIKRotation(AvatarIKGoal.LeftFoot,tempQuat);
+
 
 
 			}

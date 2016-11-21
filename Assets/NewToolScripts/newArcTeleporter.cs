@@ -95,6 +95,7 @@ public bool teleportActive
 	get { return _teleportActive; }
 }
 
+	public float HeightAboveGround;
 void Start ()
 {
 	SteamVR_Camera steamVR_Camera = transform.parent.gameObject.GetComponentInChildren<SteamVR_Camera>();
@@ -189,7 +190,7 @@ void Update()
 		if (cross.y < 0) angle = -angle;
 		Quaternion difference = Quaternion.AngleAxis(angle, Vector3.up);
 		Vector3 offset = difference * (roomSpot - camSpot);
-		_roomShapeInstance.transform.position = (_destination + offset)+_destinationNormal*0.05f;
+			_roomShapeInstance.transform.position = (_destination + offset)+_destinationNormal*0.05f + Vector3.up * HeightAboveGround;
 		if (!disableRoomRotationWithTrackpad)
 		{
 			ImprovedController controller = GetComponent<ImprovedController>();

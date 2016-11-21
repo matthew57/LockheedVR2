@@ -14,7 +14,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class NewCuttingPlane : ITool {
+public class NewCuttingPlane : NewGrabbing{
 
 
 	public GameObject cuttingPlane;
@@ -23,42 +23,12 @@ public class NewCuttingPlane : ITool {
 
 
 	public enum state {off , idle, panForward, panBackward};
-	public state cPlaneState = state.off;
+	public state cPlaneState = state.idle;
 
 	public bool cPlaneOnOff = true;
 
 	private int set = 0;
 
-
-
-	IEnumerator panCoroutine()
-	{
-	//	Debug.Log("COOOR");
-		while (cPlaneState != state.idle && cPlaneState != state.off)
-		{
-			if (cPlaneState == state.panForward)
-			{
-				//Debug.Log("MOVING");
-				cuttingPlane.transform.position = cuttingPlane.transform.position + (cuttingPlane.gameObject.transform.up) / 150;
-			}
-			else if (cPlaneState == state.panBackward)
-			{
-				//Debug.Log("MOVING");
-				cuttingPlane.transform.position = cuttingPlane.transform.position - (cuttingPlane.gameObject.transform.up) / 150;
-			}
-			yield return null;
-		}
-
-		yield return null;
-
-		//print("MyCoroutine is now finished.");
-	}
-		
-
-
-	public override bool TriggerClick(ClickedEventArgs e){return false;}
-	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-		
 
 	public override bool MenuClick (ClickedEventArgs e){
 	
@@ -84,10 +54,10 @@ public class NewCuttingPlane : ITool {
 	{
 		if (!cuttingPlane)
 		{
-			cuttingPlane = GameObject.Find("CuttingPlane");
+			cuttingPlane = GameObject.FindObjectOfType<ClippingPlane> ().gameObject;//.Find("CuttingPlane");
 		}
-
-		cuttingPlane.GetComponent<BoxCollider>().enabled = onOff;
+			
+		//cuttingPlane.GetComponent<BoxCollider>().enabled = onOff;
 		cuttingPlane.GetComponent<MeshRenderer>().enabled = onOff;
 
 		if(onOff)
@@ -104,37 +74,38 @@ public class NewCuttingPlane : ITool {
 
 
 
-
-
 	public override bool MenuUnclick (ClickedEventArgs e){return false;}
 
 	public override bool PadClick (ClickedEventArgs e){
 
+	
+
 		//DPAD UP BUTTON SETTINGS - MOVE CUTTING PLANE UP ON NORMAL/////
-		if (controllerInit.controllerState.rAxis0.y >= 0.5f && controllerInit.controllerState.rAxis0.x >= -0.5f && controllerInit.controllerState.rAxis0.x <= 0.5f)
+
+		if(e.padY > Mathf.Abs(e.padX))
 		{
-			Debug.Log("FFFFFFFFFF");
+			
 			cPlaneState = state.panForward;
 			StartCoroutine("panCoroutine");
 		}
 
 		//DPAD DOWN BUTTON SETTINGS - MOVE CUTTING PLANE DOWN ON NORMAL/////
-		if (controllerInit.controllerState.rAxis0.y <= -0.5f && controllerInit.controllerState.rAxis0.x >= -0.5f && controllerInit.controllerState.rAxis0.x <= 0.5f)
+		else if(e.padY < -1*Mathf.Abs(e.padX)) 
 		{
-			Debug.Log("BBBBBBBBB");
+
 			cPlaneState = state.panBackward;
 			StartCoroutine("panCoroutine");
 		}
 
 		//DPAD LEFT BUTTON SETTINGS - FLIP NORMAL OF CUTTING PLANE/////////////
-		else if (controllerInit.controllerState.rAxis0.x <= -0.5f && controllerInit.controllerState.rAxis0.y >= -0.5f && controllerInit.controllerState.rAxis0.y <= 0.5f)
+		else if(e.padX <  -1 * Mathf.Abs(e.padY)) 
 		{
 			cuttingPlane.gameObject.transform.up = cuttingPlane.gameObject.transform.up * -1;
 			cPlaneState = state.idle;
 		}
 
 		//DPAD RIGHT BUTTON SETTINGS -TOGGLE THROUGH CUTTING PLANE SNAPPED TO ORIGIN PLANES//////////////////
-		else if (controllerInit.controllerState.rAxis0.x >= 0.5f && controllerInit.controllerState.rAxis0.y >= -0.5f && controllerInit.controllerState.rAxis0.y <= 0.5f)
+		else if(e.padX > Mathf.Abs(e.padY))
 		{
 			TogglePlaneOriginDir();
 		}
@@ -143,6 +114,22 @@ public class NewCuttingPlane : ITool {
 
 
 	}
+
+
+	IEnumerator panCoroutine()
+	{
+		//	Debug.Log("COOOR");
+		while (cPlaneState != state.idle && cPlaneState != state.off)
+		{
+			cuttingPlane.transform.position = cuttingPlane.transform.position + (cuttingPlane.gameObject.transform.up * controllerInit.controllerState.rAxis0.y) / 130;
+
+			yield return null;
+		}
+
+		yield return null;
+
+	}
+
 
 
 	void TogglePlaneOriginDir()
@@ -171,27 +158,22 @@ public class NewCuttingPlane : ITool {
 	public override bool PadUnclick (ClickedEventArgs e){
 		if (cPlaneState == state.panForward)
 		{
-			Debug.Log("RRRRRRRRRR");
+	
 			cPlaneState = state.idle;
 		}
 		if (cPlaneState == state.panBackward)
 		{
-			Debug.Log("RRRRRRRRRR");
+	
 			cPlaneState = state.idle;
 		}
 		return true;
 	}
 
-	public override bool Grip (ClickedEventArgs e){return false;}
-	public override bool UnGrip(ClickedEventArgs e){return false;}
-	public override bool PadTouched(ClickedEventArgs e){return false;}
-	public override bool PadUntouched(ClickedEventArgs e){return false;}
-	public override bool SteamClicked (ClickedEventArgs e){return false;}
-	public override void CollisionEnter (Collider other){}
-	public override void CollisionExit (Collider other){}
-	public override void stopUsing (){}
-	public override void startUsing(){}
+	public override void startUsing()
+	{
+		onOffSwitch (false);
 
+	}
 
 
 }

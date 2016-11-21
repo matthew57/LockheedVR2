@@ -477,8 +477,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myInfo:
-    padT: FastForward/Pause/Rewind
-    MenuT: Replay
+    padT: ^Stop Playback, <Rewind, >Fast Forward, V Play/Pause
+    MenuT: Start Replay
     GripT: 
     TriggerT: Start/Stop Recording
   playBackDevice: 0

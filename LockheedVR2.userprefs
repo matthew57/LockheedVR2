@@ -1,13 +1,17 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\NewToolScripts\ImprovedController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\NewToolScripts\NewAxisRotation.cs">
     <Files>
-      <File FileName="Assets\NewToolScripts\ImprovedController.cs" Line="303" Column="4" />
-      <File FileName="Assets\NewToolScripts\RecordingSystem.cs" Line="21" Column="30" />
-      <File FileName="Assets\NewToolScripts\PlayBackSystem.cs" Line="211" Column="5" />
-      <File FileName="Assets\NewToolScripts\NewMenuSelector.cs" Line="188" Column="3" />
-      <File FileName="Assets\NewToolScripts\NewGrabbing.cs" Line="174" Column="4" />
-      <File FileName="Assets\PlayBackInputController.cs" Line="39" Column="25" />
+      <File FileName="Assets\NewToolScripts\ImprovedController.cs" Line="1" Column="1" />
+      <File FileName="Assets\NewToolScripts\RecordingSystem.cs" Line="103" Column="42" />
+      <File FileName="Assets\NewToolScripts\PlayBackSystem.cs" Line="157" Column="55" />
+      <File FileName="Assets\NewToolScripts\NewMenuSelector.cs" Line="48" Column="57" />
+      <File FileName="Assets\NewToolScripts\NewGrabbing.cs" Line="147" Column="29" />
+      <File FileName="Assets\PlayBackInputController.cs" Line="1" Column="1" />
+      <File FileName="Assets\NewToolScripts\NewCuttingPlane.cs" Line="153" Column="11" />
+      <File FileName="Assets\NewToolScripts\newArcTeleporter.cs" Line="96" Column="2" />
+      <File FileName="Assets\IKAssets\Scripts\IKControl.cs" Line="42" Column="46" />
+      <File FileName="Assets\NewToolScripts\NewAxisRotation.cs" Line="61" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

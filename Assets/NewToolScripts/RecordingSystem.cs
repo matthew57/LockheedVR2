@@ -65,10 +65,11 @@ public class RecordingSystem : ITool{
 
 	}
 
+	//Keep track of all objects that have been touched so we can put them back when we replay
 	[Serializable]
 	public struct interactedObject{
 
-		public GameObject obj;
+		public string obj;
 		public Vector3 origin;
 		public Quaternion originRotation;
 
@@ -92,24 +93,25 @@ public class RecordingSystem : ITool{
 		public void addObject(GameObject obj)
 		{
 			foreach (interactedObject io in interObjects) {
-				if (io.obj == obj) { // We have already moved this object, so its already saved;
+				if (io.obj == obj.name) { // We have already moved this object, so its already saved;
 					return;}
 			
 			}
 
 			interactedObject newIO = new interactedObject ();
-			newIO.obj = obj;
+			newIO.obj = obj.name;
 			newIO.origin = obj.transform.position;
 			newIO.originRotation = obj.transform.rotation;
 			interObjects.Add (newIO);
 		
 		}
-
+		// should be calling this roughly 30 frames a second, while recording
 		public void addFrame(movementFrame mFrame)
 		{
 			savedFrames.Add (mFrame);
 		}
 
+		//A controller button was pressed, Record it
 		public void addAction(ClickedEventArgs ea, float t)
 		{
 			if (savedFrames.Count > 0) {
@@ -138,7 +140,7 @@ public class RecordingSystem : ITool{
 
 	}
 
-
+	//I touched an object, mark it!
 	public void recordInteractedObj(GameObject obj)
 	{
 		if (isRecording) {
@@ -165,9 +167,6 @@ public class RecordingSystem : ITool{
 	float nextRecordingFrame; // next Real Time that a frame will be recorded
 
 	float recordingTime; // Time since start of recording
-
-
-
 
 	SavedData myData;
 
@@ -249,8 +248,6 @@ public class RecordingSystem : ITool{
 		
 		}
 
-
-		//SubScribeControllers ();
 		isRecording = true;
 
 
@@ -270,21 +267,16 @@ public class RecordingSystem : ITool{
 
 		}
 
-		//UnSubScribeControllers ();
-
 	}
 
 	void Update()
 	{
- 
 		if (isRecording) {
 			recordingTime += Time.deltaTime;
 
 
 			if (Time.time > nextRecordingFrame) {
-
-
-				countDown.text = "Recording: " + TimeConverter.getClockTime(recordingTime);
+				countDown.text = "Recording: " + TimeConverter.getClockTime(recordingTime) + "  \n(Trigger to Stop)";
 				nextRecordingFrame = Time.time + frameLength;
 				RecordFrame ();
 			}
@@ -361,7 +353,7 @@ public class RecordingSystem : ITool{
 
 
 
-	protected void saveToFile()//object sender, ClickedEventArgs e)
+	protected void saveToFile()
 	{//Debug.Log ("Saving to file");
 
 		isRecording = false;
@@ -390,6 +382,10 @@ public class RecordingSystem : ITool{
 		if (playBackDevice) {
 			return false;
 		}
+		if (myPlayBack.isPlaying()) {
+			ErrorPrompt.instance.showError ( "Stop Playback First (Pad Up)");
+			return true;
+		}
 
 		if (isRecording) {
 		
@@ -403,8 +399,7 @@ public class RecordingSystem : ITool{
 		return true;}
 
 
-	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-
+	// Start playback
 	public override bool MenuClick (ClickedEventArgs e){
 		if (playBackDevice) {
 			return false;
@@ -414,8 +409,13 @@ public class RecordingSystem : ITool{
 			SavedData sd = loadFromFile ();
 			if (sd != null) {
 				myPlayBack.play (sd);
+			} else {
+
+				ErrorPrompt.instance.showError ("No Data Files Found");
 			}
 			return true;
+		} else {
+			ErrorPrompt.instance.showError ("Finish Recording First (Trigger)");
 		}
 		return false;
 	}
@@ -427,23 +427,49 @@ public class RecordingSystem : ITool{
 		if (playBackDevice) {
 			return false;
 		}
+
 		if (!isRecording) {
-			if (e.padX < -.33) {
-				//Debug.Log ("Rwind");
-				myPlayBack.rewind ();
-			} else if (e.padX > .33) {
-				//Debug.Log ("fast forward");
-				myPlayBack.fastForward ();
-			} else {
-				//	Debug.Log ("play pause");
-				myPlayBack.playPause ();
+
+
+			//UP- Clear PlayBack
+			if(e.padY > Mathf.Abs(e.padX)) {
+				myPlayBack.clearPlayBack ();
+				ErrorPrompt.instance.showError ("Play Back Closed");
+				countDown.enabled = false;
 			}
+
+			//DPAD DOWN - PLay/Pause
+			else if(e.padY < -1*Mathf.Abs(e.padX)) {
+				myPlayBack.playPause ();
+
+			}
+
+		//DPAD LEFT - Rewind
+			else if(e.padX <  -1 * Mathf.Abs(e.padY)) {
+				myPlayBack.rewind ();
+
+			}
+
+		//DPAD RIGHT - Fast forward
+			else if(e.padX > Mathf.Abs(e.padY)) {
+				myPlayBack.fastForward ();
+			}
+
 			return true;
 		}
+
 		return false;
 	}
 
+	public void recordClick(ClickedEventArgs ea)
+	{
+		if (isRecording) {
+			myData.addAction (ea, recordingTime);
+		}
 
+	}
+
+	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
 	public override bool PadUnclick (ClickedEventArgs e){return false;}
 	public override bool Grip (ClickedEventArgs e){return false;}
 	public override bool UnGrip(ClickedEventArgs e){return false;}
@@ -457,15 +483,6 @@ public class RecordingSystem : ITool{
 
 
 
-	//We might be able to get rid of all of these functions except for
-
-	public void recordClick(ClickedEventArgs ea)
-	{
-		if (isRecording) {
-			myData.addAction (ea, recordingTime);
-		}
-	
-	}
 
 
 

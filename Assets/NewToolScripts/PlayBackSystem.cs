@@ -56,33 +56,35 @@ public class PlayBackSystem :Tools {
 	// Update is called once per frame
 	void Update () {
 
-
-
 		if (currentState != null) {
-			if (Input.GetKeyDown (KeyCode.LeftArrow) && !(currentState is RewindState)) {
-				fastMultiplier = initialFastMultiplier;
-				currentState = new RewindState ();
-			} else if (Input.GetKeyDown (KeyCode.RightArrow) && !(currentState is FastForwardState)) {
-				currentState = new FastForwardState ();
-				fastMultiplier = initialFastMultiplier;
-			}
-
+			//Debug.Log ("Updating " + currentState);
 
 			currentState.update (this);
 
-			countDown.text = "" + TimeConverter.getClockTime(currentPlaybackTime);
-
+			countDown.text = "" + TimeConverter.getClockTime (currentPlaybackTime);
 		}
 	}
 
+
+
+	public bool isPlaying()
+	{if (currentState == null) {
+			return false;
+		}
+		else {
+			return true;
+	}
+	}
 
 	public void rewind()
 	{if (savedData!= null) {
 		if (!(currentState is RewindState)) {
 			fastMultiplier = initialFastMultiplier;
 			currentState = new RewindState ();
+				ErrorPrompt.instance.showError ("Rewind X"+ fastMultiplier);
 		} else {
-			fastMultiplier += .5f;
+			fastMultiplier += 1f;
+				ErrorPrompt.instance.showError ("Rewind X"+ fastMultiplier);
 		}
 	}
 	
@@ -93,8 +95,10 @@ public class PlayBackSystem :Tools {
 			if (!(currentState is FastForwardState)) {
 				currentState = new FastForwardState ();
 				fastMultiplier = initialFastMultiplier;
+				ErrorPrompt.instance.showError ("Fast Forward X"+ fastMultiplier);
 			} else {
-				fastMultiplier+= .5f;
+				fastMultiplier+= 1f;
+				ErrorPrompt.instance.showError ("Fast Forward X"+ fastMultiplier);
 			}
 		}
 	}
@@ -105,8 +109,10 @@ public class PlayBackSystem :Tools {
 			fastMultiplier =  initialFastMultiplier;
 			if (!(currentState is PauseState)) {
 				currentState = new PauseState ();
+				ErrorPrompt.instance.showError ("Paused");
 			} else {
 				currentState = new RegularPlayState ();
+				ErrorPrompt.instance.showError ("Play");
 			}
 
 
@@ -132,6 +138,7 @@ public class PlayBackSystem :Tools {
 
 	public void play(RecordingSystem.SavedData sData)
 	{
+		clearPlayBack ();
 		currentState = new RegularPlayState ();
 		frameTime = 1 / sData.frameRate;
 		GameObject.FindObjectOfType<Recorder> ().Play ();
@@ -144,9 +151,14 @@ public class PlayBackSystem :Tools {
 		countDown.color = Color.green;
 		countDown.enabled = true;
 
+
+
 		foreach (RecordingSystem.interactedObject rio in sData.interObjects) {
-			GameObject newObj = (GameObject)Instantiate (rio.obj, rio.origin + new Vector3 (.0000001f,.0000001f,.0000001f), rio.originRotation);
-			newObj.layer = 8;
+			GameObject foundTHingy = GameObject.Find (rio.obj);
+
+			Debug.Log ("Searched for " + rio.obj + "   " + foundTHingy);
+			GameObject newObj = (GameObject)Instantiate (foundTHingy, rio.origin + new Vector3 (.0000001f,.0000001f,.0000001f), rio.originRotation);
+			newObj.layer = 10;
 		}
 
 		foreach (PlayBackInputController pbic in playControllers) {
@@ -159,6 +171,30 @@ public class PlayBackSystem :Tools {
 		}
 
 
+	}
+
+	//Reset the scene so all playback items are moved/removed
+	public void clearPlayBack()
+	{
+		currentState = null;
+		Debug.Log ("Starting to clear");
+		//Delete any objects from previous recordings
+		foreach (GameObject oldStuff in GameObject.FindGameObjectsWithTag("SceneObject")) {
+			Debug.Log ("Checking " + oldStuff.gameObject);
+			if (oldStuff != null) {
+				if (oldStuff.gameObject.layer == 10 ) {
+					Debug.Log ("Deleting " + oldStuff.gameObject);
+					Destroy (oldStuff.gameObject);
+				}
+			}
+		}
+
+
+		leftHand.transform.position = new Vector3( -1000, -1000, -1000);
+		rightHand.transform.position = new Vector3( -1000, -1000, -1000);
+		Head.transform.position =new Vector3( -1000, -1000, -1000);
+
+	
 	}
 
 
