@@ -171,7 +171,7 @@ public class PlayBackSystem :Tools {
 			}
 		}
 
-		//StartCoroutine (setIKRig ());
+		StartCoroutine (setIKRig ());
 	}
 
 

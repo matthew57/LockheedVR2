@@ -42,8 +42,20 @@ public class NewGrabbing : ITool {
 	RecordingSystem myRecorder;
 
 
-	List<GameObject> deletedList = new List<GameObject>();
+	List<deletedObj> deletedList = new List<deletedObj>();
 	public List<GameObject> collidedList = new List<GameObject>();
+
+
+	struct deletedObj{
+
+		public GameObject obj;
+		public Vector3 lastPos;
+		public Quaternion lastRot;
+		public bool useKinem;
+		public bool useGrav;
+
+	}
+
 
 
 	void Start()
@@ -109,12 +121,7 @@ public class NewGrabbing : ITool {
 	public override bool MenuClick (ClickedEventArgs e){ 
 
 		if (assignedController == controller.Right) {
-			if (deletedList.Count > 0) {
-				deletedList [deletedList.Count - 1].SetActive (true);
-				deletedList.RemoveAt (deletedList.Count - 1);
-
-				return true;
-			}
+			undoDelete ();
 		}
 
 
@@ -129,15 +136,7 @@ public class NewGrabbing : ITool {
 			if (e.padY > 0) {
 				if (collidedObject && grabbingState == state.pickedUp) {
 					releaseObj ();
-
-					deletedList.Add (collidedObject);
-					collidedObject.SetActive (false);
-
-					if (collidedList.Contains (collidedObject)) {
-						collidedList.Remove (collidedObject);
-					}
-
-
+					deleteObject (collidedObject);
 					checkIfInObject ();
 
 				} else if (collidedObject && grabbingState == state.idle) {
@@ -162,6 +161,57 @@ public class NewGrabbing : ITool {
 			return false;
 		}
 	}
+
+
+	//THis doesn't actually delete the object, it just moves it way far away, that way we an still bring it back if need be
+	public void deleteObject(GameObject toDelete)
+	{
+		deletedObj currDelete = new deletedObj ();
+		currDelete.obj = toDelete;
+		currDelete.lastPos = toDelete.transform.position;
+		currDelete.lastRot = toDelete.transform.rotation;
+
+		Rigidbody rb = toDelete.GetComponent<Rigidbody> ();
+		if (rb) {
+			currDelete.useGrav = rb.useGravity;
+			currDelete.useKinem = rb.isKinematic;
+
+			rb.useGravity = false;
+			rb.isKinematic = false;
+		}
+
+		deletedList.Add (currDelete);
+		toDelete.transform.position = new Vector3 (-1000, -1000, -1000);
+
+	
+		if (collidedList.Contains (collidedObject)) {
+			collidedList.Remove (collidedObject);
+		}
+	}
+
+	public void undoDelete()
+	{
+		if (deletedList.Count > 0) {
+			deletedList [deletedList.Count - 1].obj.transform.position = deletedList [deletedList.Count - 1].lastPos;
+			deletedList [deletedList.Count - 1].obj.transform.rotation = deletedList [deletedList.Count - 1].lastRot;
+			Rigidbody rb = deletedList [deletedList.Count - 1].obj.GetComponent<Rigidbody> ();
+			if (rb) {
+				rb.useGravity = deletedList [deletedList.Count - 1].useGrav;
+				rb.isKinematic = deletedList [deletedList.Count - 1].useKinem;
+				rb.velocity = Vector3.zero;
+
+			}
+
+
+			deletedList.RemoveAt (deletedList.Count - 1);
+
+		}
+	
+	
+	}
+
+
+
 	public override bool PadUnclick (ClickedEventArgs e){ 
 		if (assignedController == controller.Right) {
 			if (grabbingState == state.pickedUp)

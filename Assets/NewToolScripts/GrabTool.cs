@@ -17,4 +17,6 @@ public class GrabTool : MonoBehaviour {
 		Gizmos.DrawSphere ((this.transform.position + this.transform.rotation * (grabPointA )),.04f);
 	
 	}
+
+
 }
