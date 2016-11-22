@@ -138,6 +138,7 @@ public class PlayBackSystem :Tools {
 
 	public void play(RecordingSystem.SavedData sData)
 	{
+
 		clearPlayBack ();
 		currentState = new RegularPlayState ();
 		frameTime = 1 / sData.frameRate;
@@ -152,12 +153,12 @@ public class PlayBackSystem :Tools {
 		countDown.enabled = true;
 
 
-
+		// NEED TO FIGURE OUT A WAYA TO KEEP TRACK OF ITEMS THAT WERE DELETED, JUST MOVE THEM TO THE SIDE MAYBE?
 		foreach (RecordingSystem.interactedObject rio in sData.interObjects) {
 			GameObject foundTHingy = GameObject.Find (rio.obj);
 
-			Debug.Log ("Searched for " + rio.obj + "   " + foundTHingy);
 			GameObject newObj = (GameObject)Instantiate (foundTHingy, rio.origin + new Vector3 (.0000001f,.0000001f,.0000001f), rio.originRotation);
+			newObj.tag = "SceneObject";
 			newObj.layer = 10;
 		}
 
@@ -170,20 +171,30 @@ public class PlayBackSystem :Tools {
 			}
 		}
 
-
+		//StartCoroutine (setIKRig ());
 	}
+
+
+	//Calling this is causing weird glitching rig issues.
+	IEnumerator setIKRig(){
+		yield return new WaitForSeconds (.05f);
+		foreach (IKControl ik in GameObject.FindObjectsOfType<IKControl>()) {
+		ik.OnAnimatorIK ();
+		}
+	}
+
+
 
 	//Reset the scene so all playback items are moved/removed
 	public void clearPlayBack()
 	{
 		currentState = null;
-		Debug.Log ("Starting to clear");
+	
 		//Delete any objects from previous recordings
 		foreach (GameObject oldStuff in GameObject.FindGameObjectsWithTag("SceneObject")) {
-			Debug.Log ("Checking " + oldStuff.gameObject);
+
 			if (oldStuff != null) {
 				if (oldStuff.gameObject.layer == 10 ) {
-					Debug.Log ("Deleting " + oldStuff.gameObject);
 					Destroy (oldStuff.gameObject);
 				}
 			}
@@ -244,9 +255,6 @@ public class PlayBackSystem :Tools {
 				}
 
 				//IMPLEMENT UNDO ACTIONS FOR ALL TOOLS!
-
-	
-
 			}
 		}
 

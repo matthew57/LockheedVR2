@@ -652,6 +652,10 @@ virtual public void Teleport()
 		}
 		break;
 	}
+
+		foreach (IKControl ik in GameObject.FindObjectsOfType<IKControl>()) {
+			ik.OnAnimatorIK ();
+		}
 }
 
 virtual protected void MoveToTarget(Vector3 target)

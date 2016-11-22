@@ -41,6 +41,11 @@ public class NewGrabbing : ITool {
 	//Figure out a better way to record which objects have been touched.
 	RecordingSystem myRecorder;
 
+
+	List<GameObject> deletedList = new List<GameObject>();
+	public List<GameObject> collidedList = new List<GameObject>();
+
+
 	void Start()
 		{
 
@@ -60,7 +65,6 @@ public class NewGrabbing : ITool {
 
 	public override bool TriggerClick(ClickedEventArgs e)
 	{
-		//Debug.Log ("Trigger has been clicked " + collidedObject + "   " + this.gameObject + "   " + assignedController);
 
 		if (collidedObject == null || collidedObject.tag == "UIObject")
 		{
@@ -102,10 +106,70 @@ public class NewGrabbing : ITool {
 		return true;
 	}
 
-	public override bool MenuClick (ClickedEventArgs e){ return false;}
+	public override bool MenuClick (ClickedEventArgs e){ 
+
+		if (assignedController == controller.Right) {
+			if (deletedList.Count > 0) {
+				deletedList [deletedList.Count - 1].SetActive (true);
+				deletedList.RemoveAt (deletedList.Count - 1);
+
+				return true;
+			}
+		}
+
+
+		return false;}
+	
 	public override bool MenuUnclick (ClickedEventArgs e){ return false;}
-	public override bool PadClick (ClickedEventArgs e){ return false;}
-	public override bool PadUnclick (ClickedEventArgs e){ return false;}
+
+	// For Deleting and duplicating objects, if grabbing and object, it will leave a duplicate behind, if none are grabbed, it will create a new copy and grab it.
+	public override bool PadClick (ClickedEventArgs e){ 
+
+		if (assignedController == controller.Right) {
+			if (e.padY > 0) {
+				if (collidedObject && grabbingState == state.pickedUp) {
+					releaseObj ();
+
+					deletedList.Add (collidedObject);
+					collidedObject.SetActive (false);
+
+					if (collidedList.Contains (collidedObject)) {
+						collidedList.Remove (collidedObject);
+					}
+
+
+					checkIfInObject ();
+
+				} else if (collidedObject && grabbingState == state.idle) {
+					ErrorPrompt.instance.showError ("Pick up an object to delete it");
+				}
+			} else {
+				if (grabbingState == state.pickedUp) {
+
+					Instantiate (collidedObject, collidedObject.transform.position, collidedObject.transform.rotation);
+				} else if (grabbingState == state.colliding) {
+		
+					GameObject obj =  (GameObject)Instantiate (collidedObject, collidedObject.transform.position, collidedObject.transform.rotation);
+					collidedObject = obj;
+					pickUp (obj);
+					StartCoroutine ("snapCoroutine");
+				}
+			
+			}
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public override bool PadUnclick (ClickedEventArgs e){ 
+		if (assignedController == controller.Right) {
+			if (grabbingState == state.pickedUp)
+			{
+				releaseObj();
+			}
+		}
+			return false;}
 
 
 	public override bool Grip (ClickedEventArgs e){ 
@@ -157,7 +221,9 @@ public class NewGrabbing : ITool {
 
 	public override void CollisionEnter (Collider other){
 
-
+		if(!collidedList.Contains(other.gameObject))
+			collidedList.Add (other.gameObject);
+	
 		if(grabbingState == state.idle || grabbingState == state.colliding)
 		{
 			
@@ -169,13 +235,17 @@ public class NewGrabbing : ITool {
 	}
 	public override void CollisionExit (Collider other){
 
-		if (grabbingState != state.pickedUp)
-		{
+		if (collidedList.Contains (other.gameObject)) {
 
-			grabbingState = state.idle;
+			collidedList.Remove (other.gameObject);
 		}
 
 
+		if (grabbingState != state.pickedUp)
+		{
+			checkIfInObject ();
+		}
+	
 	}
 
 
@@ -286,7 +356,7 @@ public class NewGrabbing : ITool {
 
 	public void controllerTrigExit(object sender, Collider collider)
 	{
-		// Debug.Log("Colllllllllision enter" + collider.gameObject.name);
+
 		if (grabbingState != state.pickedUp)
 		{
 			if (collider.gameObject.GetComponent<LocalPNetworkTransform>())
@@ -297,7 +367,15 @@ public class NewGrabbing : ITool {
 		}
 	}
 
-
+	void checkIfInObject()
+	{	if (collidedList.Count > 0) {
+			collidedObject = collidedList [collidedList.Count - 1];
+	} else {
+		collidedObject = null;
+		grabbingState = state.idle;
+	}
+		
+	}
 
 
 

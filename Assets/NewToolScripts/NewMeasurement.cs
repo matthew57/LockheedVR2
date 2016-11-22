@@ -62,6 +62,9 @@ public class NewMeasurement : ITool {
 			}
 			measureState = state.start;
 			measurement = Instantiate(measurementPrefab);
+			if (playBackDevice) {
+				measurement.layer = 10;
+			}
 			allMeasurements.Add (measurement.GetComponent<measureInfo>());
 			setSpheres ();
 			StartCoroutine(measureCoroutine( false, false));     

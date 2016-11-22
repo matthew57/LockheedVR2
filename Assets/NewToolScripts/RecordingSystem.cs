@@ -176,6 +176,9 @@ public class RecordingSystem : ITool{
 
 	private float dist;
 
+	//Keeps track of coroutine that has the countdown for start recording;
+	Coroutine InDelayedRecording;
+
 	Text countDown;
 
 	void Start()
@@ -189,7 +192,7 @@ public class RecordingSystem : ITool{
 
 	IEnumerator delayedInitialize()
 	{// its delayed because its waiting for other scene objects to initialize
-		yield return new WaitForSeconds(.1f);
+		yield return new WaitForSeconds(2);
 
 
 		leftC = GameObject.Find("Controller (left)").transform;
@@ -211,63 +214,8 @@ public class RecordingSystem : ITool{
 
 
 
-	protected void startRecordingIn()//object sender, ClickedEventArgs e)
-	{
-		StartCoroutine (delayStartRecording ());
-			
-	}
 
 
-
-	IEnumerator delayStartRecording()
-	{	recordingTime = 0;
-		myPlayBack.stopPlayback ();
-
-		countDown.color = Color.green;
-		countDown.enabled = true;
-		countDown.fontSize = 20;
-		countDown.text = "Starting in 3";
-
-		yield return new WaitForSeconds (1);
-		countDown.text = "Starting in 2";
-
-		yield return new WaitForSeconds (1);
-		countDown.text = "Starting in 1";
-
-		yield return new WaitForSeconds (1);
-		countDown.fontSize = 12;
-		countDown.text = "Recording";
-		countDown.color = Color.red;
-		//AUDIO Recording
-		GetComponent<Recorder> ().BeginRecording ();
-
-		myData.startingMenuIndex = GetComponent<NewMenuSelector> ().getMenuIndex ();
-		myData.menuOn = GetComponent<NewMenuSelector> ().isMenuOn ();
-		foreach (ImprovedController ic in  GameObject.FindObjectsOfType<ImprovedController>()) {
-			ic.setRecorder (this);
-		
-		}
-
-		isRecording = true;
-
-
-		nextRecordingFrame = Time.time + .00001f;
-		recordingTime = 0;
-
-	}
-
-	protected void stopRecording()
-	{
-		GetComponent<Recorder> ().EndRecord ();
-		countDown.enabled = false;
-		isRecording = false;
-
-		foreach (ImprovedController ic in  GameObject.FindObjectsOfType<ImprovedController>()) {
-			ic.setRecorder (null);
-
-		}
-
-	}
 
 	void Update()
 	{
@@ -349,35 +297,6 @@ public class RecordingSystem : ITool{
 
 
 
-
-
-
-
-	protected void saveToFile()
-	{//Debug.Log ("Saving to file");
-
-		isRecording = false;
-		string json = JsonUtility.ToJson (myData);
-
-		File.WriteAllText ("testSaveFile" + fileExtension, json);
-	
-	
-	}
-
-
-	public SavedData loadFromFile()
-	{//Debug.Log ("loading from file");
-
-		string path = "testSaveFile" + fileExtension;
-		string info = File.ReadAllText (path);
-	
-		SavedData toReturn = JsonUtility.FromJson<SavedData> (info);
-		return toReturn;
-	}
-
-
-
-
 	public override bool TriggerClick(ClickedEventArgs e){
 		if (playBackDevice) {
 			return false;
@@ -392,11 +311,91 @@ public class RecordingSystem : ITool{
 			stopRecording ();
 			saveToFile ();
 		} else {
-			startRecordingIn ();
+			InDelayedRecording = StartCoroutine (delayStartRecording ());
 		}
 
 
 		return true;}
+
+
+
+
+
+	IEnumerator delayStartRecording()
+	{	
+		myData = new SavedData (frameRate);
+		recordingTime = 0;
+		myPlayBack.stopPlayback ();
+
+		countDown.color = Color.green;
+		countDown.enabled = true;
+		countDown.fontSize = 20;
+		countDown.text = "Starting in 3";
+
+		yield return new WaitForSeconds (1);
+		countDown.text = "Starting in 2";
+
+		yield return new WaitForSeconds (1);
+		countDown.text = "Starting in 1";
+
+		yield return new WaitForSeconds (1);
+		countDown.fontSize = 12;
+		countDown.text = "Recording";
+		countDown.color = Color.red;
+		//AUDIO Recording
+		GetComponent<Recorder> ().BeginRecording ();
+
+		myData.startingMenuIndex = GetComponent<NewMenuSelector> ().getMenuIndex ();
+		myData.menuOn = GetComponent<NewMenuSelector> ().isMenuOn ();
+		foreach (ImprovedController ic in  GameObject.FindObjectsOfType<ImprovedController>()) {
+			ic.setRecorder (this);
+
+		}
+
+		isRecording = true;
+
+
+		nextRecordingFrame = Time.time + .00001f;
+		recordingTime = 0;
+		InDelayedRecording = null;
+
+	}
+
+	protected void stopRecording()
+	{
+		GetComponent<Recorder> ().EndRecord ();
+		countDown.enabled = false;
+		isRecording = false;
+
+		foreach (ImprovedController ic in  GameObject.FindObjectsOfType<ImprovedController>()) {
+			ic.setRecorder (null);
+
+		}
+	}
+
+
+	protected void saveToFile()
+	{//Debug.Log ("Saving to file");
+
+		isRecording = false;
+		string json = JsonUtility.ToJson (myData);
+
+		File.WriteAllText ("testSaveFile" + fileExtension, json);
+
+
+	}
+
+
+	public SavedData loadFromFile()
+	{//Debug.Log ("loading from file");
+
+		string path = "testSaveFile" + fileExtension;
+		string info = File.ReadAllText (path);
+
+		SavedData toReturn = JsonUtility.FromJson<SavedData> (info);
+		return toReturn;
+	}
+
 
 
 	// Start playback
@@ -405,7 +404,7 @@ public class RecordingSystem : ITool{
 			return false;
 		}
 
-		if (!isRecording) {
+		if (!isRecording && InDelayedRecording == null) {
 			SavedData sd = loadFromFile ();
 			if (sd != null) {
 				myPlayBack.play (sd);
@@ -429,7 +428,6 @@ public class RecordingSystem : ITool{
 		}
 
 		if (!isRecording) {
-
 
 			//UP- Clear PlayBack
 			if(e.padY > Mathf.Abs(e.padX)) {

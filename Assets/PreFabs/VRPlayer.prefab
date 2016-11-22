@@ -343,8 +343,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myInfo:
-    padT: 
-    MenuT: 
+    padT: V Duplicate Object, ^ Delete Object
+    MenuT: Undo Delete
     GripT: Long Term Pick Up
     TriggerT: Pick Up / Let Go
   playBackDevice: 0
@@ -352,6 +352,7 @@ MonoBehaviour:
   assignedController: 1
   collidedObject: {fileID: 0}
   grabbingState: 0
+  collidedList: []
 --- !u!114 &114000010611493206
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -445,8 +446,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myInfo:
-    padT: 
-    MenuT: 
+    padT: V Duplicate Object, ^ Delete Object
+    MenuT: Undo Delete
     GripT: Long Term Pick Up
     TriggerT: Pick Up / Let Go
   playBackDevice: 0
@@ -454,6 +455,7 @@ MonoBehaviour:
   assignedController: 0
   collidedObject: {fileID: 0}
   grabbingState: 0
+  collidedList: []
 --- !u!114 &114000011899290762
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -504,6 +506,9 @@ MonoBehaviour:
   playBackDevice: 0
   AuxiliaryTool: 0
   assignedController: 1
+  collidedObject: {fileID: 0}
+  grabbingState: 0
+  collidedList: []
   cuttingPlane: {fileID: 0}
   cuttingSpeedReduction: 200
   cPlaneState: 0
