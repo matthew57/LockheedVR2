@@ -22,7 +22,7 @@ public class NewCuttingPlane : NewGrabbing{
 
 
 
-	public enum state {off , idle, panForward, panBackward};
+	public enum state {off , idle, pan};
 	public state cPlaneState = state.idle;
 
 	public bool cPlaneOnOff = true;
@@ -80,23 +80,16 @@ public class NewCuttingPlane : NewGrabbing{
 
 	
 
-		//DPAD UP BUTTON SETTINGS - MOVE CUTTING PLANE UP ON NORMAL/////
+		//DPAD UP or down BUTTON SETTINGS - MOVE CUTTING PLANE UP ON NORMAL/////
 
-		if(e.padY > Mathf.Abs(e.padX))
+		if(e.padY > Mathf.Abs(e.padX) ||e.padY < -1*Mathf.Abs(e.padX) )
 		{
 			
-			cPlaneState = state.panForward;
+			cPlaneState = state.pan;
 			StartCoroutine("panCoroutine");
 		}
 
-		//DPAD DOWN BUTTON SETTINGS - MOVE CUTTING PLANE DOWN ON NORMAL/////
-		else if(e.padY < -1*Mathf.Abs(e.padX)) 
-		{
-
-			cPlaneState = state.panBackward;
-			StartCoroutine("panCoroutine");
-		}
-
+	
 		//DPAD LEFT BUTTON SETTINGS - FLIP NORMAL OF CUTTING PLANE/////////////
 		else if(e.padX <  -1 * Mathf.Abs(e.padY)) 
 		{
@@ -111,7 +104,6 @@ public class NewCuttingPlane : NewGrabbing{
 		}
 	
 			return true;
-
 
 	}
 
@@ -156,16 +148,11 @@ public class NewCuttingPlane : NewGrabbing{
 	}
 
 	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){
-		if (cPlaneState == state.panForward)
+		if (cPlaneState == state.pan)
 		{
-	
 			cPlaneState = state.idle;
 		}
-		if (cPlaneState == state.panBackward)
-		{
 	
-			cPlaneState = state.idle;
-		}
 		return true;
 	}
 

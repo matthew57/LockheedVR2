@@ -69,7 +69,7 @@ public class NewMenuSelector : ITool {
 	}
 
 	void onOffClicked(ClickedEventArgs e)
-	{Debug.Log ("clicking  " + !menuOn);
+	{
 		
 		menuOn = !menuOn;
 		ToolDescript.enabled = menuOn;

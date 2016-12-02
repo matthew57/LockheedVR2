@@ -66,6 +66,12 @@ public class PlayBackSystem :Tools {
 	}
 
 
+	public RecordingSystem.movementFrame getCurrentFrame(bool timeNormal)
+	{
+		if (timeNormal) {
+			return previousFrame;}
+		return nextFrame;
+	}
 
 	public bool isPlaying()
 	{if (currentState == null) {

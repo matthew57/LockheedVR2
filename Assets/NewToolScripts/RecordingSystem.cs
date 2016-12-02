@@ -32,7 +32,7 @@ public class RecordingSystem : ITool{
 
 	// Records the position of the head/hands at a single moment in time, plus all of the button events that are clicked between this and the next
 	[Serializable]
-	public struct movementFrame{
+	public class movementFrame{
 		//l == left   These have been abreviated to save on file storage space.
 		//r = right
 		//h = head
@@ -52,8 +52,9 @@ public class RecordingSystem : ITool{
 
 		public List<ActionClick> myC; // My clicks
 
+		public Vector2 LPad;
 
-
+		public Vector2 RPad;
 		public void changeTime(float t)
 		{
 			RT += t;}
@@ -64,6 +65,8 @@ public class RecordingSystem : ITool{
 			RT = t;}
 
 	}
+
+
 
 	//Keep track of all objects that have been touched so we can put them back when we replay
 	[Serializable]
@@ -137,16 +140,42 @@ public class RecordingSystem : ITool{
 				return mf;}
 
 		}
+		// used for gettign what action type a pad down was when rewinding
+
+
 
 	}
 
-	//I touched an object, mark it!
+	//I touched an object, mark it so we can make a copy on playback!
 	public void recordInteractedObj(GameObject obj)
 	{
 		if (isRecording) {
 			myData.addObject (obj);
 		}
 	}
+
+	public movementFrame getStartingAction(movementFrame mf, uint controllerIndex, Tools.button myButt)
+	{
+		for (int i = myData.savedFrames.LastIndexOf (mf); i > 0; i--) {
+			foreach (ActionClick ac in  myData.savedFrames[i].myC) {
+				if (ac.myAction.butClicked == myButt && ac.myAction.controllerIndex == controllerIndex) {
+					return  myData.savedFrames [i];
+				}
+			}
+		}
+		return null;
+	}
+
+	public static ClickedEventArgs getActionFromFrame(movementFrame mf, uint controllerIndex, Tools.button myButt)
+	{
+		foreach (ActionClick ac in  mf.myC) {
+			if (ac.myAction.butClicked == myButt && ac.myAction.controllerIndex == controllerIndex) {
+				return  ac.myAction;
+			}
+		}
+		return new ClickedEventArgs();
+	}
+
 
 
 	private Transform eyeC;
@@ -290,8 +319,12 @@ public class RecordingSystem : ITool{
 
 		mFrame.rP = rightC.position;
 		mFrame.rQ = rightC.rotation;
-		mFrame.RT = recordingTime;
+		mFrame.RT = recordingTime; 
+		mFrame.LPad = new Vector2(controllerLeft.controllerState.rAxis0.x,controllerLeft.controllerState.rAxis0.y);
+		mFrame.RPad = new Vector2(controllerRight.controllerState.rAxis0.x,controllerRight.controllerState.rAxis0.y);
+
 		myData.addFrame (mFrame);
+
 
 	}
 
