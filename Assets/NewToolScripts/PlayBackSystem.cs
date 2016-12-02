@@ -200,6 +200,14 @@ public class PlayBackSystem :Tools {
 			}
 		}
 
+		foreach (GameObject oldStuff in GameObject.FindGameObjectsWithTag("Measurement")) {
+
+			if (oldStuff != null) {
+				if (oldStuff.gameObject.layer == 10 ) {
+					Destroy (oldStuff.gameObject);
+				}
+			}
+		}
 
 		leftHand.transform.position = new Vector3( -1000, -1000, -1000);
 		rightHand.transform.position = new Vector3( -1000, -1000, -1000);
@@ -233,7 +241,7 @@ public class PlayBackSystem :Tools {
 
 				foreach (RecordingSystem.ActionClick ea in nextFrame.myC) {
 					foreach (PlayBackInputController pbic in playControllers) {
-					//	Debug.Log ("I clicked " + ea.controllerIndex + "   " + ea.butClicked + "   " + pbic);
+						
 						StartCoroutine(PerformAction(pbic, ea));
 					}
 				}
@@ -248,12 +256,17 @@ public class PlayBackSystem :Tools {
 				previousFrame = savedData.getGetPrevFrame (previousFrame);
 
 				if (nextFrame.RT == previousFrame.RT) {
-
-
 					currentState = null;
 					return;
 				}
 
+
+				foreach (RecordingSystem.ActionClick ea in nextFrame.myC) {
+					foreach (PlayBackInputController pbic in playControllers) {
+						
+						StartCoroutine(PerformBackwardsAction(pbic, ea));
+					}
+				}
 				//IMPLEMENT UNDO ACTIONS FOR ALL TOOLS!
 			}
 		}
@@ -266,7 +279,14 @@ public class PlayBackSystem :Tools {
 	IEnumerator PerformAction(PlayBackInputController pbic, RecordingSystem.ActionClick ac)
 	{
 		yield return new WaitForSeconds (ac.actionTime - currentPlaybackTime);
-		pbic.callButtonAction(ac.myAction);
+		pbic.callButtonAction(ac.myAction, true);
+	}
+
+	//Used for rewinding
+	IEnumerator PerformBackwardsAction(PlayBackInputController pbic, RecordingSystem.ActionClick ac)
+	{
+		yield return new WaitForSeconds (currentPlaybackTime -ac.actionTime);
+		pbic.callButtonAction(ac.myAction, false);
 	}
 
 
@@ -285,9 +305,7 @@ public class PlayBackSystem :Tools {
 	{
 		public void update(PlayBackSystem pbs)
 		{
-			if (Input.GetKeyDown (KeyCode.DownArrow)) {
-				pbs.currentState = new PauseState ();
-			}
+
 
 			pbs.PlayIt (1);
 
@@ -300,9 +318,7 @@ public class PlayBackSystem :Tools {
 	{
 		public void update(PlayBackSystem pbs)
 		{
-			if (Input.GetKeyDown (KeyCode.DownArrow)) {
-				pbs.currentState = new RegularPlayState();
-			}
+
 		}
 	}
 
@@ -311,16 +327,6 @@ public class PlayBackSystem :Tools {
 	{
 		public void update(PlayBackSystem pbs)
 		{
-
-		//	Debug.Log ("in fastforward state");
-			if (Input.GetKeyDown (KeyCode.DownArrow)) {
-				pbs.currentState = new PauseState ();
-			}
-			if (Input.GetKeyDown (KeyCode.RightArrow)) {
-				pbs.fastMultiplier++;
-			} 
-
-
 			pbs.PlayIt (pbs.fastMultiplier);
 		}
 
@@ -329,14 +335,7 @@ public class PlayBackSystem :Tools {
 	public class RewindState : PlayBackState
 	{
 		public void update(PlayBackSystem pbs)
-		{	//Debug.Log ("in rewind state");
-			if (Input.GetKeyDown (KeyCode.DownArrow)) {
-				pbs.currentState = new PauseState ();
-			}
-			if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-				pbs.fastMultiplier++;
-			} 
-			
+		{	
 			pbs.PlayIt (-1 * pbs.fastMultiplier);
 		}
 

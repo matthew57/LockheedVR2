@@ -69,7 +69,7 @@ public class NewMenuSelector : ITool {
 	}
 
 	void onOffClicked(ClickedEventArgs e)
-	{//Debug.Log ("clicking  " + !menuOn);
+	{Debug.Log ("clicking  " + !menuOn);
 		
 		menuOn = !menuOn;
 		ToolDescript.enabled = menuOn;
@@ -107,55 +107,57 @@ public class NewMenuSelector : ITool {
 
 
 
-	public override bool TriggerClick(ClickedEventArgs e){return false;}
+	public override bool TriggerClick(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool TriggerUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
 
-	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-	public override bool MenuClick (ClickedEventArgs e){
+
+	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal){
 
 	//	Debug.Log ("I am clicked " + this.gameObject);
 		onOffClicked (e);
 
 		return true;}
 	
-	public override bool MenuUnclick (ClickedEventArgs e){return false;}
-	public override bool PadClick (ClickedEventArgs e){
+	public override bool MenuUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadClick (ClickedEventArgs e, bool TimeNormal){
 
 		//Debug.Log ("Entering");
 		if (!menuOn) {
 			return false;
 		}
-		//Debug.Log ("Caliing actions " + e.butClicked + "   " + this.gameObject);
+	
 			menuButtons[currentMenuIndex].myButton.GetComponent<Image>().color = Color.clear;
 			menuButtons[currentMenuIndex].myButton.transform.GetComponentInChildren<Text>().enabled = false;
 
 
+		if (e.padX > 0 ||!TimeNormal) {
+				currentMenuIndex++;
 
-		if (e.padX > 0) {
-			currentMenuIndex++;
+				if (currentMenuIndex == menuButtons.Count) {
+					currentMenuIndex = 0;
+				}
+		
+			} else {
+				currentMenuIndex--;
+				if (currentMenuIndex == -1) {
+					currentMenuIndex = menuButtons.Count - 1;
+				}
+		
+			}
 
-			if (currentMenuIndex == menuButtons.Count) {
-				currentMenuIndex = 0;
-			}
-		
-		} else {
-			currentMenuIndex--;
-			if (currentMenuIndex == -1) {
-				currentMenuIndex = menuButtons.Count -1;
-			}
-		
-		}
+
 		setMenuIndex (currentMenuIndex);
 
 
 		return true;
 	
 	}
-	public override bool PadUnclick (ClickedEventArgs e){return false;}
-	public override bool Grip (ClickedEventArgs e){return false;}
-	public override bool UnGrip(ClickedEventArgs e){return false;}
-	public override bool PadTouched(ClickedEventArgs e){return false;}
-	public override bool PadUntouched(ClickedEventArgs e){return false;}
-	public override bool SteamClicked (ClickedEventArgs e){return false;}
+	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool Grip (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool UnGrip(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadTouched(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadUntouched(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool SteamClicked (ClickedEventArgs e, bool TimeNormal){return false;}
 
 	public override void CollisionEnter (Collider collider){
 

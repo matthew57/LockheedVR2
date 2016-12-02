@@ -15,7 +15,7 @@ public class ImprovedController : MonoBehaviour {
 
 	public void setMainTool(ITool nextTool)
 	{
-
+		//Debug.Log ("Settign main tool to " + nextTool + "  " + this.gameObject);
 
 		if (myTools.Count == 0) {
 			myTools.Add (nextTool);
@@ -133,12 +133,12 @@ public class ImprovedController : MonoBehaviour {
 		this.controllerIndex = (uint) index;
 	}
 
-	public virtual void OnTriggerClicked(ClickedEventArgs e)
+	public virtual void OnTriggerClicked(ClickedEventArgs e, bool TimeNormal)
 	{
 
 		foreach (ITool IT in myTools) {
 			if (IT) {
-				if (IT.TriggerClick (e)) {
+				if (IT.TriggerClick (e,TimeNormal)) {
 					break;
 				}
 			}
@@ -150,11 +150,11 @@ public class ImprovedController : MonoBehaviour {
 
 	}
 
-	public virtual void OnTriggerUnclicked(ClickedEventArgs e)
+	public virtual void OnTriggerUnclicked(ClickedEventArgs e, bool TimeNormal)
 	{
 	foreach (ITool IT in myTools) {
 			if (IT) {
-				if (IT.TriggerUnclick(e)) {
+				if (IT.TriggerUnclick(e,TimeNormal)) {
 					break;
 				}
 			}
@@ -163,16 +163,12 @@ public class ImprovedController : MonoBehaviour {
 			TriggerUnclicked(this, e);
 	}
 
-	public virtual void OnMenuClicked(ClickedEventArgs e)
+	public virtual void OnMenuClicked(ClickedEventArgs e, bool TimeNormal)
 	{
-		//Debug.Log ("CCCCCCCCalling menu");
-		foreach (ITool IT in myTools) {
 
-			//Debug.Log ("Inside LOOP!");
+		foreach (ITool IT in myTools) {
 			if (IT) {
-				//Debug.Log ("HAS A TOOL " + IT);
-				if (IT.MenuClick(e)) {
-					//Debug.Log ("BREAKING");
+				if (IT.MenuClick(e,TimeNormal)) {
 					break;
 				}
 			}
@@ -181,11 +177,11 @@ public class ImprovedController : MonoBehaviour {
 			MenuButtonClicked(this, e);
 	}
 
-	public virtual void OnMenuUnclicked(ClickedEventArgs e)
+	public virtual void OnMenuUnclicked(ClickedEventArgs e, bool TimeNormal)
 	{
 		foreach (ITool IT in myTools) {
 			if (IT) {
-				if (IT.MenuUnclick(e)) {
+				if (IT.MenuUnclick(e,TimeNormal)) {
 					break;
 				}
 			}
@@ -194,11 +190,11 @@ public class ImprovedController : MonoBehaviour {
 			MenuButtonUnclicked(this, e);
 	}
 
-	public virtual void OnSteamClicked(ClickedEventArgs e)
+	public virtual void OnSteamClicked(ClickedEventArgs e, bool TimeNormal)
 	{
 		foreach (ITool IT in myTools) {
 			if (IT) {
-				if (IT.SteamClicked(e)) {
+				if (IT.SteamClicked(e,TimeNormal)) {
 					break;
 				}
 			}
@@ -207,11 +203,11 @@ public class ImprovedController : MonoBehaviour {
 			SteamClicked(this, e);
 	}
 
-	public virtual void OnPadClicked(ClickedEventArgs e)
-	{
+	public virtual void OnPadClicked(ClickedEventArgs e, bool TimeNormal)
+	{//Debug.Log ("checking " + this.gameObject);
 		foreach (ITool IT in myTools) {
 			if (IT) {
-				if (IT.PadClick(e)) {
+				if (IT.PadClick(e,TimeNormal)) {
 					return;
 				}
 			}
@@ -220,11 +216,11 @@ public class ImprovedController : MonoBehaviour {
 			PadClicked(this, e);
 	}
 
-	public virtual void OnPadUnclicked(ClickedEventArgs e)
+	public virtual void OnPadUnclicked(ClickedEventArgs e, bool TimeNormal)
 	{
 		foreach (ITool IT in myTools) {
 			if (IT) {
-				if (IT.PadUnclick(e)) {
+				if (IT.PadUnclick(e,TimeNormal)) {
 					return;
 				}
 			}
@@ -233,11 +229,11 @@ public class ImprovedController : MonoBehaviour {
 			PadUnclicked(this, e);
 	}
 
-	public virtual void OnPadTouched(ClickedEventArgs e)
+	public virtual void OnPadTouched(ClickedEventArgs e, bool TimeNormal)
 	{
 		foreach (ITool IT in myTools) {
 			if (IT) {
-				if (IT.PadTouched(e)) {
+				if (IT.PadTouched(e,TimeNormal)) {
 					break;
 				}
 			}
@@ -246,11 +242,11 @@ public class ImprovedController : MonoBehaviour {
 			PadTouched(this, e);
 	}
 
-	public virtual void OnPadUntouched(ClickedEventArgs e)
+	public virtual void OnPadUntouched(ClickedEventArgs e, bool TimeNormal)
 	{
 		foreach (ITool IT in myTools) {
 			if (IT) {
-				if (IT.PadUntouched(e)) {
+				if (IT.PadUntouched(e,TimeNormal)) {
 					break;
 				}
 			}
@@ -259,11 +255,11 @@ public class ImprovedController : MonoBehaviour {
 			PadUntouched(this, e);
 	}
 
-	public virtual void OnGripped(ClickedEventArgs e)
+	public virtual void OnGripped(ClickedEventArgs e, bool TimeNormal)
 	{
 		foreach (ITool IT in myTools) {
 			if (IT) {
-				if (IT.Grip(e)) {
+				if (IT.Grip(e,TimeNormal)) {
 					break;
 				}
 			}
@@ -272,10 +268,10 @@ public class ImprovedController : MonoBehaviour {
 			Gripped(this, e);
 	}
 
-	public virtual void OnUngripped(ClickedEventArgs e)
+	public virtual void OnUngripped(ClickedEventArgs e, bool TimeNormal)
 	{foreach (ITool IT in myTools) {
 		if (IT) {
-				if (IT.UnGrip(e)) {
+				if (IT.UnGrip(e,TimeNormal)) {
 				break;
 			}
 		}
@@ -308,7 +304,7 @@ public class ImprovedController : MonoBehaviour {
 			{
 				triggerPressed = true;
 				e.butClicked = Tools.button.Trigger;// ******
-				OnTriggerClicked(e);
+				OnTriggerClicked(e, true);
 				e.offOn = true;
 				buttonPressed = true;
 
@@ -317,7 +313,7 @@ public class ImprovedController : MonoBehaviour {
 			{
 				triggerPressed = false;
 				e.butClicked = Tools.button.Trigger;// ******
-				OnTriggerUnclicked(e);
+				OnTriggerUnclicked(e, true);
 				e.offOn = false;
 				buttonPressed = true;
 			}
@@ -327,7 +323,7 @@ public class ImprovedController : MonoBehaviour {
 			{
 				gripped = true;
 				e.butClicked = Tools.button.Grip;// ******
-				OnGripped(e);
+				OnGripped(e, true);
 				e.offOn = true;
 				buttonPressed = true;
 
@@ -336,7 +332,7 @@ public class ImprovedController : MonoBehaviour {
 			{
 				gripped = false;
 				e.butClicked = Tools.button.Grip;// ******
-				OnUngripped(e);
+				OnUngripped(e, true);
 				e.offOn = false;
 				buttonPressed = true;
 			}
@@ -346,7 +342,7 @@ public class ImprovedController : MonoBehaviour {
 			{
 				padTouched = true;
 				e.butClicked = Tools.button.PadTouch; // ******
-				OnPadTouched(e);
+				OnPadTouched(e, true);
 				e.offOn = true;
 				buttonPressed = true;
 
@@ -355,7 +351,7 @@ public class ImprovedController : MonoBehaviour {
 			{
 				padTouched = false;
 				e.butClicked = Tools.button.PadTouch;// ******
-				OnPadUntouched(e);
+				OnPadUntouched(e, true);
 				e.offOn = false;
 				buttonPressed = true;
 			}
@@ -368,7 +364,7 @@ public class ImprovedController : MonoBehaviour {
 			{
 				padPressed = true;
 				e.butClicked = Tools.button.Pad; // ******
-				OnPadClicked(e);
+				OnPadClicked(e, true);
 				e.offOn = true;
 				buttonPressed = true;
 			}
@@ -376,7 +372,7 @@ public class ImprovedController : MonoBehaviour {
 			{
 				padPressed = false;
 				e.butClicked = Tools.button.Pad;// ******
-				OnPadUnclicked(e);
+				OnPadUnclicked(e, true);
 				e.offOn = false;
 				buttonPressed = true;
 			}
@@ -386,7 +382,7 @@ public class ImprovedController : MonoBehaviour {
 			{
 				menuPressed = true;
 				e.butClicked = Tools.button.Menu; // ******
-				OnMenuClicked(e);
+				OnMenuClicked(e, true);
 				e.offOn = true;
 				buttonPressed = true;
 			}
@@ -394,14 +390,14 @@ public class ImprovedController : MonoBehaviour {
 			{
 				menuPressed = false;
 				e.butClicked = Tools.button.Menu;// ******
-				OnMenuUnclicked(e);
+				OnMenuUnclicked(e, true);
 				e.offOn = false;
 				buttonPressed = true;
 			}
 
 		
 			if (MyRecorder && buttonPressed) {
-				MyRecorder.recordClick (e);
+				MyRecorder.recordClick (e, true);
 			}
 
 		}

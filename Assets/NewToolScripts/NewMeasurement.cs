@@ -12,6 +12,8 @@ public class NewMeasurement : ITool {
 	public GameObject measurementPrefab;
 	private GameObject measurement;
 	private List<measureInfo> allMeasurements = new List<measureInfo> ();
+
+	private List<measureInfo> deletedMeasurements = new List<measureInfo> ();
 	private GameObject startsphere;
 	private GameObject endsphere;
 	private GameObject measureLine;
@@ -53,125 +55,163 @@ public class NewMeasurement : ITool {
 
 
 
-	public override bool TriggerClick(ClickedEventArgs e){
+	public override bool TriggerClick(ClickedEventArgs e, bool TimeNormal){
+		if (TimeNormal) {
+			if (measureState == state.idle) {	
+				if (closestMeasure) {
+					closestMeasure.myLine.material = closestMeasure.yellowShade;
+				}
+				measureState = state.start;
+				measurement = Instantiate (measurementPrefab);
 
-		if (measureState == state.idle)
-		{	
-			if (closestMeasure) {
-				closestMeasure.myLine.material = closestMeasure.yellowShade;
-			}
-			measureState = state.start;
-			measurement = Instantiate(measurementPrefab);
-			if (playBackDevice) {
-				measurement.layer = 10;
-			}
-			allMeasurements.Add (measurement.GetComponent<measureInfo>());
-			setSpheres ();
-			StartCoroutine(measureCoroutine( false, false));     
-		}
-		else if (measureState == state.start)
-		{
-			finalCLick (false);
+				if (playBackDevice) {
+					measurement.layer = 10;
+				}
+				allMeasurements.Add (measurement.GetComponent<measureInfo> ());
+				setSpheres ();
+				StartCoroutine (measureCoroutine (false, false));     
+			} else if (measureState == state.start) {
+				finalCLick (false);
 		
-		}
-		else if (measureState == state.end)
-		{
-			measureState = state.idle;
+			} else if (measureState == state.end) {
+				measureState = state.idle;
+			}
+		} else {
+			if (measureState == state.idle) {
+				MenuClick (e, true);
+			} else {
+				PadClick (e, true);
+			}
 		}
 		return true;
 
 	}
-	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-
-
 
 	//Rearrange existing measurement
-	public override bool MenuClick (ClickedEventArgs e){
-
-		if (measureState == state.idle)
-		{	
-			if (closestMeasure) {
-				closestMeasure.myLine.material = closestMeasure.yellowShade;
-			}
-			measureState = state.start;
-			measurement = getClosest ().gameObject;
-			if (!measurement) {
-				return false;}
+	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal){
+		if (TimeNormal) {
 			
-			setSpheres ();
-			if (Vector3.Distance (grabSphere.transform.position, endsphere.transform.position) > Vector3.Distance (grabSphere.transform.position, startsphere.transform.position)) {
-				GameObject tempStart = startsphere;
+			if (measureState == state.idle) {
+					
+				if (closestMeasure) {
+					closestMeasure.myLine.material = closestMeasure.yellowShade;
+				}
+				measureState = state.start;
+				measurement = getClosest ().gameObject;
+				if (!measurement) {
+					return false;
+				}
+			
+				setSpheres ();
+				if (Vector3.Distance (grabSphere.transform.position, endsphere.transform.position) > Vector3.Distance (grabSphere.transform.position, startsphere.transform.position)) {
+					GameObject tempStart = startsphere;
 
-				startsphere = endsphere;
-				startsphere.name = "EndSphere";
+					startsphere = endsphere;
+					startsphere.name = "EndSphere";
 
-				endsphere = tempStart;
-				endsphere.name = "StartSphere";
+					endsphere = tempStart;
+					endsphere.name = "StartSphere";
 			
 
-			} else {
+				} else {
 	
-				endsphere.transform.position = startsphere.transform.position;
+					endsphere.transform.position = startsphere.transform.position;
+				}
+
+				StartCoroutine (measureCoroutine (false, true));  
+			} else if (measureState == state.start) {
+				finalCLick (false);
+
+			} else if (measureState == state.end) {
+
+				measureState = state.idle;
 			}
+		} else {
+			if (measureState == state.idle) {
 
-			StartCoroutine (measureCoroutine (false,true));  
-		}
-		else if (measureState == state.start)
-		{
-			finalCLick (false);
+				Debug.Log ("Was idle");
+				MenuClick (e, true);
 
-		}
-		else if (measureState == state.end)
-		{
-
-			measureState = state.idle;
+			} else if (measureState == state.start) {
+				Debug.Log ("Was Start ");
+				TriggerClick (e, true);
+			
+			} else if (measureState == state.end) {
+				Debug.Log ("Was End");
+				TriggerClick (e, true);
+			}
+		
 		}
 		return true;
 	}
-	
-	public override bool MenuUnclick (ClickedEventArgs e){return false;}
 
-
-	public override bool PadClick (ClickedEventArgs e){
+	public override bool PadClick (ClickedEventArgs e, bool TimeNormal){
 
 
 		measureInfo bestObj = getClosest ();
-
-		if (bestObj) {
+		if (TimeNormal) {
+			if (bestObj) {
 		
-			allMeasurements.Remove (bestObj);
-				Destroy (bestObj.gameObject);
+				allMeasurements.Remove (bestObj);
+				if (playBackDevice) {
+					deletedMeasurements.Add (bestObj);
+					bestObj.gameObject.SetActive (false);
+				} else {
+					Destroy (bestObj.gameObject);
+				}
+				measureState = state.idle;
+			}
+		} else {
+
+			float bestDistance = 100000;
+			foreach (measureInfo obj in deletedMeasurements) {
+
+					float tempDist = distanceToLine (obj.startSphere.transform.position, obj.endSphere.transform.position, grabSphere.transform.position);// = Vector3.Distance (obj.startSphere.transform.position, grabSphere.transform.position);
+					if (tempDist < bestDistance) {
+						bestObj = obj;
+						bestDistance = tempDist;
+
+					}
+
+				}
+			bestObj.gameObject.SetActive (true);
+			deletedMeasurements.Remove (bestObj);
+			allMeasurements.Add (bestObj);
+
+		
 		}
 
 		return true;
 	}
 
 
-
-
-
-
-	public override bool PadUnclick (ClickedEventArgs e){return false;}
 
 
 
 
 	//USED FOR SNAPPING
-	public override bool Grip (ClickedEventArgs e){
-		if (measureState == state.idle)
-		{
-			measureState = state.start;
-			measurement = Instantiate(measurementPrefab);
-			allMeasurements.Add (measurement.GetComponent<measureInfo>());
-			setSpheres ();
+	public override bool Grip (ClickedEventArgs e, bool TimeNormal){
+	
+		if (TimeNormal) {
+			if (measureState == state.idle) {
+				measureState = state.start;
+				measurement = Instantiate (measurementPrefab);
+				allMeasurements.Add (measurement.GetComponent<measureInfo> ());
+				setSpheres ();
 
 
 
-			StartCoroutine (measureCoroutine (true, false));  
-		}
-		else if (measureState == state.start)
-		{
-			finalCLick (true);
+				StartCoroutine (measureCoroutine (true, false));  
+			} else if (measureState == state.start) {
+				finalCLick (true);
+
+			}
+		} else {
+			if (measureState == state.idle) {
+				MenuClick (e, true);
+			} else {
+				PadClick (e, true);
+			}
 
 		}
 
@@ -234,10 +274,13 @@ public class NewMeasurement : ITool {
 
 	}
 
-	public override bool UnGrip(ClickedEventArgs e){return false;}
-	public override bool PadTouched(ClickedEventArgs e){return false;}
-	public override bool PadUntouched(ClickedEventArgs e){return false;}
-	public override bool SteamClicked (ClickedEventArgs e){return false;}
+	public override bool MenuUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool TriggerUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool UnGrip(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadTouched(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadUntouched(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool SteamClicked (ClickedEventArgs e, bool TimeNormal){return false;}
 	public override void CollisionEnter (Collider other){}
 	public override void CollisionExit (Collider other){}
 
@@ -356,7 +399,9 @@ public class NewMeasurement : ITool {
 		measureInfo bestObj = null;
 
 		foreach (measureInfo obj in allMeasurements) {
-
+			if (obj == null) {
+				continue;
+			}
 			float tempDist = distanceToLine (obj.startSphere.transform.position, obj.endSphere.transform.position, grabSphere.transform.position);// = Vector3.Distance (obj.startSphere.transform.position, grabSphere.transform.position);
 			if (tempDist < bestDistance) {
 				bestObj = obj;

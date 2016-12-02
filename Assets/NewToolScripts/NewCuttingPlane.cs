@@ -30,7 +30,7 @@ public class NewCuttingPlane : NewGrabbing{
 	private int set = 0;
 
 
-	public override bool MenuClick (ClickedEventArgs e){
+	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal){
 	
 
 
@@ -74,9 +74,9 @@ public class NewCuttingPlane : NewGrabbing{
 
 
 
-	public override bool MenuUnclick (ClickedEventArgs e){return false;}
+	public override bool MenuUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
 
-	public override bool PadClick (ClickedEventArgs e){
+	public override bool PadClick (ClickedEventArgs e, bool TimeNormal){
 
 	
 
@@ -155,7 +155,7 @@ public class NewCuttingPlane : NewGrabbing{
 		cPlaneState = state.idle;
 	}
 
-	public override bool PadUnclick (ClickedEventArgs e){
+	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){
 		if (cPlaneState == state.panForward)
 		{
 	

@@ -297,7 +297,7 @@ public class RecordingSystem : ITool{
 
 
 
-	public override bool TriggerClick(ClickedEventArgs e){
+	public override bool TriggerClick(ClickedEventArgs e, bool TimeNormal){
 		if (playBackDevice) {
 			return false;
 		}
@@ -399,7 +399,7 @@ public class RecordingSystem : ITool{
 
 
 	// Start playback
-	public override bool MenuClick (ClickedEventArgs e){
+	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal){
 		if (playBackDevice) {
 			return false;
 		}
@@ -419,10 +419,10 @@ public class RecordingSystem : ITool{
 		return false;
 	}
 
-	public override bool MenuUnclick (ClickedEventArgs e){return false;}
+	public override bool MenuUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
 
 
-	public override bool PadClick (ClickedEventArgs e){
+	public override bool PadClick (ClickedEventArgs e, bool TimeNormal){
 		if (playBackDevice) {
 			return false;
 		}
@@ -459,7 +459,7 @@ public class RecordingSystem : ITool{
 		return false;
 	}
 
-	public void recordClick(ClickedEventArgs ea)
+	public void recordClick(ClickedEventArgs ea, bool TimeNormal)
 	{
 		if (isRecording) {
 			myData.addAction (ea, recordingTime);
@@ -467,13 +467,13 @@ public class RecordingSystem : ITool{
 
 	}
 
-	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-	public override bool PadUnclick (ClickedEventArgs e){return false;}
-	public override bool Grip (ClickedEventArgs e){return false;}
-	public override bool UnGrip(ClickedEventArgs e){return false;}
-	public override bool PadTouched(ClickedEventArgs e){return false;}
-	public override bool PadUntouched(ClickedEventArgs e){return false;}
-	public override bool SteamClicked (ClickedEventArgs e){return false;}
+	public override bool TriggerUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool Grip (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool UnGrip(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadTouched(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadUntouched(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool SteamClicked (ClickedEventArgs e, bool TimeNormal){return false;}
 	public override void CollisionEnter (Collider other){}
 	public override void CollisionExit (Collider other){}
 	public override void stopUsing (){}

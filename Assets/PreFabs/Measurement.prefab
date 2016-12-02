@@ -39,7 +39,7 @@ GameObject:
   - 114: {fileID: 114000010484491714}
   m_Layer: 0
   m_Name: Measurement
-  m_TagString: Untagged
+  m_TagString: Measurement
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

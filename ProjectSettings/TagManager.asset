@@ -11,6 +11,8 @@ TagManager:
   - UIObject
   - SceneObject
   - ClippingPlane
+  - Fire
+  - Measurement
   layers:
   - Default
   - TransparentFX

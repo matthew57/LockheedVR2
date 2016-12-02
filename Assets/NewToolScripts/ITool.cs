@@ -23,17 +23,17 @@ public abstract class  ITool : MonoBehaviour {
 
 	// RETURN TRUE IF YOU HAVE CODE THAT IS USED IN THESE METHODS. FALSE WILL ALLOW THE COMMAND TO GO TO OTHER SECONDARY TOOLS
 
-	public abstract bool TriggerClick(ClickedEventArgs e);
-	public abstract bool TriggerUnclick (ClickedEventArgs e);
-	public abstract bool MenuClick (ClickedEventArgs e);
-	public abstract bool MenuUnclick (ClickedEventArgs e);
-	public abstract bool PadClick (ClickedEventArgs e);
-	public abstract bool PadUnclick (ClickedEventArgs e);
-	public abstract bool Grip (ClickedEventArgs e);
-	public abstract bool UnGrip(ClickedEventArgs e);
-	public abstract bool PadTouched(ClickedEventArgs e);
-	public abstract bool PadUntouched(ClickedEventArgs e);
-	public abstract bool SteamClicked (ClickedEventArgs e);
+	public abstract bool TriggerClick(ClickedEventArgs e, bool TimeNormal);
+	public abstract bool TriggerUnclick (ClickedEventArgs e, bool TimeNormal);
+	public abstract bool MenuClick (ClickedEventArgs e, bool TimeNormal);
+	public abstract bool MenuUnclick (ClickedEventArgs e, bool TimeNormal);
+	public abstract bool PadClick (ClickedEventArgs e, bool TimeNormal);
+	public abstract bool PadUnclick (ClickedEventArgs e, bool TimeNormal);
+	public abstract bool Grip (ClickedEventArgs e, bool TimeNormal);
+	public abstract bool UnGrip(ClickedEventArgs e, bool TimeNormal);
+	public abstract bool PadTouched(ClickedEventArgs e, bool TimeNormal);
+	public abstract bool PadUntouched(ClickedEventArgs e, bool TimeNormal);
+	public abstract bool SteamClicked (ClickedEventArgs e, bool TimeNormal);
 	public abstract void CollisionEnter (Collider other);
 	public abstract void CollisionExit (Collider other);
 
@@ -45,17 +45,17 @@ public abstract class  ITool : MonoBehaviour {
 
 //Copy and paste these into any new classes extending ITool. leave them blank if that tool doesn't use that button press
 
-	public override bool TriggerClick(ClickedEventArgs e){return false;}
-	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-	public override bool MenuClick (ClickedEventArgs e){return false;}
-	public override bool MenuUnclick (ClickedEventArgs e){return false;}
-	public override bool PadClick (ClickedEventArgs e){return false;}
-	public override bool PadUnclick (ClickedEventArgs e){return false;}
-	public override bool Grip (ClickedEventArgs e){return false;}
-	public override bool UnGrip(ClickedEventArgs e){return false;}
-	public override bool PadTouched(ClickedEventArgs e){return false;}
-	public override bool PadUntouched(ClickedEventArgs e){return false;}
-	public override bool SteamClicked (ClickedEventArgs e){return false;}
+	public override bool TriggerClick(ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool TriggerUnclick (ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool MenuUnclick (ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool PadClick (ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool Grip (ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool UnGrip(ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool PadTouched(ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool PadUntouched(ClickedEventArgs e, bool TimeNormal)){return false;}
+	public override bool SteamClicked (ClickedEventArgs e, bool TimeNormal)){return false;}
 	public override void CollisionEnter (Collider other){}
 	public override void CollisionExit (Collider other){}
 	public override void stopUsing (){}

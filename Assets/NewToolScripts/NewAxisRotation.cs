@@ -14,9 +14,9 @@ public class NewAxisRotation: ITool {
 
 	GameObject lastCollided;
 
-	public override bool TriggerClick(ClickedEventArgs e){return false;}
-	public override bool TriggerUnclick (ClickedEventArgs e){return false;}
-	public override bool MenuClick (ClickedEventArgs e){
+	public override bool TriggerClick(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool TriggerUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal){
 	
 		if (axisState == state.off)
 		{
@@ -29,9 +29,9 @@ public class NewAxisRotation: ITool {
 		return true;
 	
 	}
-	public override bool MenuUnclick (ClickedEventArgs e){return false;}
+	public override bool MenuUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
 
-	public override bool PadClick (ClickedEventArgs e){
+	public override bool PadClick (ClickedEventArgs e, bool TimeNormal){
 
 
 		if (!controllerInit.triggerPressed)
@@ -68,7 +68,7 @@ public class NewAxisRotation: ITool {
 		return true;
 	}
 
-	public override bool PadUnclick (ClickedEventArgs e){
+	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){
 		if (axisState != state.off)
 		{
 			axisState = state.idle;
@@ -77,7 +77,7 @@ public class NewAxisRotation: ITool {
 		return true;
 	}
 
-	public override bool Grip (ClickedEventArgs e){
+	public override bool Grip (ClickedEventArgs e, bool TimeNormal){
 		if (lastCollided) {
 
 			GameObject.FindObjectOfType<ModelManager> ().cadModel = lastCollided;
@@ -92,10 +92,10 @@ public class NewAxisRotation: ITool {
 		return false;
 	
 	}
-	public override bool UnGrip(ClickedEventArgs e){return false;}
-	public override bool PadTouched(ClickedEventArgs e){return false;}
-	public override bool PadUntouched(ClickedEventArgs e){return false;}
-	public override bool SteamClicked (ClickedEventArgs e){return false;}
+	public override bool UnGrip(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadTouched(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool PadUntouched(ClickedEventArgs e, bool TimeNormal){return false;}
+	public override bool SteamClicked (ClickedEventArgs e, bool TimeNormal){return false;}
 	public override void CollisionEnter (Collider other){
 		lastCollided = other.gameObject;
 
@@ -115,11 +115,8 @@ public class NewAxisRotation: ITool {
 
 		while (axisState == state.moving)
 		{
-
 			axis.transform.rotation = Quaternion.Euler(axis.transform.rotation.z, controllerInit.transform.rotation.eulerAngles.y, axis.transform.rotation.x);
-
 			axis.transform.Translate(nVector * Time.deltaTime);
-
 			nVector = new Vector3(controllerInit.controllerState.rAxis0.x, 0, controllerInit.controllerState.rAxis0.y);
 
 			yield return null;

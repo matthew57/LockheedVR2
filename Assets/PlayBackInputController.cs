@@ -20,11 +20,9 @@ public class PlayBackInputController : ImprovedController {
 		
 	}
 
-	public void callButtonAction(ClickedEventArgs e)
+	public void callButtonAction(ClickedEventArgs e, bool TimeNormal)
 	{
 		if (e.controllerIndex != controllerIndex) {
-
-		
 			return;
 		}
 
@@ -33,69 +31,63 @@ public class PlayBackInputController : ImprovedController {
 		this.transform.position = e.location;
 		this.transform.rotation = e.rotation;
 
-		if (e.butClicked == Tools.button.Trigger && e.offOn)
-			{
-				triggerPressed = true;
-				OnTriggerClicked(e);
-
+		if (e.butClicked == Tools.button.Trigger) {
+			if (e.offOn) {
+				triggerPressed = true && TimeNormal;
+				OnTriggerClicked (e, TimeNormal);
+			} else {
+				triggerPressed = false || !TimeNormal;
+				OnTriggerUnclicked (e, TimeNormal);
 			}
-		else if (e.butClicked == Tools.button.Trigger && !e.offOn)
-			{
-				triggerPressed = false;
-				OnTriggerUnclicked(e);
-			}
+		}
 
 			
-		if (e.butClicked == Tools.button.Grip && e.offOn)
-			{
-				gripped = true;
-				OnGripped(e);
+		if (e.butClicked == Tools.button.Grip) {
+			if (e.offOn) {
+				gripped = true && TimeNormal;
+				OnGripped (e, TimeNormal);
+			} else {
+				gripped = false || !TimeNormal;
+				OnUngripped (e, TimeNormal);
+			}
+		}
 
+		if (e.butClicked == Tools.button.Pad) {
+			if (e.offOn) {
+				padPressed = true && TimeNormal;
+				OnPadClicked (e, TimeNormal);
+			} else {
+				padPressed = false || !TimeNormal;
+				OnPadUnclicked (e, TimeNormal);
 			}
-		else if (e.butClicked == Tools.button.Grip && !e.offOn)
-			{
-				gripped = false;
-				OnUngripped(e);
-			}
-
-
-		if (e.butClicked == Tools.button.Pad && e.offOn)
-			{
-				padPressed = true;
-				OnPadClicked(e);
-			}
-		else if (e.butClicked == Tools.button.Pad && !e.offOn)
-			{
-				padPressed = false;
-				OnPadUnclicked(e);
-			}
+		}
 
 
-			if (e.butClicked == Tools.button.Menu && e.offOn)
-			{
-				menuPressed = true;
-				OnMenuClicked(e);
+		if (e.butClicked == Tools.button.Menu){
+			if (e.offOn) {
+				menuPressed = true && TimeNormal;
+				OnMenuClicked (e, TimeNormal);
+			} else {
+				menuPressed = false|| !TimeNormal;
+				OnMenuUnclicked(e, TimeNormal);
 			}
-			else if (e.butClicked == Tools.button.Menu && !e.offOn)
-			{
-				menuPressed = false;
-				OnMenuUnclicked(e);
-			}
-
+		}
 			
-		if (e.butClicked == Tools.button.PadTouch && e.offOn)
-			{
-				padTouched = true;
-				OnPadTouched(e);
-
+			
+		if (e.butClicked == Tools.button.PadTouch ) {
+			if (e.offOn) {
+				padTouched = true && TimeNormal;
+				OnPadTouched (e, TimeNormal);
+			} else {
+				padTouched = false || !TimeNormal;
+				OnPadUntouched (e, TimeNormal);
 			}
-		else if (e.butClicked == Tools.button.PadTouch && !e.offOn)
-			{
-				padTouched = false;
-				OnPadUntouched(e);
-			}
-
-
-
+		}
+	
 	}
+
+
+
+
+
 }

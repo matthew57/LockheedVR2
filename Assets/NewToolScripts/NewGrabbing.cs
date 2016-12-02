@@ -45,7 +45,7 @@ public class NewGrabbing : ITool {
 	List<deletedObj> deletedList = new List<deletedObj>();
 	public List<GameObject> collidedList = new List<GameObject>();
 
-
+	//Objects dont actually get deleted, they re just moved off to the side of the program where they cant be seen or accessed
 	struct deletedObj{
 
 		public GameObject obj;
@@ -60,8 +60,6 @@ public class NewGrabbing : ITool {
 
 	void Start()
 		{
-
-	
 		foreach (NewGrabbing ng in GetComponents<NewGrabbing>()) {
 			if (ng != this) {
 				otherGrabber = ng;
@@ -70,14 +68,15 @@ public class NewGrabbing : ITool {
 		}
 		myRecorder = GetComponent<RecordingSystem> ();
 		grabSphere = controllerInit.gameObject.transform.Find("GrabSphere").gameObject;
-
-
 		}
 
 
-	public override bool TriggerClick(ClickedEventArgs e)
+	public override bool TriggerClick(ClickedEventArgs e, bool TimeNormal)
 	{
-
+		if (!TimeNormal) {
+			TriggerUnclick (e, true);
+			return true;
+		}
 		if (collidedObject == null || collidedObject.tag == "UIObject")
 		{
 			return false;
@@ -108,8 +107,12 @@ public class NewGrabbing : ITool {
 		return true;
 	}
 
-	public override bool TriggerUnclick (ClickedEventArgs e)
-	{
+	public override bool TriggerUnclick (ClickedEventArgs e, bool TimeNormal)
+	{if (!TimeNormal) {
+			TriggerClick (e, true);
+			return true ;
+		}
+
 		if (grabbingState == state.pickedUp)
 		{
 			releaseObj();
@@ -118,40 +121,66 @@ public class NewGrabbing : ITool {
 		return true;
 	}
 
-	public override bool MenuClick (ClickedEventArgs e){ 
-
+	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal){ 
+		
 		if (assignedController == controller.Right) {
-			undoDelete ();
+
+			if (!TimeNormal) {
+				releaseObj ();
+				deleteObject (collidedObject);
+				checkIfInObject ();
+		
+			} else {
+				undoDelete ();
+			}
+			return true;
 		}
 
 
 		return false;}
 	
-	public override bool MenuUnclick (ClickedEventArgs e){ return false;}
+	public override bool MenuUnclick (ClickedEventArgs e, bool TimeNormal){ return false;}
 
 	// For Deleting and duplicating objects, if grabbing and object, it will leave a duplicate behind, if none are grabbed, it will create a new copy and grab it.
-	public override bool PadClick (ClickedEventArgs e){ 
+	public override bool PadClick (ClickedEventArgs e, bool TimeNormal){ 
 
+	
 		if (assignedController == controller.Right) {
 			if (e.padY > 0) {
 				if (collidedObject && grabbingState == state.pickedUp) {
-					releaseObj ();
-					deleteObject (collidedObject);
-					checkIfInObject ();
+
+					if (!TimeNormal) {
+						MenuClick (e, true);
+					} else {
+						releaseObj ();
+						deleteObject (collidedObject);
+						checkIfInObject ();
+					}
 
 				} else if (collidedObject && grabbingState == state.idle) {
-					ErrorPrompt.instance.showError ("Pick up an object to delete it");
+					if (TimeNormal) {
+						ErrorPrompt.instance.showError ("Pick up an object to delete it");
+					}
 				}
 			} else {
 				if (grabbingState == state.pickedUp) {
-
-					Instantiate (collidedObject, collidedObject.transform.position, collidedObject.transform.rotation);
+					if (TimeNormal) {
+						Instantiate (collidedObject, collidedObject.transform.position, collidedObject.transform.rotation);
+					} else {
+						releaseObj ();
+						Destroy (collidedObject);
+						checkIfInObject ();
+					}
 				} else if (grabbingState == state.colliding) {
-		
-					GameObject obj =  (GameObject)Instantiate (collidedObject, collidedObject.transform.position, collidedObject.transform.rotation);
-					collidedObject = obj;
-					pickUp (obj);
-					StartCoroutine ("snapCoroutine");
+					if (TimeNormal) {
+						GameObject obj = (GameObject)Instantiate (collidedObject, collidedObject.transform.position, collidedObject.transform.rotation);
+						collidedObject = obj;
+						pickUp (obj);
+						StartCoroutine ("snapCoroutine");
+					} else {
+						Destroy (collidedObject);
+						checkIfInObject ();
+					}
 				}
 			
 			}
@@ -165,27 +194,28 @@ public class NewGrabbing : ITool {
 
 	//THis doesn't actually delete the object, it just moves it way far away, that way we an still bring it back if need be
 	public void deleteObject(GameObject toDelete)
-	{
-		deletedObj currDelete = new deletedObj ();
-		currDelete.obj = toDelete;
-		currDelete.lastPos = toDelete.transform.position;
-		currDelete.lastRot = toDelete.transform.rotation;
+	{if (toDelete) {
+			deletedObj currDelete = new deletedObj ();
+			currDelete.obj = toDelete;
+			currDelete.lastPos = toDelete.transform.position;
+			currDelete.lastRot = toDelete.transform.rotation;
 
-		Rigidbody rb = toDelete.GetComponent<Rigidbody> ();
-		if (rb) {
-			currDelete.useGrav = rb.useGravity;
-			currDelete.useKinem = rb.isKinematic;
+			Rigidbody rb = toDelete.GetComponent<Rigidbody> ();
+			if (rb) {
+				currDelete.useGrav = rb.useGravity;
+				currDelete.useKinem = rb.isKinematic;
 
-			rb.useGravity = false;
-			rb.isKinematic = false;
-		}
+				rb.useGravity = false;
+				rb.isKinematic = false;
+			}
 
-		deletedList.Add (currDelete);
-		toDelete.transform.position = new Vector3 (-1000, -1000, -1000);
+			deletedList.Add (currDelete);
+			toDelete.transform.position = new Vector3 (-1000, -1000, -1000);
 
 	
-		if (collidedList.Contains (collidedObject)) {
-			collidedList.Remove (collidedObject);
+			if (collidedList.Contains (collidedObject)) {
+				collidedList.Remove (collidedObject);
+			}
 		}
 	}
 
@@ -212,17 +242,21 @@ public class NewGrabbing : ITool {
 
 
 
-	public override bool PadUnclick (ClickedEventArgs e){ 
+	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){ 
 		if (assignedController == controller.Right) {
 			if (grabbingState == state.pickedUp)
 			{
-				releaseObj();
+				if (TimeNormal) {
+					releaseObj ();
+				} else {
+					TriggerClick (e, true);
+				}
 			}
 		}
 			return false;}
 
 
-	public override bool Grip (ClickedEventArgs e){ 
+	public override bool Grip (ClickedEventArgs e, bool TimeNormal){ 
 
 
 		if (collidedObject == null || collidedObject.tag == "UIObject")
@@ -233,15 +267,27 @@ public class NewGrabbing : ITool {
 		if (grabbingState == state.colliding) {
 
 			if (otherGrabber.currentlyGrabbing (collidedObject)) {
-				otherGrabber.releaseObj ();
+				if (TimeNormal) {
+					otherGrabber.releaseObj ();
+				} else {
+					releaseObj ();
+					otherGrabber.pickUp (collidedObject);				
+				}
 			}
+			if (TimeNormal) {
 				pickUp (collidedObject);
 				StartCoroutine ("snapCoroutine");
-
+			} else {
+				releaseObj ();
+			}
 				return true;
 
 		} else if (grabbingState == state.pickedUp) {
-			releaseObj();
+			if (TimeNormal) {
+				releaseObj ();
+			} else {
+				pickUp (collidedObject);
+			}
 			return true;
 		
 		}
@@ -251,10 +297,10 @@ public class NewGrabbing : ITool {
 		return false;}
 
 
-	public override  bool UnGrip(ClickedEventArgs e){ return false;}
-	public override bool PadTouched(ClickedEventArgs e){ return false;}
-	public override bool PadUntouched(ClickedEventArgs e){ return false;}
-	public override bool SteamClicked (ClickedEventArgs e){ return false;}
+	public override  bool UnGrip(ClickedEventArgs e, bool TimeNormal){ return false;}
+	public override bool PadTouched(ClickedEventArgs e, bool TimeNormal){ return false;}
+	public override bool PadUntouched(ClickedEventArgs e, bool TimeNormal){ return false;}
+	public override bool SteamClicked (ClickedEventArgs e, bool TimeNormal){ return false;}
 
 	//Initialize any variables in these, they get called whenever you start/stop using the given tool
 	public override void stopUsing (){}
@@ -371,17 +417,19 @@ public class NewGrabbing : ITool {
 	public void releaseObj()
 	{
 		// Debug.Log("release");
-		collidedObject.transform.parent = grabbedObjParent;
-		grabbingState = state.colliding;
+		if (collidedObject) {
+			collidedObject.transform.parent = grabbedObjParent;
+			grabbingState = state.colliding;
 
-		if (ObjectUsedGrav) {
-			collidedObject.GetComponent<Rigidbody> ().useGravity = true;
-			collidedObject.GetComponent<Rigidbody> ().isKinematic = false;
+			if (ObjectUsedGrav) {
+				collidedObject.GetComponent<Rigidbody> ().useGravity = true;
+				collidedObject.GetComponent<Rigidbody> ().isKinematic = false;
 
-			StartCoroutine (throwObject (collidedObject, (collidedObject.transform.position - lastObjectLocation) / Time.deltaTime));
-			//collidedObject.GetComponent<Rigidbody> ().AddForce ((collidedObject.transform.position - lastObjectLocation)/Time.deltaTime);
+				StartCoroutine (throwObject (collidedObject, (collidedObject.transform.position - lastObjectLocation) / Time.deltaTime));
+				//collidedObject.GetComponent<Rigidbody> ().AddForce ((collidedObject.transform.position - lastObjectLocation)/Time.deltaTime);
 		
 		
+			}
 		}
 	}
 
