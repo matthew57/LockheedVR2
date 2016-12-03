@@ -33,45 +33,59 @@ public class NewAxisRotation: ITool {
 
 	public override bool PadClick (ClickedEventArgs e, bool TimeNormal){
 
-
-		if (!controllerInit.triggerPressed)
-		{
-
-			//Left
-			if (controllerInit.controllerState.rAxis0.x <= -0.5f && controllerInit.controllerState.rAxis0.y >= -0.5f && controllerInit.controllerState.rAxis0.y <= 0.5f)
-			{
-				axisState = state.rotate;
-				StartCoroutine("rotate");
-			}
-
-			//DPAD RIGHT BUTTON SETTINGS -TOGGLE THROUGH CUTTING PLANE SNAPPED TO ORIGIN PLANES//////////////////
-			else if (controllerInit.controllerState.rAxis0.x >= 0.5f && controllerInit.controllerState.rAxis0.y >= -0.5f && controllerInit.controllerState.rAxis0.y <= 0.5f)
-			{
-				axisState = state.rotate;
-				StartCoroutine("rotate");
-			}
-
+		if (TimeNormal) {
+			if (!controllerInit.triggerPressed) {
+				//Left or right
+				if (e.padX < -1 * Mathf.Abs (e.padY) || e.padX > Mathf.Abs (e.padY)) {
+					axisState = state.rotate;
+					StartCoroutine ("rotate");
+				}
 			//Up
-			else if (controllerInit.controllerState.rAxis0.y >= 0.5f && controllerInit.controllerState.rAxis0.x >= -0.5f && controllerInit.controllerState.rAxis0.x <= 0.5f)
-			{
-				Vector3 startLocation = new Vector3(cadModel.transform.position.x, axis.transform.position.y, cadModel.transform.position.z);
-				axis.transform.position = startLocation;
+			else if (e.padY > Mathf.Abs (e.padX)) {
+					Vector3 startLocation = new Vector3 (cadModel.transform.position.x, axis.transform.position.y, cadModel.transform.position.z);
+					axis.transform.position = startLocation;
+				}
+			} else {
+				axisState = state.moving;
+				Vector3 nVector = new Vector3 (controllerInit.controllerState.rAxis0.x, 0, controllerInit.controllerState.rAxis0.y);
+				StartCoroutine (panCoroutine (nVector));
 			}
+		} else {
+			PadUnclick (e, true);
 		}
 
-		else
-		{
-			axisState = state.moving;
-			Vector3 nVector = new Vector3(controllerInit.controllerState.rAxis0.x, 0, controllerInit.controllerState.rAxis0.y);
-			StartCoroutine(panCoroutine(nVector));
-		}
+
 		return true;
 	}
 
 	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){
-		if (axisState != state.off)
-		{
-			axisState = state.idle;
+		if (TimeNormal) {
+			if (axisState != state.off) {
+				axisState = state.idle;
+			}
+		} else {
+			RecordingSystem.movementFrame currentFrame = GameObject.FindObjectOfType<PlayBackSystem> ().getCurrentFrame (false);
+			RecordingSystem.movementFrame startPressFrame = GameObject.FindObjectOfType<RecordingSystem>().getStartingAction(currentFrame, controllerInit.controllerIndex, Tools.button.Pad);
+			ClickedEventArgs cea =  RecordingSystem.getActionFromFrame (startPressFrame, controllerInit.controllerIndex, Tools.button.Pad);
+
+			if (!controllerInit.triggerPressed) {
+				//Left or right
+				if (cea.padX < -1 * Mathf.Abs (e.padY) || cea.padX > Mathf.Abs (e.padY)) {
+					axisState = state.rotate;
+					StartCoroutine ("rotate");
+				}
+				//Up
+				else if (cea.padY > Mathf.Abs (cea.padX)) {
+					Vector3 startLocation = new Vector3 (cadModel.transform.position.x, axis.transform.position.y, cadModel.transform.position.z);
+					axis.transform.position = startLocation;
+				}
+			} else {
+				axisState = state.moving;
+				Vector3 nVector = new Vector3 (controllerInit.controllerState.rAxis0.x, 0, controllerInit.controllerState.rAxis0.y);
+				StartCoroutine (panCoroutine (nVector));
+			}
+
+		
 		}
 
 		return true;
@@ -96,6 +110,7 @@ public class NewAxisRotation: ITool {
 	public override bool PadTouched(ClickedEventArgs e, bool TimeNormal){return false;}
 	public override bool PadUntouched(ClickedEventArgs e, bool TimeNormal){return false;}
 	public override bool SteamClicked (ClickedEventArgs e, bool TimeNormal){return false;}
+
 	public override void CollisionEnter (Collider other){
 		lastCollided = other.gameObject;
 
