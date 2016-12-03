@@ -16,7 +16,7 @@ public class Recorder : MonoBehaviour
 
     public void BeginRecording()
     {
-		myAudioClip = Microphone.Start (null, false, 10, 44100);
+		myAudioClip = Microphone.Start (null, false, 15, 44100);
     }
 
     public void EndRecord()
@@ -34,7 +34,6 @@ public class Recorder : MonoBehaviour
         AudioClip clip = LoadFile(filepath);
         AudioSource source = GetComponent<AudioSource>();
         source.clip = clip;
-        Debug.Log("Clip Assigned");
         source.Play();
     }
 
@@ -50,16 +49,24 @@ public class Recorder : MonoBehaviour
     AudioClip LoadFile(string path)
     {
         WWW www = new WWW("file://" + path);
-        print("loading " + path);
+        Debug.Log("loading " + path);
 
         AudioClip clip = www.GetAudioClip(false);
-        while (clip.loadState != AudioDataLoadState.Loaded)
-        {
-            int i = 0;
-        }
 
-        print("done loading");
+        Debug.Log("done loading");
         //clip.name = Path.GetFileName(path);
         return clip;
+    }
+
+    public void Pause()
+    {
+        AudioSource source = GetComponent<AudioSource>();
+        source.Pause();
+    }
+
+    public void Resume()
+    {
+        AudioSource source = GetComponent<AudioSource>();
+        source.UnPause();
     }
 }
