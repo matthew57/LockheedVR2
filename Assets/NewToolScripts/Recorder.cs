@@ -6,43 +6,68 @@ public class Recorder : MonoBehaviour
 {
 
     AudioClip myAudioClip;
-    int clipNum;
-    string filepath;
 
     void Start()
     {
-        clipNum = 0;
+     
     }
 
     public void BeginRecording()
     {
-		myAudioClip = Microphone.Start (null, false, 15, 44100);
+		myAudioClip = Microphone.Start (null, false, 600, 44100);
     }
 
-    public void EndRecord()
-    {
-        clipNum++;
-        Microphone.End(null);
-        string fileName = "myFile" + clipNum.ToString();
-        filepath = Path.Combine(Application.dataPath + "/Audio/", fileName + ".wav");
-        SavWav.Save(filepath, myAudioClip);
-		//File.Write
-    }
+	public void EndRecord(string fileName)
+	{
+		var position = Microphone.GetPosition(null);
+		Microphone.End(null);
+		//var position = Microphone.GetPosition(null);
 
-    public void Play()
+		var soundData = new float[myAudioClip.samples * myAudioClip.channels];
+		myAudioClip.GetData(soundData, 0);
+
+		//Create shortened array for the data that was used for recording
+		var newData = new float[position * myAudioClip.channels];
+
+		//Copy the used samples to a new array
+		for (int i = 0; i < newData.Length; i++)
+		{
+			newData[i] = soundData[i];
+		}
+
+		//One does not simply shorten an AudioClip,
+		//    so we make a new one with the appropriate length
+		var newClip = AudioClip.Create(myAudioClip.name, position, myAudioClip.channels, myAudioClip.frequency, false);
+
+		newClip.SetData(newData, 0);        //Give it the data from the old clip
+
+		//Replace the old clip
+		AudioClip.Destroy(myAudioClip);
+		myAudioClip = newClip;
+		string filepath = Path.Combine(Application.dataPath + "/Audio/", fileName + ".wav");
+		Debug.Log ("Saved file at: " + filepath);
+		SavWav.Save(filepath, newClip);
+	}
+
+	public void Play(string fileName)
     {
+		string filepath = Path.Combine(Application.dataPath + "/Audio/", fileName + ".wav");
         AudioClip clip = LoadFile(filepath);
         AudioSource source = GetComponent<AudioSource>();
         source.clip = clip;
+		source.time = 0;
+		//Debug.Log ("Playing audio at: " + clip.time);
         source.Play();
     }
 
-    public void PlayAt()
+	public void PlayAt(string fileName, float time)
     {
+		string filepath = Path.Combine(Application.dataPath + "/Audio/", fileName + ".wav");
         AudioClip clip = LoadFile(filepath);
         AudioSource source = GetComponent<AudioSource>();
         source.clip = clip;
-        source.time = 3;
+
+        source.time = time;
         source.Play();
     }
 
@@ -52,8 +77,11 @@ public class Recorder : MonoBehaviour
         Debug.Log("loading " + path);
 
         AudioClip clip = www.GetAudioClip(false);
-
-        Debug.Log("done loading");
+		while (clip.loadState != AudioDataLoadState.Loaded) 
+		{
+			int i = 0;
+		}
+       // Debug.Log("done loading");
         //clip.name = Path.GetFileName(path);
         return clip;
     }

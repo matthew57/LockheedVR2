@@ -53,7 +53,7 @@ public class SavWav : MonoBehaviour {
 
         File.ReadAllBytes(filepath);
 
-		Debug.Log(filepath);
+		//Debug.Log(filepath);
 
         return true; // TODO: return false if there's a failure saving the file
     }

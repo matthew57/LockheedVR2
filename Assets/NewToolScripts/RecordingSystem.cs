@@ -51,10 +51,8 @@ public class RecordingSystem : ITool{
 		public Quaternion rQ;
 
 		public List<ActionClick> myC; // My clicks
+		public List<interactedObject> inter;
 
-		public Vector2 LPad;
-
-		public Vector2 RPad;
 		public void changeTime(float t)
 		{
 			RT += t;}
@@ -72,11 +70,12 @@ public class RecordingSystem : ITool{
 	[Serializable]
 	public struct interactedObject{
 
-		public string obj;
-		public Vector3 origin;
-		public Quaternion originRotation;
+		public string ob;
+		public Vector3 or;
+		public Quaternion Rot;
 
 	}
+		
 
 
 	// a container for all of the frames for a given action sequance (shot)
@@ -96,15 +95,15 @@ public class RecordingSystem : ITool{
 		public void addObject(GameObject obj)
 		{
 			foreach (interactedObject io in interObjects) {
-				if (io.obj == obj.name) { // We have already moved this object, so its already saved;
+				if (io.ob == obj.name) { // We have already moved this object, so its already saved;
 					return;}
 			
 			}
 
 			interactedObject newIO = new interactedObject ();
-			newIO.obj = obj.name;
-			newIO.origin = obj.transform.position;
-			newIO.originRotation = obj.transform.rotation;
+			newIO.ob = obj.name;
+			newIO.or = obj.transform.position;
+			newIO.Rot = obj.transform.rotation;
 			interObjects.Add (newIO);
 		
 		}
@@ -141,9 +140,6 @@ public class RecordingSystem : ITool{
 
 		}
 		// used for gettign what action type a pad down was when rewinding
-
-
-
 	}
 
 	//I touched an object, mark it so we can make a copy on playback!
@@ -153,6 +149,24 @@ public class RecordingSystem : ITool{
 			myData.addObject (obj);
 		}
 	}
+
+
+	List<GameObject> currentlyTracking = new List<GameObject> ();
+
+	public void trackObject(GameObject obj)
+	{
+		if (!currentlyTracking.Contains (obj)) {
+			currentlyTracking.Add (obj);
+		}
+	}
+
+	public void stopTrackObject(GameObject obj)
+	{
+		if (currentlyTracking.Contains (obj)) {
+			currentlyTracking.Remove(obj);
+		}
+	}
+
 
 	public movementFrame getStartingAction(movementFrame mf, uint controllerIndex, Tools.button myButt)
 	{
@@ -309,22 +323,28 @@ public class RecordingSystem : ITool{
 	{
 		movementFrame mFrame = new movementFrame ();
 		mFrame.myC = new List<ActionClick> ();
+		System.Math.Round ((decimal)eyeC.position.x, 3);
 
-
-		mFrame.hP = eyeC.position;
+		mFrame.hP = eyeC.position; 
 		mFrame.hQ = eyeC.rotation;
 
 		mFrame.lP = leftC.position;
 		mFrame.lQ = leftC.rotation;
 
-		mFrame.rP = rightC.position;
+		mFrame.rP =rightC.position;
 		mFrame.rQ = rightC.rotation;
 		mFrame.RT = recordingTime; 
-		mFrame.LPad = new Vector2(controllerLeft.controllerState.rAxis0.x,controllerLeft.controllerState.rAxis0.y);
-		mFrame.RPad = new Vector2(controllerRight.controllerState.rAxis0.x,controllerRight.controllerState.rAxis0.y);
+
+		foreach (GameObject obj in currentlyTracking) {
+			interactedObject io = new interactedObject ();
+			io.ob = obj.name;
+			io.or = obj.transform.position;
+			io.Rot = obj.transform.rotation;
+
+			mFrame.inter.Add (io);
+		}
 
 		myData.addFrame (mFrame);
-
 
 	}
 
@@ -396,7 +416,7 @@ public class RecordingSystem : ITool{
 
 	protected void stopRecording()
 	{
-		GetComponent<Recorder> ().EndRecord ();
+		GetComponent<Recorder> ().EndRecord ("testSaveFile");
 		countDown.enabled = false;
 		isRecording = false;
 

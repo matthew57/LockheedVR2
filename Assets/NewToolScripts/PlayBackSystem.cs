@@ -32,13 +32,6 @@ public class PlayBackSystem :Tools {
 
 
 	PlayBackState currentState;
-	//==============================================================================================================
-	// pressing the fastforward/rewind keys [left/right arrows] while already in those states will accelerate how fast time is moving for the play back
-	// pressing the play/pause button [down arrow] will reset the playback rate and do the play/pause
-	//
-	//
-	//
-	//==============================================================================================================
 
 	// Use this for initialization
 	void Start () {
@@ -85,6 +78,7 @@ public class PlayBackSystem :Tools {
 	public void rewind()
 	{if (savedData!= null) {
 		if (!(currentState is RewindState)) {
+			GameObject.FindObjectOfType<Recorder> ().Pause ();
 			fastMultiplier = initialFastMultiplier;
 			currentState = new RewindState ();
 				ErrorPrompt.instance.showError ("Rewind X"+ fastMultiplier);
@@ -99,6 +93,7 @@ public class PlayBackSystem :Tools {
 	{
 		if (savedData!= null) {
 			if (!(currentState is FastForwardState)) {
+				GameObject.FindObjectOfType<Recorder> ().Pause ();
 				currentState = new FastForwardState ();
 				fastMultiplier = initialFastMultiplier;
 				ErrorPrompt.instance.showError ("Fast Forward X"+ fastMultiplier);
@@ -116,9 +111,12 @@ public class PlayBackSystem :Tools {
 			if (!(currentState is PauseState)) {
 				currentState = new PauseState ();
 				ErrorPrompt.instance.showError ("Paused");
+				GameObject.FindObjectOfType<Recorder> ().Pause ();
 			} else {
 				currentState = new RegularPlayState ();
 				ErrorPrompt.instance.showError ("Play");
+
+				GameObject.FindObjectOfType<Recorder> ().PlayAt ("testSaveFile",currentPlaybackTime);
 			}
 
 
@@ -148,7 +146,7 @@ public class PlayBackSystem :Tools {
 		clearPlayBack ();
 		currentState = new RegularPlayState ();
 		frameTime = 1 / sData.frameRate;
-		GameObject.FindObjectOfType<Recorder> ().Play ();
+		GameObject.FindObjectOfType<Recorder> ().Play ("testSaveFile");
 		savedData = sData;
 
 		previousFrame = savedData.savedFrames [0];
@@ -158,12 +156,10 @@ public class PlayBackSystem :Tools {
 		countDown.color = Color.green;
 		countDown.enabled = true;
 
-
-		// NEED TO FIGURE OUT A WAYA TO KEEP TRACK OF ITEMS THAT WERE DELETED, JUST MOVE THEM TO THE SIDE MAYBE?
 		foreach (RecordingSystem.interactedObject rio in sData.interObjects) {
-			GameObject foundTHingy = GameObject.Find (rio.obj);
+			GameObject foundTHingy = GameObject.Find (rio.ob);
 
-			GameObject newObj = (GameObject)Instantiate (foundTHingy, rio.origin + new Vector3 (.0000001f,.0000001f,.0000001f), rio.originRotation);
+			GameObject newObj = (GameObject)Instantiate (foundTHingy, rio.or + new Vector3 (.0000001f,.0000001f,.0000001f), rio.Rot);
 			newObj.tag = "SceneObject";
 			newObj.layer = 10;
 		}
@@ -194,6 +190,8 @@ public class PlayBackSystem :Tools {
 	//Reset the scene so all playback items are moved/removed
 	public void clearPlayBack()
 	{
+		GameObject.FindObjectOfType<Recorder> ().Pause ();
+
 		currentState = null;
 	
 		//Delete any objects from previous recordings
