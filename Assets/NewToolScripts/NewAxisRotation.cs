@@ -5,7 +5,7 @@ public class NewAxisRotation: ITool {
 
 	public GameObject axisPrefab;
 	public Vector3 direction;
-	private GameObject cadModel;
+	public GameObject cadModel;
 
 
 	private GameObject axis;
@@ -33,7 +33,7 @@ public class NewAxisRotation: ITool {
 
 	public override bool PadClick (ClickedEventArgs e, bool TimeNormal){
 
-		if (TimeNormal) {
+		if (TimeNormal && !playBackDevice) {
 			if (!controllerInit.triggerPressed) {
 				//Left or right
 				if (e.padX < -1 * Mathf.Abs (e.padY) || e.padX > Mathf.Abs (e.padY)) {
@@ -59,33 +59,11 @@ public class NewAxisRotation: ITool {
 	}
 
 	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){
-		if (TimeNormal) {
+		if (TimeNormal&& !playBackDevice) {
 			if (axisState != state.off) {
 				axisState = state.idle;
 			}
 		} else {
-			RecordingSystem.movementFrame currentFrame = GameObject.FindObjectOfType<PlayBackSystem> ().getCurrentFrame (false);
-			RecordingSystem.movementFrame startPressFrame = GameObject.FindObjectOfType<RecordingSystem>().getStartingAction(currentFrame, controllerInit.controllerIndex, Tools.button.Pad);
-			ClickedEventArgs cea =  RecordingSystem.getActionFromFrame (startPressFrame, controllerInit.controllerIndex, Tools.button.Pad);
-
-			if (!controllerInit.triggerPressed) {
-				//Left or right
-				if (cea.padX < -1 * Mathf.Abs (e.padY) || cea.padX > Mathf.Abs (e.padY)) {
-					axisState = state.rotate;
-					StartCoroutine ("rotate");
-				}
-				//Up
-				else if (cea.padY > Mathf.Abs (cea.padX)) {
-					Vector3 startLocation = new Vector3 (cadModel.transform.position.x, axis.transform.position.y, cadModel.transform.position.z);
-					axis.transform.position = startLocation;
-				}
-			} else {
-				axisState = state.moving;
-				Vector3 nVector = new Vector3 (controllerInit.controllerState.rAxis0.x, 0, controllerInit.controllerState.rAxis0.y);
-				StartCoroutine (panCoroutine (nVector));
-			}
-
-		
 		}
 
 		return true;
@@ -93,7 +71,7 @@ public class NewAxisRotation: ITool {
 
 	public override bool Grip (ClickedEventArgs e, bool TimeNormal){
 		if (lastCollided) {
-
+			cadModel = lastCollided;
 			GameObject.FindObjectOfType<ModelManager> ().cadModel = lastCollided;
 
 			turnOffAxis ();
@@ -127,7 +105,7 @@ public class NewAxisRotation: ITool {
 
 	IEnumerator panCoroutine(Vector3 nVector)
 	{
-
+		GameObject.FindObjectOfType<RecordingSystem> ().trackObject (axis);
 		while (axisState == state.moving)
 		{
 			axis.transform.rotation = Quaternion.Euler(axis.transform.rotation.z, controllerInit.transform.rotation.eulerAngles.y, axis.transform.rotation.x);
@@ -136,20 +114,21 @@ public class NewAxisRotation: ITool {
 
 			yield return null;
 		}
-
+		GameObject.FindObjectOfType<RecordingSystem> ().stopTrackObject (axis);
 		yield return null;
 	}
 
 	IEnumerator rotate()
 	{
 
+		GameObject.FindObjectOfType<RecordingSystem> ().trackObject (cadModel);
 		while (axisState == state.rotate)
 		{
 			cadModel.transform.RotateAround(axis.transform.position, axis.transform.up, Time.deltaTime * 90f * controllerInit.controllerState.rAxis0.x);
 
 			yield return null;
 		}
-
+		GameObject.FindObjectOfType<RecordingSystem> ().stopTrackObject (cadModel);
 		yield return null;
 
 	}

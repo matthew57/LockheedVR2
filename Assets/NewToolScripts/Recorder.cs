@@ -79,7 +79,7 @@ public class Recorder : MonoBehaviour
         AudioClip clip = www.GetAudioClip(false);
 		while (clip.loadState != AudioDataLoadState.Loaded) 
 		{
-			int i = 0;
+			//int i = 0;
 		}
        // Debug.Log("done loading");
         //clip.name = Path.GetFileName(path);

@@ -12,7 +12,7 @@ public class PlayBackSystem :Tools {
 	public float fastMultiplier;
 	float initialFastMultiplier;
 
-	RecordingSystem.SavedData savedData;
+	public RecordingSystem.SavedData savedData;
 	float currentPlaybackTime;
 
 	public GameObject leftHand;
@@ -32,6 +32,7 @@ public class PlayBackSystem :Tools {
 
 
 	PlayBackState currentState;
+	int currentFrameIndex;
 
 	// Use this for initialization
 	void Start () {
@@ -249,7 +250,7 @@ public class PlayBackSystem :Tools {
 						StartCoroutine(PerformAction(pbic, ea));
 					}
 				}
-
+				currentFrameIndex = savedData.savedFrames.IndexOf (previousFrame);
 			}
 
 			//Rewinding Time
@@ -273,8 +274,38 @@ public class PlayBackSystem :Tools {
 				}
 				//IMPLEMENT UNDO ACTIONS FOR ALL TOOLS!
 			}
+			currentFrameIndex = savedData.savedFrames.IndexOf (nextFrame);
 		}
 
+
+
+		// THIS PART HANDLES THINGS YOU MOVED WHILE USING THE CUTTING PLANE AND AXIS ROTATION TOOLS
+		foreach (RecordingSystem.movingObject mo in  savedData.movingObject) {
+
+				if (mo.sFrame == currentFrameIndex || mo.EFrame == currentFrameIndex) {
+
+					foreach (GameObject potential in GameObject.FindGameObjectsWithTag("SceneObject")) {
+
+						if (potential.gameObject.layer == 10 ) {
+						// THIS NEEDS TO BE FIXED IF THERE ARE MULTIPLE OBJECTS WITH THE SAME NAME!!!!!
+							if (potential.name.Contains (mo.name)) {
+								Debug.Log ("Setting it to "+ potential.name);
+								mo.myObj = potential;
+								break;
+								}
+							}
+						}
+					}
+
+
+		
+			if (mo.sFrame < currentFrameIndex && mo.EFrame > currentFrameIndex) {
+
+				mo.myObj.transform.position = mo.myTrans [currentFrameIndex - mo.sFrame].or;
+				mo.myObj.transform.rotation = mo.myTrans [currentFrameIndex - mo.sFrame].Rot;
+			}
+		
+		}
 
 		updateObjTransforms ();
 	}

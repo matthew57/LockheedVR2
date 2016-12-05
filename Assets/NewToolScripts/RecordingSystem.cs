@@ -63,8 +63,7 @@ public class RecordingSystem : ITool{
 			RT = t;}
 
 	}
-
-
+		
 
 	//Keep track of all objects that have been touched so we can put them back when we replay
 	[Serializable]
@@ -76,7 +75,32 @@ public class RecordingSystem : ITool{
 
 	}
 		
+	//USed for things that move but cannot properly be done so through inverse commands.
+	[Serializable]
+	public class movingObject{
 
+		public string name;
+		public float sTime;
+		public float eTime;
+		public int sFrame;
+		public int EFrame;
+
+		public Vector3 SP;
+		public Quaternion SR;
+		public Vector3 EP;
+		public Quaternion ER;
+		public List<TransformData> myTrans = new List<TransformData>();
+		public GameObject myObj;
+
+	}
+
+	[Serializable]
+	public struct TransformData{
+
+		public Vector3 or;
+		public Quaternion Rot;
+
+	}
 
 	// a container for all of the frames for a given action sequance (shot)
 	[Serializable]
@@ -91,6 +115,9 @@ public class RecordingSystem : ITool{
 		public int frameRate;
 		public List<movementFrame> savedFrames = new List<movementFrame>();
 		public List<interactedObject> interObjects = new List<interactedObject> ();
+
+		//these exist as subsequances for objects that are only moved for a short time.
+		public List<movingObject> movingObject = new List<movingObject> ();
 
 		public void addObject(GameObject obj)
 		{
@@ -151,21 +178,50 @@ public class RecordingSystem : ITool{
 	}
 
 
-	List<GameObject> currentlyTracking = new List<GameObject> ();
+	List<movingObject> currentlyTracking = new List<movingObject> ();
 
+
+	//================================================================================================================
+	// These two methods should be called from continuous indistinct modifer tools, like the cutting plane pad and axis rotation pad commands.
+	// and commands where the previous location of a give nthing is not known/ recorded
 	public void trackObject(GameObject obj)
 	{
-		if (!currentlyTracking.Contains (obj)) {
-			currentlyTracking.Add (obj);
+		if (isRecording) {
+
+			movingObject mo = new movingObject ();
+			mo.sFrame = myData.savedFrames.Count - 1;
+			mo.name = obj.name;
+			mo.SP = obj.transform.position;
+			mo.SR = obj.transform.rotation;
+			mo.myObj = obj;
+			mo.sTime = recordingTime;
+
+			currentlyTracking.Add (mo);
+			myData.movingObject.Add (mo);
 		}
+
 	}
 
 	public void stopTrackObject(GameObject obj)
 	{
-		if (currentlyTracking.Contains (obj)) {
-			currentlyTracking.Remove(obj);
+		if (isRecording) {
+			movingObject theMO = null;
+			foreach (movingObject mo in currentlyTracking) {
+		
+				if (mo.myObj == obj && mo.EFrame == 0) {
+					mo.EFrame = myData.savedFrames.Count - 1;
+					mo.EP = obj.transform.position;
+					mo.ER = obj.transform.rotation;
+					mo.eTime = recordingTime;
+					currentlyTracking.Remove (mo);
+					theMO = mo;
+					break;
+				}
+			}
+			currentlyTracking.Remove (theMO);
 		}
 	}
+	//================================================================================================================
 
 
 	public movementFrame getStartingAction(movementFrame mf, uint controllerIndex, Tools.button myButt)
@@ -256,10 +312,6 @@ public class RecordingSystem : ITool{
 
 
 
-
-
-
-
 	void Update()
 	{
 		if (isRecording) {
@@ -335,13 +387,11 @@ public class RecordingSystem : ITool{
 		mFrame.rQ = rightC.rotation;
 		mFrame.RT = recordingTime; 
 
-		foreach (GameObject obj in currentlyTracking) {
-			interactedObject io = new interactedObject ();
-			io.ob = obj.name;
-			io.or = obj.transform.position;
-			io.Rot = obj.transform.rotation;
-
-			mFrame.inter.Add (io);
+		foreach (movingObject obj in currentlyTracking) {
+			TransformData td = new TransformData ();
+			td.or = obj.myObj.transform.position;
+			td.Rot = obj.myObj.transform.rotation;
+			obj.myTrans.Add (td);
 		}
 
 		myData.addFrame (mFrame);

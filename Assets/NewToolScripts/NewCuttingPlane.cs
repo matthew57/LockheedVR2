@@ -111,13 +111,14 @@ public class NewCuttingPlane : NewGrabbing{
 	IEnumerator panCoroutine()
 	{
 		//	Debug.Log("COOOR");
+		GameObject.FindObjectOfType<RecordingSystem> ().trackObject (cuttingPlane);
 		while (cPlaneState != state.idle && cPlaneState != state.off)
 		{
 			cuttingPlane.transform.position = cuttingPlane.transform.position + (cuttingPlane.gameObject.transform.up * controllerInit.controllerState.rAxis0.y) / 130;
 
 			yield return null;
 		}
-
+		GameObject.FindObjectOfType<RecordingSystem> ().stopTrackObject(cuttingPlane);
 		yield return null;
 
 	}

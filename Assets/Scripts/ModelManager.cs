@@ -57,16 +57,27 @@ public class ModelManager : NetworkBehaviour {
         {
             if (child == pTransform)
             {
-                child.gameObject.AddComponent<NetworkIdentity>();
-                child.gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
-                child.gameObject.AddComponent<NetworkTransform>();
-                child.gameObject.GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
+				NetworkIdentity NI = child.gameObject.GetComponent<NetworkIdentity> ();
+				if (!NI) {
+					NI = child.gameObject.AddComponent<NetworkIdentity> ();
+				}
+                NI.localPlayerAuthority = true;
+
+
+				NetworkTransform NT = child.gameObject.GetComponent<NetworkTransform> ();
+				if (!NT) {
+					NT = child.gameObject.AddComponent<NetworkTransform> ();
+				}
+               NT.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
                 setShader(child.gameObject);
             }
             else
             {
-                child.gameObject.AddComponent<Rigidbody>();
-                child.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+				Rigidbody rb = child.gameObject.GetComponent<Rigidbody> ();
+				if (!rb) {
+					rb = child.gameObject.AddComponent<Rigidbody> ();
+				}
+                rb.isKinematic = true;
                 child.gameObject.AddComponent<MeshCollider>();
                 child.gameObject.AddComponent<NetworkIdentity>();
                 child.gameObject.AddComponent<SnapBack>();
