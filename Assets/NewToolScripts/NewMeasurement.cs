@@ -33,7 +33,7 @@ public class NewMeasurement : ITool {
 
 	public enum state { idle, start, end };
 	public state measureState = state.idle;
-
+	bool objectsVisible = true;
 
 	void Update()
 	{
@@ -57,6 +57,9 @@ public class NewMeasurement : ITool {
 
 	public override bool TriggerClick(ClickedEventArgs e, bool TimeNormal){
 		if (TimeNormal) {
+			if (!objectsVisible) {
+				return true;}
+			
 			if (measureState == state.idle) {	
 				if (closestMeasure) {
 					closestMeasure.myLine.material = closestMeasure.yellowShade;
@@ -90,6 +93,8 @@ public class NewMeasurement : ITool {
 	//Rearrange existing measurement
 	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal){
 		if (TimeNormal) {
+			if (!objectsVisible) {
+				return true;}
 			
 			if (measureState == state.idle) {
 					
@@ -129,15 +134,15 @@ public class NewMeasurement : ITool {
 		} else {
 			if (measureState == state.idle) {
 
-				Debug.Log ("Was idle");
+	
 				MenuClick (e, true);
 
 			} else if (measureState == state.start) {
-				Debug.Log ("Was Start ");
+
 				TriggerClick (e, true);
 			
 			} else if (measureState == state.end) {
-				Debug.Log ("Was End");
+
 				TriggerClick (e, true);
 			}
 		
@@ -150,16 +155,32 @@ public class NewMeasurement : ITool {
 
 		measureInfo bestObj = getClosest ();
 		if (TimeNormal) {
-			if (bestObj) {
+
+
+			if (e.padY > 0) {
+				// DELETE THE CLOSEST OBJECT
+				if (bestObj &&objectsVisible) {
 		
-				allMeasurements.Remove (bestObj);
-				if (playBackDevice) {
-					deletedMeasurements.Add (bestObj);
-					bestObj.gameObject.SetActive (false);
-				} else {
-					Destroy (bestObj.gameObject);
+					allMeasurements.Remove (bestObj);
+					if (playBackDevice) {
+						deletedMeasurements.Add (bestObj);
+						bestObj.gameObject.SetActive (false);
+					} else {
+						Destroy (bestObj.gameObject);
+					}
+					measureState = state.idle;
 				}
-				measureState = state.idle;
+			} else {
+				// MAKE ALL MEASUREMENTS INVISIBLE
+
+				if (measureState == state.start) {
+					finalCLick (false);
+
+				} 
+				objectsVisible = !objectsVisible;
+				foreach (measureInfo obj in allMeasurements) {
+					obj.gameObject.SetActive (objectsVisible);
+				}
 			}
 		} else {
 
@@ -193,6 +214,8 @@ public class NewMeasurement : ITool {
 	public override bool Grip (ClickedEventArgs e, bool TimeNormal){
 	
 		if (TimeNormal) {
+			if (!objectsVisible) {
+				return true;}
 			if (measureState == state.idle) {
 				measureState = state.start;
 				measurement = Instantiate (measurementPrefab);

@@ -1,0 +1,285 @@
+fileFormatVersion: 2
+guid: 1025f8c40f99d7a49ba65806b6b9af1a
+timeCreated: 1481154247
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Box05
+    100002: //RootNode
+    100004: F35_Mover
+    100006: front landing gear hatch
+    100008: Group01
+    100010: Group02
+    100012: landing hook hatch
+    100014: Line018
+    100016: Line17
+    100018: Object03
+    100020: Object04
+    100022: Object05
+    100024: Object06
+    100026: Object07
+    100028: Object08
+    100030: Object09
+    100032: Object10
+    100034: Object11
+    100036: Object12
+    100038: Object14
+    100040: Object15
+    100042: Object17
+    100044: Object173
+    100046: Object174
+    100048: Object175
+    100050: Object176
+    100052: Object177
+    100054: Object18
+    100056: Object180
+    100058: Object181
+    100060: Object20
+    100062: Object21
+    100064: Object22
+    100066: Object23
+    100068: Object24
+    100070: Object25
+    100072: Object26
+    100074: Object28
+    100076: Object29
+    100078: Object30
+    100080: Object31
+    100082: Object32
+    100084: Object33
+    100086: Object34
+    100088: Object35
+    100090: Particle View01
+    400000: Box05
+    400002: //RootNode
+    400004: F35_Mover
+    400006: front landing gear hatch
+    400008: Group01
+    400010: Group02
+    400012: landing hook hatch
+    400014: Line018
+    400016: Line17
+    400018: Object03
+    400020: Object04
+    400022: Object05
+    400024: Object06
+    400026: Object07
+    400028: Object08
+    400030: Object09
+    400032: Object10
+    400034: Object11
+    400036: Object12
+    400038: Object14
+    400040: Object15
+    400042: Object17
+    400044: Object173
+    400046: Object174
+    400048: Object175
+    400050: Object176
+    400052: Object177
+    400054: Object18
+    400056: Object180
+    400058: Object181
+    400060: Object20
+    400062: Object21
+    400064: Object22
+    400066: Object23
+    400068: Object24
+    400070: Object25
+    400072: Object26
+    400074: Object28
+    400076: Object29
+    400078: Object30
+    400080: Object31
+    400082: Object32
+    400084: Object33
+    400086: Object34
+    400088: Object35
+    400090: Particle View01
+    2300000: Box05
+    2300002: front landing gear hatch
+    2300004: landing hook hatch
+    2300006: Line17
+    2300008: Object03
+    2300010: Object04
+    2300012: Object05
+    2300014: Object06
+    2300016: Object07
+    2300018: Object08
+    2300020: Object09
+    2300022: Object10
+    2300024: Object11
+    2300026: Object12
+    2300028: Object14
+    2300030: Object15
+    2300032: Object17
+    2300034: Object173
+    2300036: Object174
+    2300038: Object175
+    2300040: Object176
+    2300042: Object177
+    2300044: Object18
+    2300046: Object180
+    2300048: Object181
+    2300050: Object20
+    2300052: Object21
+    2300054: Object22
+    2300056: Object23
+    2300058: Object24
+    2300060: Object25
+    2300062: Object26
+    2300064: Object28
+    2300066: Object29
+    2300068: Object30
+    2300070: Object31
+    2300072: Object32
+    2300074: Object33
+    2300076: Object34
+    2300078: Object35
+    3300000: Box05
+    3300002: front landing gear hatch
+    3300004: landing hook hatch
+    3300006: Line17
+    3300008: Object03
+    3300010: Object04
+    3300012: Object05
+    3300014: Object06
+    3300016: Object07
+    3300018: Object08
+    3300020: Object09
+    3300022: Object10
+    3300024: Object11
+    3300026: Object12
+    3300028: Object14
+    3300030: Object15
+    3300032: Object17
+    3300034: Object173
+    3300036: Object174
+    3300038: Object175
+    3300040: Object176
+    3300042: Object177
+    3300044: Object18
+    3300046: Object180
+    3300048: Object181
+    3300050: Object20
+    3300052: Object21
+    3300054: Object22
+    3300056: Object23
+    3300058: Object24
+    3300060: Object25
+    3300062: Object26
+    3300064: Object28
+    3300066: Object29
+    3300068: Object30
+    3300070: Object31
+    3300072: Object32
+    3300074: Object33
+    3300076: Object34
+    3300078: Object35
+    4300000: Object181
+    4300002: Object25
+    4300004: Object35
+    4300006: Object34
+    4300008: Object33
+    4300010: Object32
+    4300012: Object31
+    4300014: Object29
+    4300016: front landing gear hatch
+    4300018: Object14
+    4300020: Object09
+    4300022: Object06
+    4300024: Object07
+    4300026: Object30
+    4300028: Object03
+    4300030: Line17
+    4300032: Box05
+    4300034: Object04
+    4300036: Object05
+    4300038: Object08
+    4300040: Object21
+    4300042: landing hook hatch
+    4300044: Object22
+    4300046: Object23
+    4300048: Object26
+    4300050: Object28
+    4300052: Object173
+    4300054: Object174
+    4300056: Object18
+    4300058: Object175
+    4300060: Object176
+    4300062: Object177
+    4300064: Object180
+    4300066: Object12
+    4300068: Object17
+    4300070: Object11
+    4300072: Object24
+    4300074: Object20
+    4300076: Object15
+    4300078: Object10
+    7400000: f35_bank
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

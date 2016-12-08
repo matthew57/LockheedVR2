@@ -36,7 +36,10 @@ public class NewGrabbing : ITool {
 	Vector3 lastObjectLocation;
 	Quaternion lastRotation;
 
-	NewGrabbing otherGrabber;
+	public NewGrabbing otherGrabber;
+
+	//keeps track of if we are mobing a copy or the original from the pad down command
+	bool MovingLastCopied;
 
 	//Figure out a better way to record which objects have been touched.
 	RecordingSystem myRecorder;
@@ -60,12 +63,7 @@ public class NewGrabbing : ITool {
 
 	void Start()
 		{
-		foreach (NewGrabbing ng in GetComponents<NewGrabbing>()) {
-			if (ng != this) {
-				otherGrabber = ng;
-				break;
-			}
-		}
+
 		myRecorder = GetComponent<RecordingSystem> ();
 		grabSphere = controllerInit.gameObject.transform.Find("GrabSphere").gameObject;
 		}
@@ -93,8 +91,11 @@ public class NewGrabbing : ITool {
 					//CmdCreateCollidedObjCopy(collidedObject.GetComponent<NetworkIdentity>());
 				}
 			}
+
+			Debug.Log ("Checking is " + collidedObject + " is being held");
 			if (!!otherGrabber.currentlyGrabbing (collidedObject)) {
 				otherGrabber.releaseObj ();
+				Debug.Log ("Calling Release");
 			
 			}
 
@@ -155,6 +156,7 @@ public class NewGrabbing : ITool {
 						releaseObj ();
 						deleteObject (collidedObject);
 						checkIfInObject ();
+					
 					}
 
 				} else if (collidedObject && grabbingState == state.idle) {
@@ -166,6 +168,7 @@ public class NewGrabbing : ITool {
 				if (grabbingState == state.pickedUp) {
 					if (TimeNormal) {
 						Instantiate (collidedObject, collidedObject.transform.position, collidedObject.transform.rotation);
+						MovingLastCopied = false;
 					} else {
 						releaseObj ();
 						Destroy (collidedObject);
@@ -176,6 +179,7 @@ public class NewGrabbing : ITool {
 						GameObject obj = (GameObject)Instantiate (collidedObject, collidedObject.transform.position, collidedObject.transform.rotation);
 						collidedObject = obj;
 						pickUp (obj);
+						MovingLastCopied = true;
 						StartCoroutine ("snapCoroutine");
 					} else {
 						Destroy (collidedObject);
@@ -191,6 +195,22 @@ public class NewGrabbing : ITool {
 		}
 	}
 
+
+
+	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){ 
+		if (assignedController == controller.Right) {
+			if (grabbingState == state.pickedUp)
+			{
+				if (TimeNormal) {
+					if (MovingLastCopied) {
+						releaseObj ();
+					}
+				} else {
+					TriggerClick (e, true);
+				}
+			}
+		}
+		return false;}
 
 	//THis doesn't actually delete the object, it just moves it way far away, that way we an still bring it back if need be
 	public void deleteObject(GameObject toDelete)
@@ -242,18 +262,6 @@ public class NewGrabbing : ITool {
 
 
 
-	public override bool PadUnclick (ClickedEventArgs e, bool TimeNormal){ 
-		if (assignedController == controller.Right) {
-			if (grabbingState == state.pickedUp)
-			{
-				if (TimeNormal) {
-					releaseObj ();
-				} else {
-					TriggerClick (e, true);
-				}
-			}
-		}
-			return false;}
 
 
 	public override bool Grip (ClickedEventArgs e, bool TimeNormal){ 
@@ -308,7 +316,9 @@ public class NewGrabbing : ITool {
 
 
 	public bool currentlyGrabbing(GameObject ob)
-	{if (grabbingState == state.pickedUp && collidedObject == ob) {
+	{
+		
+		if (grabbingState == state.pickedUp && collidedObject == ob) {
 			return true;
 		} else {
 			return false;
@@ -356,8 +366,9 @@ public class NewGrabbing : ITool {
 	{
 
 		while ((grabbingState == state.pickedUp))
-		{ lastObjectLocation = collidedObject.transform.position;
-			lastRotation = collidedObject.transform.rotation;
+		{ // These are important in case we want to throw stuff
+			lastObjectLocation = collidedObject.transform.position;
+		lastRotation = collidedObject.transform.rotation;
 
 
 			if (collidedObject.GetComponent<SnapBack>())
@@ -407,6 +418,7 @@ public class NewGrabbing : ITool {
 
 		}
 
+		//A copy of this object will be made in playback
 		if(myRecorder){
 			myRecorder.recordInteractedObj (obj);
 		}
@@ -417,17 +429,16 @@ public class NewGrabbing : ITool {
 	public void releaseObj()
 	{
 		// Debug.Log("release");
+		grabbingState = state.colliding;
 		if (collidedObject) {
 			collidedObject.transform.parent = grabbedObjParent;
-			grabbingState = state.colliding;
+
 
 			if (ObjectUsedGrav) {
 				collidedObject.GetComponent<Rigidbody> ().useGravity = true;
 				collidedObject.GetComponent<Rigidbody> ().isKinematic = false;
 
 				StartCoroutine (throwObject (collidedObject, (collidedObject.transform.position - lastObjectLocation) / Time.deltaTime));
-				//collidedObject.GetComponent<Rigidbody> ().AddForce ((collidedObject.transform.position - lastObjectLocation)/Time.deltaTime);
-		
 		
 			}
 		}

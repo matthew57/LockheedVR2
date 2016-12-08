@@ -352,6 +352,7 @@ MonoBehaviour:
   assignedController: 1
   collidedObject: {fileID: 0}
   grabbingState: 0
+  otherGrabber: {fileID: 114000011647367206}
   collidedList: []
 --- !u!114 &114000010611493206
 MonoBehaviour:
@@ -433,6 +434,7 @@ MonoBehaviour:
   assignedController: 1
   axisPrefab: {fileID: 1000010933800488, guid: 11fb94c6da386a24fb23fa9a21fc6c7d, type: 2}
   direction: {x: 0, y: 0, z: 0}
+  cadModel: {fileID: 0}
   axisState: 0
 --- !u!114 &114000011647367206
 MonoBehaviour:
@@ -455,6 +457,7 @@ MonoBehaviour:
   assignedController: 0
   collidedObject: {fileID: 0}
   grabbingState: 0
+  otherGrabber: {fileID: 114000010271935452}
   collidedList: []
 --- !u!114 &114000011899290762
 MonoBehaviour:
@@ -508,6 +511,7 @@ MonoBehaviour:
   assignedController: 1
   collidedObject: {fileID: 0}
   grabbingState: 0
+  otherGrabber: {fileID: 0}
   collidedList: []
   cuttingPlane: {fileID: 0}
   cuttingSpeedReduction: 200
