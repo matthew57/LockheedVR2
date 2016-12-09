@@ -20,6 +20,15 @@ public class IKControl : MonoBehaviour {
 	Quaternion rRotate;
 	Quaternion lRotate;
 
+	public float xFloat = 0;
+	public float YFloat = .04f;
+	public float zFloat= .1f;
+
+	public float RightxFloat = 0;
+	public float RightYFloat = .04f;
+	public float RightzFloat= .1f;
+
+
 	[Tooltip("this number defines how high off the body the head is put based on the head's rotation")]
 	public float bodyOffsetAmount = .6f;
 	void Start () 
@@ -62,10 +71,10 @@ public class IKControl : MonoBehaviour {
 				// Set the right hand target position and rotation, if one has been assigned
 				if(rightHand != null) {
 					animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
-					animator.SetIKRotationWeight(AvatarIKGoal.RightHand,.8f);  
-					animator.SetIKPosition (AvatarIKGoal.RightHand, rightHand.transform.position);// - rightHand.transform.rotation * (new Vector3 (0,-.04f,.1f)));
+					animator.SetIKRotationWeight(AvatarIKGoal.RightHand,.8f); 
+					animator.SetIKPosition (AvatarIKGoal.RightHand, rightHand.transform.position - rightHand.transform.rotation * (new Vector3 (RightxFloat,RightYFloat,RightzFloat)));
 					rRotate = rightHand.transform.rotation;
-					rRotate *= Quaternion.Euler (rightHand.transform.forward * 65);
+					//rRotate *= Quaternion.Euler (rightHand.transform.forward * 65);
 					animator.SetIKRotation(AvatarIKGoal.RightHand,rRotate);
 				}     
 
@@ -73,18 +82,18 @@ public class IKControl : MonoBehaviour {
 				if(leftHand != null) {
 					animator.SetIKPositionWeight(AvatarIKGoal.LeftHand,1);
 					animator.SetIKRotationWeight(AvatarIKGoal.LeftHand,.8f);  
-					animator.SetIKPosition (AvatarIKGoal.LeftHand, leftHand.transform.position);// - leftHand.transform.rotation * (new Vector3 (0,-.04f,.1f)));
+					animator.SetIKPosition (AvatarIKGoal.LeftHand, leftHand.transform.position - leftHand.transform.rotation * (new Vector3 (xFloat,YFloat,zFloat)));
 					lRotate = leftHand.transform.rotation;
-					lRotate *= Quaternion.Euler (leftHand.transform.forward * -65);
+					//lRotate *= Quaternion.Euler (leftHand.transform.forward * -65);
 					animator.SetIKRotation(AvatarIKGoal.LeftHand,lRotate);
 				}   
 
 				RaycastHit rayHit;
 
 				Vector3 floorLocation = transform.position;
-				if (Physics.Raycast (transform.position, Vector3.down,  out  rayHit, 20,1 << 9)) {
+				if (Physics.Raycast (transform.position - Vector3.down, Vector3.down,  out  rayHit, 20,1 << 9)) {
 
-					floorLocation = rayHit.point + Vector3.up * .1f;
+					floorLocation = rayHit.point + Vector3.up*.5f * .1f;
 				}
 
 

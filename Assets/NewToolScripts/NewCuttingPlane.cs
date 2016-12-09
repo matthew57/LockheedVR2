@@ -28,7 +28,19 @@ public class NewCuttingPlane : NewGrabbing{
 	public bool cPlaneOnOff = true;
 
 	private int set = 0;
+	RecordingSystem myRecorder;
 
+	void Start()
+	{
+		myRecorder = GetComponent<RecordingSystem> ();
+		/*
+		if (playBackDevice) {
+			cuttingPlane = (GameObject)Instantiate (cuttingPlane, cuttingPlane.transform.position, cuttingPlane.transform.rotation);
+			cuttingPlane.tag = "SceneObject";
+			cuttingPlane.layer = 10;
+		}
+*/
+	}
 
 	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal){
 	
@@ -56,7 +68,11 @@ public class NewCuttingPlane : NewGrabbing{
 		{
 			cuttingPlane = GameObject.FindObjectOfType<ClippingPlane> ().gameObject;//.Find("CuttingPlane");
 		}
-			
+	
+		if(myRecorder){
+			myRecorder.recordInteractedObj (cuttingPlane);
+		}
+
 		//cuttingPlane.GetComponent<BoxCollider>().enabled = onOff;
 		cuttingPlane.GetComponent<MeshRenderer>().enabled = onOff;
 
@@ -77,32 +93,26 @@ public class NewCuttingPlane : NewGrabbing{
 	public override bool MenuUnclick (ClickedEventArgs e, bool TimeNormal){return false;}
 
 	public override bool PadClick (ClickedEventArgs e, bool TimeNormal){
-
-	
-
-		//DPAD UP or down BUTTON SETTINGS - MOVE CUTTING PLANE UP ON NORMAL/////
-
-		if(e.padY > Mathf.Abs(e.padX) ||e.padY < -1*Mathf.Abs(e.padX) )
-		{
+		if (TimeNormal) {
+			//DPAD UP or down BUTTON SETTINGS - MOVE CUTTING PLANE UP ON NORMAL/////
+			if (e.padY > Mathf.Abs (e.padX) || e.padY < -1 * Mathf.Abs (e.padX)) {
 			
-			cPlaneState = state.pan;
-			StartCoroutine("panCoroutine");
-		}
+				cPlaneState = state.pan;
+				StartCoroutine ("panCoroutine");
+			}
 
 	
 		//DPAD LEFT BUTTON SETTINGS - FLIP NORMAL OF CUTTING PLANE/////////////
-		else if(e.padX <  -1 * Mathf.Abs(e.padY)) 
-		{
-			cuttingPlane.gameObject.transform.up = cuttingPlane.gameObject.transform.up * -1;
-			cPlaneState = state.idle;
-		}
+		else if (e.padX < -1 * Mathf.Abs (e.padY)) {
+				cuttingPlane.gameObject.transform.up = cuttingPlane.gameObject.transform.up * -1;
+				cPlaneState = state.idle;
+			}
 
 		//DPAD RIGHT BUTTON SETTINGS -TOGGLE THROUGH CUTTING PLANE SNAPPED TO ORIGIN PLANES//////////////////
-		else if(e.padX > Mathf.Abs(e.padY))
-		{
-			TogglePlaneOriginDir();
+		else if (e.padX > Mathf.Abs (e.padY)) {
+				TogglePlaneOriginDir ();
+			}
 		}
-	
 			return true;
 
 	}
@@ -110,6 +120,10 @@ public class NewCuttingPlane : NewGrabbing{
 
 	IEnumerator panCoroutine()
 	{
+		if(myRecorder){
+			myRecorder.recordInteractedObj (cuttingPlane);
+		}
+
 		//	Debug.Log("COOOR");
 		GameObject.FindObjectOfType<RecordingSystem> ().trackObject (cuttingPlane);
 		while (cPlaneState != state.idle && cPlaneState != state.off)
@@ -126,7 +140,10 @@ public class NewCuttingPlane : NewGrabbing{
 
 
 	void TogglePlaneOriginDir()
-	{
+	{if(myRecorder){
+			myRecorder.recordInteractedObj (cuttingPlane);
+		}
+		
 		if (set == 0)
 		{
 			cuttingPlane.gameObject.transform.up = Vector3.up;

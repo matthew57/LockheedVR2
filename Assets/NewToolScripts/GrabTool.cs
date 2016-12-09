@@ -5,7 +5,7 @@ public class GrabTool : MonoBehaviour {
 
 	public Vector3 grabPointA;
 	public float handleAngle;
-
+	public int grabAnim;
 
 	public Vector3 getGrabPoint()
 	{

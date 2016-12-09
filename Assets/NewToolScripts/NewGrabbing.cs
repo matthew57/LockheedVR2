@@ -44,6 +44,9 @@ public class NewGrabbing : ITool {
 	//Figure out a better way to record which objects have been touched.
 	RecordingSystem myRecorder;
 
+	public Material Highlighter;
+	Material[] CollidedObjectMaterial;
+
 
 	List<deletedObj> deletedList = new List<deletedObj>();
 	public List<GameObject> collidedList = new List<GameObject>();
@@ -92,10 +95,10 @@ public class NewGrabbing : ITool {
 				}
 			}
 
-			Debug.Log ("Checking is " + collidedObject + " is being held");
+
 			if (!!otherGrabber.currentlyGrabbing (collidedObject)) {
 				otherGrabber.releaseObj ();
-				Debug.Log ("Calling Release");
+			
 			
 			}
 
@@ -177,7 +180,10 @@ public class NewGrabbing : ITool {
 				} else if (grabbingState == state.colliding) {
 					if (TimeNormal) {
 						GameObject obj = (GameObject)Instantiate (collidedObject, collidedObject.transform.position, collidedObject.transform.rotation);
-						collidedObject = obj;
+
+
+						SetCollisionObject (obj);
+
 						pickUp (obj);
 						MovingLastCopied = true;
 						StartCoroutine ("snapCoroutine");
@@ -333,12 +339,27 @@ public class NewGrabbing : ITool {
 		if(grabbingState == state.idle || grabbingState == state.colliding)
 		{
 			
-			collidedObject =other.gameObject;
+			SetCollisionObject (other.gameObject);
 			grabbingState = state.colliding;
 
 			//Debug.Log ("Now inside " + collidedObject + "   " + this.gameObject);
 		}
 	}
+
+	public void SetCollisionObject(GameObject nextObj)
+	{
+		if (collidedObject) {
+			collidedObject.GetComponent<MeshRenderer> ().materials = CollidedObjectMaterial;
+		}
+
+		if(nextObj){
+			CollidedObjectMaterial = nextObj.GetComponent<MeshRenderer> ().materials;
+			nextObj.GetComponent<MeshRenderer> ().material = Highlighter;
+		}
+
+	}
+
+
 	public override void CollisionExit (Collider other){
 
 		if (collidedList.Contains (other.gameObject)) {
@@ -478,9 +499,13 @@ public class NewGrabbing : ITool {
 
 	void checkIfInObject()
 	{	if (collidedList.Count > 0) {
-			collidedObject = collidedList [collidedList.Count - 1];
+
+			SetCollisionObject (collidedList [collidedList.Count - 1]);
+		
 	} else {
-		collidedObject = null;
+
+		SetCollisionObject (null);
+
 		grabbingState = state.idle;
 	}
 		

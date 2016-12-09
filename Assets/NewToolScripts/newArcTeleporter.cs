@@ -628,6 +628,10 @@ virtual public void Teleport()
 				}
 				break;
 			}
+
+				foreach (IKControl ik in GameObject.FindObjectsOfType<IKControl>()) {
+					ik.OnAnimatorIK ();
+				}
 		}
 		break;
 	case FiringMode.PROJECTILE:
@@ -639,6 +643,9 @@ virtual public void Teleport()
 				if (_goodSpot)
 				{
 					MoveToTarget(_teleportSpot);
+						foreach (IKControl ik in GameObject.FindObjectsOfType<IKControl>()) {
+							ik.OnAnimatorIK ();
+						}
 				}
 				break;
 			case Transition.FADE:
@@ -646,6 +653,9 @@ virtual public void Teleport()
 				{
 					CreateFadeQuad();
 					StartCoroutine(fadeTransition(_teleportSpot));
+						foreach (IKControl ik in GameObject.FindObjectsOfType<IKControl>()) {
+							ik.OnAnimatorIK ();
+						}
 				}
 				break;
 			}
@@ -653,9 +663,7 @@ virtual public void Teleport()
 		break;
 	}
 
-		foreach (IKControl ik in GameObject.FindObjectsOfType<IKControl>()) {
-			ik.OnAnimatorIK ();
-		}
+
 }
 
 virtual protected void MoveToTarget(Vector3 target)

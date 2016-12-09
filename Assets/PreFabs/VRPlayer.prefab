@@ -353,6 +353,7 @@ MonoBehaviour:
   collidedObject: {fileID: 0}
   grabbingState: 0
   otherGrabber: {fileID: 114000011647367206}
+  Highlighter: {fileID: 2100000, guid: 289b116921e2fdf4b8cee69395d718b3, type: 2}
   collidedList: []
 --- !u!114 &114000010611493206
 MonoBehaviour:
@@ -458,6 +459,7 @@ MonoBehaviour:
   collidedObject: {fileID: 0}
   grabbingState: 0
   otherGrabber: {fileID: 114000010271935452}
+  Highlighter: {fileID: 2100000, guid: 289b116921e2fdf4b8cee69395d718b3, type: 2}
   collidedList: []
 --- !u!114 &114000011899290762
 MonoBehaviour:
@@ -512,6 +514,7 @@ MonoBehaviour:
   collidedObject: {fileID: 0}
   grabbingState: 0
   otherGrabber: {fileID: 0}
+  Highlighter: {fileID: 0}
   collidedList: []
   cuttingPlane: {fileID: 0}
   cuttingSpeedReduction: 200

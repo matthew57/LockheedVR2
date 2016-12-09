@@ -13,6 +13,8 @@ public class ImprovedController : MonoBehaviour {
 	// THE TOOL IN THE FIRST INDEX IS THE MAIN SELECTABLE TOOL THAT CAN BE SWAPPED OUT.
 	public List<ITool> myTools;
 
+	public handanimations myHand;
+
 	public void setMainTool(ITool nextTool)
 	{
 		//Debug.Log ("Settign main tool to " + nextTool + "  " + this.gameObject);
@@ -307,7 +309,7 @@ public class ImprovedController : MonoBehaviour {
 				OnTriggerClicked(e, true);
 				e.offOn = true;
 				buttonPressed = true;
-
+				myHand.SetHandAnim (handanimations.HandPosition.GrabSmall);
 			}
 			else if (trigger == 0L && triggerPressed)
 			{
@@ -316,6 +318,7 @@ public class ImprovedController : MonoBehaviour {
 				OnTriggerUnclicked(e, true);
 				e.offOn = false;
 				buttonPressed = true;
+				myHand.SetHandAnim (handanimations.HandPosition.Idle);
 			}
 
 			ulong grip = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_Grip));
