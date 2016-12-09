@@ -8,7 +8,8 @@ public class MainMenuManager : MonoBehaviour {
 	public GameObject sceneMenu;
 
 	void Start() {
-		mainMenu.SetActive (true);
+		mainMenu.SetActive (false);
+		sceneMenu.SetActive (true);
 	}
 
 	public void ProcessSelection(string selectionTag) {

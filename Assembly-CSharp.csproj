@@ -67,6 +67,7 @@
      <Compile Include="Assets\NewToolScripts\newLaserPointer.cs" />
      <Compile Include="Assets\PlayBackController.cs" />
      <Compile Include="Assets\PlayBackInputController.cs" />
+     <Compile Include="Assets\PlaybackManager.cs" />
      <Compile Include="Assets\Scripts\AssemblyMover.cs" />
      <Compile Include="Assets\Scripts\AxisRotation.cs" />
      <Compile Include="Assets\Scripts\ClippingPlane.cs" />
