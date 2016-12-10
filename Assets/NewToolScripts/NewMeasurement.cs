@@ -165,6 +165,7 @@ public class NewMeasurement : ITool {
 					if (playBackDevice) {
 						deletedMeasurements.Add (bestObj);
 						bestObj.gameObject.SetActive (false);
+
 					} else {
 						Destroy (bestObj.gameObject);
 					}
@@ -178,8 +179,14 @@ public class NewMeasurement : ITool {
 
 				} 
 				objectsVisible = !objectsVisible;
+				if (objectsVisible) {
+					ErrorPrompt.instance.showError ("Measurements Visible");
+				} else {
+					ErrorPrompt.instance.showError ("Measurements Invisible");
+				}
 				foreach (measureInfo obj in allMeasurements) {
 					obj.gameObject.SetActive (objectsVisible);
+
 				}
 			}
 		} else {

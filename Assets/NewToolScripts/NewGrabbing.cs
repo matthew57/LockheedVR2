@@ -28,6 +28,9 @@ public class NewGrabbing : ITool {
 
 	private GameObject grabSphere;
 
+	//things like drills and stuff.
+	GrabTool currentGrabTool;
+
 
 	private float dist;
 	bool ObjectUsedGrav = false; 
@@ -78,6 +81,14 @@ public class NewGrabbing : ITool {
 			TriggerUnclick (e, true);
 			return true;
 		}
+
+		if (currentGrabTool) {
+
+			//We're holding a drill or something
+			currentGrabTool.buttonPressed();
+			return true;
+		}
+
 		if (collidedObject == null || collidedObject.tag == "UIObject")
 		{
 			return false;
@@ -115,6 +126,11 @@ public class NewGrabbing : ITool {
 	{if (!TimeNormal) {
 			TriggerClick (e, true);
 			return true ;
+		}
+
+		if (currentGrabTool) {
+			currentGrabTool.buttonReleased ();
+			return true;
 		}
 
 		if (grabbingState == state.pickedUp)
@@ -333,54 +349,58 @@ public class NewGrabbing : ITool {
 
 	public override void CollisionEnter (Collider other){
 
-		if(!collidedList.Contains(other.gameObject))
+		if (!collidedList.Contains (other.gameObject)) {
 			collidedList.Add (other.gameObject);
+		}
 	
 		if(grabbingState == state.idle || grabbingState == state.colliding)
 		{
-			
 			SetCollisionObject (other.gameObject);
 			grabbingState = state.colliding;
-
 			//Debug.Log ("Now inside " + collidedObject + "   " + this.gameObject);
+		}
+	}
+
+	public override void CollisionExit (Collider other){
+
+		if (collidedList.Contains (other.gameObject)) {
+			collidedList.Remove (other.gameObject);
+		}
+
+		if (grabbingState != state.pickedUp)
+		{
+			checkIfInObject ();
 		}
 	}
 
 	public void SetCollisionObject(GameObject nextObj)
 	{
 		if (collidedObject) {
-			collidedObject.GetComponent<MeshRenderer> ().materials = CollidedObjectMaterial;
+
+	
+			if (collidedObject.GetComponent<MeshRenderer> ().sharedMaterial == (Highlighter)) {
+				collidedObject.GetComponent<MeshRenderer> ().materials = CollidedObjectMaterial;
+			}
 		}
+		collidedObject = nextObj;
 
 		if(nextObj){
-			CollidedObjectMaterial = nextObj.GetComponent<MeshRenderer> ().materials;
-			nextObj.GetComponent<MeshRenderer> ().material = Highlighter;
+			if (nextObj.GetComponent<MeshRenderer> ().sharedMaterial != Highlighter) {
+				CollidedObjectMaterial = nextObj.GetComponent<MeshRenderer> ().materials;
+				nextObj.GetComponent<MeshRenderer> ().sharedMaterial = Highlighter;
+			}
 		}
 
 	}
 
 
-	public override void CollisionExit (Collider other){
 
-		if (collidedList.Contains (other.gameObject)) {
-
-			collidedList.Remove (other.gameObject);
-		}
-
-
-		if (grabbingState != state.pickedUp)
-		{
-			checkIfInObject ();
-		}
-	
-	}
 
 
 	private  void resetClicked(object sender, ClickedEventArgs e)
 	{
 		//CmdResetModel();
 	}
-
 
 
 	IEnumerator snapCoroutine()
@@ -411,8 +431,6 @@ public class NewGrabbing : ITool {
 		}
 
 		yield return null;
-
-	//	print("MyCoroutine is now finished.");
 	}
 
 
@@ -425,17 +443,15 @@ public class NewGrabbing : ITool {
 		rb.useGravity = false;
 		rb.isKinematic = true;
 		grabbedObjParent = obj.transform.parent;
+		obj.GetComponent<MeshRenderer> ().sharedMaterials = CollidedObjectMaterial;
 
 		obj.transform.SetParent(controllerInit.transform);
-		GrabTool gTool = obj.GetComponent<GrabTool> ();
-		if (gTool) {
+		currentGrabTool = obj.GetComponent<GrabTool> ();
+		if (currentGrabTool) {
 
 			obj.transform.rotation = grabSphere.transform.rotation;
-
-			obj.transform.Rotate (new Vector3 (gTool.handleAngle, 0, 0));
-
-			obj.transform.position = (grabSphere.transform.position - gTool.transform.rotation * gTool.getGrabPoint());
-
+			obj.transform.Rotate (new Vector3 (currentGrabTool.handleAngle, 0, 0));
+			obj.transform.position = (grabSphere.transform.position - currentGrabTool.transform.rotation * currentGrabTool.getGrabPoint());
 
 		}
 
@@ -454,7 +470,7 @@ public class NewGrabbing : ITool {
 		if (collidedObject) {
 			collidedObject.transform.parent = grabbedObjParent;
 
-
+			collidedObject.GetComponent<MeshRenderer> ().sharedMaterial = Highlighter;
 			if (ObjectUsedGrav) {
 				collidedObject.GetComponent<Rigidbody> ().useGravity = true;
 				collidedObject.GetComponent<Rigidbody> ().isKinematic = false;
@@ -498,14 +514,13 @@ public class NewGrabbing : ITool {
 	}
 
 	void checkIfInObject()
-	{	if (collidedList.Count > 0) {
+	{	
+		if (collidedList.Count > 0) {
 
 			SetCollisionObject (collidedList [collidedList.Count - 1]);
 		
 	} else {
-
 		SetCollisionObject (null);
-
 		grabbingState = state.idle;
 	}
 		

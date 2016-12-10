@@ -72,6 +72,7 @@ public class RecordingSystem : ITool{
 		public string ob;
 		public Vector3 or;
 		public Quaternion Rot;
+		public Vector3 Scale;
 
 	}
 		
@@ -126,11 +127,12 @@ public class RecordingSystem : ITool{
 					return;}
 			
 			}
-
+			Debug.Log ("Interacted with " + obj);
 			interactedObject newIO = new interactedObject ();
 			newIO.ob = obj.name;
 			newIO.or = obj.transform.position;
 			newIO.Rot = obj.transform.rotation;
+			newIO.Scale = obj.transform.lossyScale;
 			interObjects.Add (newIO);
 		
 		}

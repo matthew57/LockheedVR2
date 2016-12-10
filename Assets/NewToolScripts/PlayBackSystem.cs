@@ -157,10 +157,12 @@ public class PlayBackSystem :Tools {
 		countDown.color = Color.green;
 		countDown.enabled = true;
 
+
 		foreach (RecordingSystem.interactedObject rio in sData.interObjects) {
 			GameObject foundTHingy = GameObject.Find (rio.ob);
 
-			GameObject newObj = (GameObject)Instantiate (foundTHingy, rio.or + new Vector3 (.0000001f,.0000001f,.0000001f), rio.Rot);
+			GameObject newObj = (GameObject)Instantiate (foundTHingy, rio.or, rio.Rot);
+			newObj.transform.localScale = rio.Scale;
 			newObj.tag = "SceneObject";
 			newObj.layer = 10;
 		}

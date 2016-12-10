@@ -23,6 +23,8 @@ public class NewMenuSelector : ITool {
 	}
 
 
+	Image toolDisplay;
+
 	public List<menuButton> menuButtons = new List<menuButton>();
 
 
@@ -42,6 +44,7 @@ public class NewMenuSelector : ITool {
 		}
 		AuxiliaryTool = true;
 	
+		toolDisplay = GameObject.Find ("CurrentToolDisplay").GetComponent<Image> ();
 
 		menuButtons [0].myButton = menu.transform.Find ("AxisRotationButton").gameObject;
 		menuButtons [1].myButton = menu.transform.Find ("MovePartsButton").gameObject;
@@ -126,8 +129,8 @@ public class NewMenuSelector : ITool {
 			return false;
 		}
 	
-			menuButtons[currentMenuIndex].myButton.GetComponent<Image>().color = Color.clear;
-			menuButtons[currentMenuIndex].myButton.transform.GetComponentInChildren<Text>().enabled = false;
+		menuButtons[currentMenuIndex].myButton.GetComponent<Image>().color = Color.clear;
+		menuButtons[currentMenuIndex].myButton.transform.GetComponentInChildren<Text>().enabled = false;
 
 
 		if (e.padX > 0 ||!TimeNormal) {
@@ -145,7 +148,9 @@ public class NewMenuSelector : ITool {
 		
 			}
 
-
+		if (!playBackDevice) {
+			toolDisplay.sprite = menuButtons [currentMenuIndex].myButton.transform.FindChild ("Image").GetComponent<Image> ().sprite;
+		}
 		setMenuIndex (currentMenuIndex);
 
 
