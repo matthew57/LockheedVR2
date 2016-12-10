@@ -30,23 +30,24 @@ public class PlaybackManager : MonoBehaviour {
     private void DisplayPlayBackScenes()
     {
         Vector3 playerLocation = GameObject.FindObjectOfType<Camera>().transform.position;
-        float xPos = -6.31f;
-        float yPos = 3.19f;
-        float zPos = 5.73f;
-        float yRotation = -53.7f;
         int numRecordings = recordings.Length;
         for (int i = 0; i < numRecordings; i++)
         {
-			Debug.Log ("Trying to display: " + recordings [i]);
+            float xPos = -6.31f;
+            float yPos = 3.19f;
+            float zPos = 5.73f;
+            float yRotation = -53.7f;
 			Color panelColor = Color.gray;
             //odds on top evens on bottom
-            if (i > 1)
-            {
-                xPos += 4;
-                zPos += 3;
-                yRotation += 33.6f;
-            } 
-            if (i + 1 % 2 == 0)
+
+            int col = i / 2;
+
+            Debug.Log("Iteration: " + i);
+            Debug.Log("Column: + " + col);
+            xPos += (4 * col);
+            zPos += (3 * col);
+            yRotation += (33.6f * col);
+            if ((i + 1) % 2 == 0)
             {
                 yPos -= 2.13f;
                 panelColor = Color.blue;
