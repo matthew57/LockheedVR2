@@ -8,7 +8,7 @@ public class ViveCursor : MonoBehaviour {
         ZAxis
     }
 
-	MainMenuManager menuManager;
+	PlaybackManager playbackManager;
 
     public Color color;
     public float thickness = 0.002f;    
@@ -52,7 +52,7 @@ public class ViveCursor : MonoBehaviour {
     // Use this for initialization
     void Start () {
 		trackedObj = this.GetComponent<SteamVR_TrackedObject> ();
-		menuManager = GameObject.Find ("MenuManager").GetComponent<MainMenuManager> ();
+		playbackManager = GameObject.Find ("PlaybackManager").GetComponent<PlaybackManager> ();
 
         Material newMaterial = new Material(Shader.Find("Unlit/Color"));
         newMaterial.SetColor("_Color", color);
@@ -131,7 +131,8 @@ public class ViveCursor : MonoBehaviour {
 
 		triggerButtonDown = controller.GetHairTriggerDown();
 		if (triggerButtonDown) {
-			menuManager.ProcessSelection (hitObject.collider.tag);
+			Debug.Log ("I hit the object named: " + hitObject.collider.name);
+			playbackManager.ProcessSelection (hitObject.collider.name);
 		}
     }
 

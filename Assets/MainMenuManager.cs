@@ -11,24 +11,4 @@ public class MainMenuManager : MonoBehaviour {
 		mainMenu.SetActive (false);
 		sceneMenu.SetActive (true);
 	}
-
-	public void ProcessSelection(string selectionTag) {
-		switch (selectionTag) {
-		case "Options":
-			mainMenu.SetActive (false);
-			optionsMenu.SetActive (true);
-			break;
-		case "Scenes":
-			mainMenu.SetActive (false);
-			sceneMenu.SetActive (true);
-			break;
-		case "Back":
-			optionsMenu.SetActive (false);
-			sceneMenu.SetActive (false);
-			mainMenu.SetActive (true);
-			break;
-		default:
-			break;
-		}
-	}
 }
