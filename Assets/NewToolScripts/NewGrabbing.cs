@@ -82,10 +82,10 @@ public class NewGrabbing : ITool {
 			return true;
 		}
 
-		if (currentGrabTool) {
+		if (currentGrabTool &&grabbingState  == state.pickedUp ) {
 
 			//We're holding a drill or something
-			currentGrabTool.buttonPressed();
+			currentGrabTool.buttonPressed(TimeNormal);
 			return true;
 		}
 
@@ -128,8 +128,8 @@ public class NewGrabbing : ITool {
 			return true ;
 		}
 
-		if (currentGrabTool) {
-			currentGrabTool.buttonReleased ();
+		if (currentGrabTool && grabbingState == state.pickedUp) {
+			currentGrabTool.buttonReleased (TimeNormal);
 			return true;
 		}
 

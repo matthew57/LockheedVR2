@@ -501,6 +501,15 @@ public class RecordingSystem : ITool{
 		return toReturn;
 	}
 
+	public SavedData loadFromFile(string fileName)
+	{//Debug.Log ("loading from file");
+
+		string info = File.ReadAllText (fileName);
+
+		SavedData toReturn = JsonUtility.FromJson<SavedData> (info);
+		return toReturn;
+	}
+
 
 
 	// Start playback
