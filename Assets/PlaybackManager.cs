@@ -4,6 +4,12 @@ using System;
 using System.IO;
 using UnityEngine.UI;
 
+//This class is used to display the in world menus which will list the files available for playback. 
+//Upon calling the menu, it will display, and the cursors should turn on
+//Once a file is selected, the menu should be diabled, the panels should be destroyed, and the path of the file should be sent to the recordign system
+//----KNOWN ISSUES----------------------------
+//The call of the recording systme method needs to be fixed
+//The cursors need to be found to turn on and off when the menu turns on and off
 public class PlaybackManager : MonoBehaviour {
 
     string[] recordings;
@@ -22,6 +28,9 @@ public class PlaybackManager : MonoBehaviour {
         //Make each panel have a tag with it's name
         //Load the scene with that tag
 		icons = new GameObject[6];
+		//This doesn't work yet
+		//ViveCursor vc = GameObject.Find ("[CameraRig]").GetComponentInChildren<ViveCursor> ();
+		//vc.enabled = true;
 		DestroyIcons ();
         LoadPlayBackScenes();
         DisplayPlayBackScenes();
@@ -140,7 +149,7 @@ public class PlaybackManager : MonoBehaviour {
 			icons [i] = null;
 		}
 	}
-
+		
 	public void goToNextPage() {
 		currentPage++;
 		DestroyIcons ();
@@ -165,11 +174,18 @@ public class PlaybackManager : MonoBehaviour {
 		default:
 			if (Path.GetExtension (selectionName) == ".UVR") {
 				string path = Application.dataPath + "/PlaybackFiles/" + selectionName;
-				Debug.Log ("this path: " + path);
-				this.gameObject.SetActive (false);
+				//RecordingSystem.setFilePath (path);
+				setDisabled ();
 			}
-			DestroyIcons ();
 			break;
 		}
+	}
+
+	public void setDisabled() {
+		this.gameObject.SetActive (false);
+		DestroyIcons ();
+		//havent gotten this to work yet
+		//ViveCursor vc = GameObject.Find ("[CameraRig]").GetComponentInChildren<ViveCursor> ();
+		//vc.enabled = false;
 	}
 }

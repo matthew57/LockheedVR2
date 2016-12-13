@@ -15,6 +15,11 @@ using Valve.VR;
 
 public class RecordingSystem : ITool{
 
+
+
+
+	public string filepath = "testSaveFile.UVR";
+
 	[Serializable]
 	public struct ActionClick{
 
@@ -494,23 +499,16 @@ public class RecordingSystem : ITool{
 	public SavedData loadFromFile()
 	{//Debug.Log ("loading from file");
 
-		string path = "testSaveFile" + fileExtension;
-		string info = File.ReadAllText (path);
-
-		SavedData toReturn = JsonUtility.FromJson<SavedData> (info);
-		return toReturn;
-	}
-
-	public SavedData loadFromFile(string fileName)
-	{//Debug.Log ("loading from file");
-
-		string info = File.ReadAllText (fileName);
+		string info = File.ReadAllText (filepath);
 
 		SavedData toReturn = JsonUtility.FromJson<SavedData> (info);
 		return toReturn;
 	}
 
 
+	public void setFilePath(string path) {
+		filepath = path;
+	}
 
 	// Start playback
 	public override bool MenuClick (ClickedEventArgs e, bool TimeNormal){
