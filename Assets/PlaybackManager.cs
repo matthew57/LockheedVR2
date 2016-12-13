@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.IO;
 using UnityEngine.UI;
 
 public class PlaybackManager : MonoBehaviour {
@@ -8,17 +9,20 @@ public class PlaybackManager : MonoBehaviour {
     string[] recordings;
 	private int currentPage;
 	private int numPages;
+	public GameObject[] icons;
 
 	public GameObject playbackPanel;
 	public GameObject transitionButton;
 
 	// Use this for initialization
-	void Awake () {
+	void OnEnable () {
         //First, I need to go into the file system and grab all the scenes that have been saved
         //Save those names to a list
         //Create Panels for each scene
         //Make each panel have a tag with it's name
         //Load the scene with that tag
+		icons = new GameObject[6];
+		DestroyIcons ();
         LoadPlayBackScenes();
         DisplayPlayBackScenes();
 	}
@@ -26,7 +30,7 @@ public class PlaybackManager : MonoBehaviour {
     private void LoadPlayBackScenes()
     {
         string filepath = Application.dataPath + "/PlaybackFiles/";
-        recordings = System.IO.Directory.GetFiles(filepath, "*.UVR");
+        recordings = Directory.GetFiles(filepath, "*.UVR");
     }
 
     private void DisplayPlayBackScenes()
@@ -64,17 +68,18 @@ public class PlaybackManager : MonoBehaviour {
 					yPos -= 2.13f;
 					//panelColor = Color.blue;
 				}
-				GameObject go = (GameObject)Instantiate (playbackPanel);
+				GameObject go = (GameObject) Instantiate(playbackPanel);
 				go.transform.position = new Vector3 (xPos, yPos, zPos);
 				go.transform.eulerAngles = new Vector3 (0, yRotation, 0);
 				Canvas[] canvii = go.GetComponentsInChildren<Canvas> ();
 				foreach (Canvas c in canvii) {
 					Text[] texts = c.GetComponentsInChildren<Text> ();
 					foreach (Text t in texts) {					
-						t.text = System.IO.Path.GetFileNameWithoutExtension (recordings [currentIndex]);
-						go.name = t.text;
+						t.text = Path.GetFileNameWithoutExtension (recordings [currentIndex]);
+						go.name = t.text + ".UVR";
 					}
 				}
+				icons [i] = go;
 			}
 		}
 		if (numPages > (currentPage + 1)) 
@@ -105,6 +110,7 @@ public class PlaybackManager : MonoBehaviour {
 			}
 		}
 		go.name = "Next";
+		icons [4] = go;
 	}
 
 	public void createPrevButton()
@@ -125,24 +131,31 @@ public class PlaybackManager : MonoBehaviour {
 			}
 		}
 		go.name = "Back";
+		icons [5] = go;
+	}
+
+	public void DestroyIcons() {
+		for (int i = 0; i < icons.Length; i++) {
+			Destroy (icons [i]);
+			icons [i] = null;
+		}
 	}
 
 	public void goToNextPage() {
 		currentPage++;
+		DestroyIcons ();
 		CreateIcons ();
 	}
 
 	public void goToPrevPage() {
 		currentPage--;
+		DestroyIcons ();
 		CreateIcons ();
 	}
 
 	public void ProcessSelection(string selectionName) {
 		switch (selectionName) {
-		case "Options":
-			break;
-		case "Scenes":
-			break;
+
 		case "Back":
 			goToPrevPage ();
 			break;
@@ -150,6 +163,12 @@ public class PlaybackManager : MonoBehaviour {
 			goToNextPage ();
 			break;
 		default:
+			if (Path.GetExtension (selectionName) == ".UVR") {
+				string path = Application.dataPath + "/PlaybackFiles/" + selectionName;
+				Debug.Log ("this path: " + path);
+				this.gameObject.SetActive (false);
+			}
+			DestroyIcons ();
 			break;
 		}
 	}
